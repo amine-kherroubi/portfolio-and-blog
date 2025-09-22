@@ -44,16 +44,21 @@ const textCase = "uppercase";
     <Header />
 
     <h1>{pageTitle}</h1>
+
     <h2>... and my new Astro site!</h2>
+
     <p>
       I am working through Astro's introductory tutorial. This is the second
       page on my website, and it's the first one I built myself!
     </p>
+
     <p>
       This site will update as I complete more of the tutorial, so keep checking
       back and see how my journey is going!
     </p>
+
     <p>Here are a few facts about me:</p>
+
     <ul>
       <li>My name is {identity.firstName}.</li>
       <li>
@@ -68,12 +73,17 @@ const textCase = "uppercase";
         )
       }
     </ul>
+
     <p>My skills are:</p>
+
     <ul>
       {skills.map((skill) => <li class="skill">{skill}</li>)}
     </ul>
+
     {happy && <p>I am happy to be learning Astro!</p>}
+
     {finished && <p>I finished this tutorial!</p>}
+
     {
       goal === 3 ? (
         <p>My goal is to finish in 3 days.</p>
@@ -83,5 +93,8 @@ const textCase = "uppercase";
     }
 
     <Footer />
+    <script>
+      import "../scripts/menu.js";
+    </script>
   </body>
 </html>
