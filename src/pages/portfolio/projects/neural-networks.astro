@@ -1,5 +1,5 @@
 ---
-import Layout from "../../../layouts/Layout.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 const project = {
   title: "NEURAL NETWORKS",
@@ -39,7 +39,7 @@ const relatedProjects = [
 ];
 ---
 
-<Layout title={`${project.title} — Project`}>
+<BaseLayout title={`${project.title} — Project`}>
   <!-- Navigation -->
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
     <div
@@ -67,7 +67,7 @@ const relatedProjects = [
         <span>{project.duration}</span>
       </div>
 
-      <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
+      <div class="w-32 h-2 bg-yellow mb-12"></div>
       <h1
         class="text-[clamp(3rem,8vw,8rem)] font-bold leading-[0.85] tracking-tighter mb-12"
       >
@@ -85,7 +85,7 @@ const relatedProjects = [
   <section class="px-16 lg:px-24 mb-32">
     <div class="max-w-[1600px] mx-auto">
       <div
-        class="aspect-video bg-black border-8 border-[#FFD700] flex items-center justify-center"
+        class="aspect-video bg-black border-8 border-yellow flex items-center justify-center"
       >
         <p class="text-white/70 text-2xl font-bold uppercase tracking-wide">
           PROJECT VISUALIZATION
@@ -102,7 +102,7 @@ const relatedProjects = [
         <div class="space-y-24">
           <!-- Overview -->
           <div>
-            <div class="w-24 h-2 bg-[#FFD700] mb-8"></div>
+            <div class="w-24 h-2 bg-yellow mb-8"></div>
             <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
               Overview
             </h2>
@@ -124,7 +124,7 @@ const relatedProjects = [
 
           <!-- Solution -->
           <div>
-            <div class="w-24 h-2 bg-[#FFD700] mb-8"></div>
+            <div class="w-24 h-2 bg-yellow mb-8"></div>
             <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
               The Solution
             </h2>
@@ -134,7 +134,7 @@ const relatedProjects = [
 
             <!-- Code Example -->
             <div
-              class="bg-black text-white p-12 border-8 border-[#FFD700] overflow-x-auto"
+              class="bg-black text-white p-12 border-8 border-yellow overflow-x-auto"
             >
               <pre
                 class="text-base font-mono"><code>{`class OptimizedNetwork(nn.Module):
@@ -162,7 +162,7 @@ const relatedProjects = [
               {
                 project.results.map((result) => (
                   <li class="flex items-start gap-6">
-                    <div class="w-4 h-4 bg-[#FFD700] mt-2 shrink-0" />
+                    <div class="w-4 h-4 bg-yellow mt-2 shrink-0" />
                     <p class="text-2xl text-black/70">{result}</p>
                   </li>
                 ))
@@ -233,7 +233,7 @@ const relatedProjects = [
                 <a
                   href={project.github}
                   target="_blank"
-                  class="flex items-center justify-between w-full px-8 py-6 bg-black text-white hover:bg-[#FFD700] hover:text-black group"
+                  class="flex items-center justify-between w-full px-8 py-6 bg-black text-white hover:bg-yellow hover:text-black transition-colors group"
                 >
                   <span class="font-bold uppercase text-sm tracking-wide">
                     GitHub
@@ -259,7 +259,7 @@ const relatedProjects = [
                 <a
                   href={project.demo}
                   target="_blank"
-                  class="flex items-center justify-between w-full px-8 py-6 border-4 border-black hover:bg-black hover:text-white group"
+                  class="flex items-center justify-between w-full px-8 py-6 border-4 border-black hover:bg-black hover:text-white transition-colors group"
                 >
                   <span class="font-bold uppercase text-sm tracking-wide">
                     Live Demo
@@ -287,9 +287,9 @@ const relatedProjects = [
   </section>
 
   <!-- Related Projects -->
-  <section class="py-32 px-16 lg:px-24 bg-[#F5F5F5]">
+  <section class="py-32 px-16 lg:px-24 bg-gray-50">
     <div class="max-w-[1600px] mx-auto">
-      <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
+      <div class="w-32 h-2 bg-yellow mb-12"></div>
       <h2 class="text-4xl font-bold mb-16 uppercase tracking-tight">
         MORE PROJECTS
       </h2>
@@ -298,7 +298,7 @@ const relatedProjects = [
           relatedProjects.map((related) => (
             <a
               href={`/projects/${related.slug}`}
-              class="group bg-white p-12 border-4 border-black hover:border-[#FFD700]"
+              class="group bg-white p-12 border-4 border-black hover:border-yellow transition-colors"
             >
               <h3 class="text-3xl lg:text-4xl font-bold mb-4 leading-[1.1]">
                 {related.title}
@@ -338,8 +338,8 @@ const relatedProjects = [
     >
       <p class="text-sm font-bold uppercase tracking-wide">© 2024 Your Name</p>
       <p class="text-sm font-bold uppercase tracking-wide">
-        Designed with <span class="text-[#FFD700]">precision</span> using Astro
+        Designed with <span class="text-yellow">precision</span> using Astro
       </p>
     </div>
   </footer>
-</Layout>
+</BaseLayout>

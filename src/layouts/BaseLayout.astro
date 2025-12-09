@@ -9,7 +9,10 @@ interface Props {
 
 const { title = SITE.title, description = SITE.description } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, "http://localhost:4321");
+const canonicalURL = new URL(
+  Astro.url.pathname,
+  Astro.site || Astro.url.origin
+);
 ---
 
 <!doctype html>
