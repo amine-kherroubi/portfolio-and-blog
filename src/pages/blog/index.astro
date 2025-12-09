@@ -1,0 +1,241 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const allPosts = [
+  {
+    title: "The Beauty of Constraint",
+    excerpt:
+      "How limitations in design lead to creative breakthroughs and elegant solutions.",
+    date: "2024-03-15",
+    readTime: "5 min read",
+    slug: "beauty-of-constraint",
+    featured: true,
+  },
+  {
+    title: "Swiss Design in Digital Age",
+    excerpt:
+      "Adapting timeless principles to modern web interfaces and user experiences.",
+    date: "2024-03-01",
+    readTime: "7 min read",
+    slug: "swiss-design-digital",
+    featured: true,
+  },
+  {
+    title: "Minimalism in Code",
+    excerpt:
+      "Writing cleaner, more maintainable software through deliberate simplicity.",
+    date: "2024-02-20",
+    readTime: "6 min read",
+    slug: "minimalism-in-code",
+    featured: false,
+  },
+  {
+    title: "Grid Systems Explained",
+    excerpt:
+      "A deep dive into the mathematics and psychology behind effective layouts.",
+    date: "2024-02-05",
+    readTime: "10 min read",
+    slug: "grid-systems",
+    featured: false,
+  },
+  {
+    title: "The Art of Typography",
+    excerpt:
+      "Choosing and combining typefaces for maximum impact and readability.",
+    date: "2024-01-15",
+    readTime: "8 min read",
+    slug: "typography-art",
+    featured: false,
+  },
+];
+
+const featuredPosts = allPosts.filter((post) => post.featured);
+const regularPosts = allPosts.filter((post) => !post.featured);
+---
+
+<Layout title="Blog — Thoughts on Design & Development">
+  <!-- Navigation -->
+  <nav
+    class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-black/10"
+  >
+    <div
+      class="max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex justify-between items-center"
+    >
+      <a
+        href="/"
+        class="text-lg font-bold tracking-tight hover:text-red-600 transition-colors"
+      >
+        ← HOME
+      </a>
+      <ul class="flex gap-8 text-sm font-medium">
+        <li>
+          <a href="/#work" class="hover:text-red-600 transition-colors">WORK</a>
+        </li>
+        <li><a href="/blog" class="text-red-600">BLOG</a></li>
+        <li>
+          <a href="/#contact" class="hover:text-red-600 transition-colors"
+            >CONTACT</a
+          >
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="pt-32 pb-20 px-6 lg:px-12">
+    <div class="max-w-[1400px] mx-auto">
+      <h1
+        class="text-[clamp(3rem,8vw,7rem)] font-bold leading-[0.9] tracking-tight mb-8"
+      >
+        BLOG
+      </h1>
+      <p
+        class="text-xl lg:text-2xl text-black/70 max-w-[800px] leading-relaxed"
+      >
+        Exploring the intersection of design, technology, and creative thinking.
+        Thoughts on minimalism, craftsmanship, and building for the web.
+      </p>
+      <div class="mt-8 w-24 h-1 bg-red-600"></div>
+    </div>
+  </section>
+
+  <!-- Featured Posts -->
+  <section class="py-12 px-6 lg:px-12 bg-gray-50">
+    <div class="max-w-[1400px] mx-auto">
+      <h2 class="text-2xl font-bold mb-12 tracking-tight">FEATURED ARTICLES</h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {
+          featuredPosts.map((post) => (
+            <article class="group bg-white hover:shadow-2xl transition-all duration-500">
+              <a href={`/blog/${post.slug}`} class="block p-8 lg:p-12 h-full">
+                <div class="flex items-center gap-4 text-sm text-black/60 mb-6">
+                  <time>{post.date}</time>
+                  <span>•</span>
+                  <span>{post.readTime}</span>
+                </div>
+
+                <h3 class="text-3xl lg:text-4xl font-bold mb-4 group-hover:text-red-600 transition-colors">
+                  {post.title}
+                </h3>
+
+                <p class="text-lg text-black/70 leading-relaxed mb-6">
+                  {post.excerpt}
+                </p>
+
+                <span class="inline-flex items-center gap-2 font-medium group-hover:gap-4 transition-all">
+                  Read Article
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </span>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- All Posts -->
+  <section class="py-20 px-6 lg:px-12">
+    <div class="max-w-[1400px] mx-auto">
+      <h2 class="text-2xl font-bold mb-12 tracking-tight">ALL ARTICLES</h2>
+
+      <div class="space-y-1">
+        {
+          regularPosts.map((post) => (
+            <article class="group border-b border-black/10 hover:bg-gray-50 transition-colors">
+              <a
+                href={`/blog/${post.slug}`}
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between py-8 gap-6"
+              >
+                <div class="flex-1">
+                  <h3 class="text-2xl lg:text-3xl font-bold mb-3 group-hover:text-red-600 transition-colors">
+                    {post.title}
+                  </h3>
+                  <p class="text-black/70 leading-relaxed">{post.excerpt}</p>
+                </div>
+
+                <div class="flex items-center gap-8 text-sm text-black/60 lg:shrink-0">
+                  <time class="whitespace-nowrap">{post.date}</time>
+                  <span class="whitespace-nowrap">{post.readTime}</span>
+                  <svg
+                    class="w-6 h-6 group-hover:translate-x-2 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </div>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="py-20 px-6 lg:px-12 bg-black text-white">
+    <div class="max-w-[800px] mx-auto text-center">
+      <h2 class="text-4xl lg:text-5xl font-bold mb-6">STAY UPDATED</h2>
+      <p class="text-xl text-white/70 mb-12">
+        Get new articles delivered straight to your inbox. No spam, just quality
+        content.
+      </p>
+
+      <form class="flex flex-col sm:flex-row gap-4 max-w-[500px] mx-auto">
+        <input
+          type="email"
+          placeholder="your@email.com"
+          class="flex-1 px-6 py-4 bg-white text-black focus:outline-none focus:ring-2 focus:ring-red-600"
+          required
+        />
+        <button
+          type="submit"
+          class="px-8 py-4 bg-red-600 text-white font-medium hover:bg-red-700 transition-colors whitespace-nowrap"
+        >
+          SUBSCRIBE
+        </button>
+      </form>
+
+      <p class="text-sm text-white/50 mt-6">
+        Join 500+ designers and developers
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer
+    class="py-12 px-6 lg:px-12 bg-black text-white border-t border-white/10"
+  >
+    <div
+      class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6"
+    >
+      <p class="text-sm text-white/60">
+        © 2024 Your Name. All rights reserved.
+      </p>
+      <p class="text-sm text-white/60">
+        Designed & Built with <span class="text-red-600">♥</span> using Astro &
+        TailwindCSS
+      </p>
+    </div>
+  </footer>
+</Layout>
