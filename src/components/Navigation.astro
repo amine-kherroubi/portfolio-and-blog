@@ -15,7 +15,7 @@ const { currentPage } = Astro.props;
       href="/"
       class="text-[0.8125rem] font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200"
     >
-      {currentPage !== "home" ? "← Home" : "Your Name"}
+      {currentPage !== "home" ? "Home" : "Your Name"}
     </a>
 
     <!-- Navigation Links -->
@@ -28,7 +28,7 @@ const { currentPage } = Astro.props;
           class:list={[
             "transition-opacity duration-200 relative",
             currentPage === "portfolio"
-              ? "opacity-100 after:content-[''] after:absolute after:bottom-[-12px] after:left-0 after:right-0 after:h-0.5 after:bg-black"
+              ? "opacity-100 after:content-[''] after:absolute after:-bottom-3 after:left-0 after:right-0 after:h-0.5 after:bg-black"
               : "opacity-50 hover:opacity-100",
           ]}
         >
@@ -41,7 +41,7 @@ const { currentPage } = Astro.props;
           class:list={[
             "transition-opacity duration-200 relative",
             currentPage === "blog"
-              ? "opacity-100 after:content-[''] after:absolute after:bottom-[-12px] after:left-0 after:right-0 after:h-0.5 after:bg-black"
+              ? "opacity-100 after:content-[''] after:absolute after:-bottom-3 after:left-0 after:right-0 after:h-0.5 after:bg-black"
               : "opacity-50 hover:opacity-100",
           ]}
         >
