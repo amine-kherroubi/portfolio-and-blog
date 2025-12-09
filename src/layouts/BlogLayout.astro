@@ -1,5 +1,7 @@
 ---
-import Layout from "./Layout.astro";
+import BaseLayout from "./BaseLayout.astro";
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   frontmatter: {
@@ -13,23 +15,11 @@ interface Props {
 const { frontmatter } = Astro.props;
 ---
 
-<Layout title={frontmatter.title}>
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
-    <div
-      class="max-w-[1200px] mx-auto px-16 py-8 flex justify-between items-center"
-    >
-      <a href="/" class="text-lg font-bold tracking-tight uppercase">
-        ← HOME
-      </a>
-      <a href="/blog" class="text-sm font-bold uppercase tracking-wide">
-        ALL POSTS
-      </a>
-    </div>
-  </nav>
+<BaseLayout title={frontmatter.title} description={frontmatter.excerpt}>
+  <Navigation currentPage="blog" />
 
   <article class="pt-40 pb-32 px-16">
     <div class="max-w-[1200px] mx-auto">
-      <!-- Article Header -->
       <header class="mb-24">
         <div
           class="flex items-center gap-6 text-sm font-bold uppercase tracking-wide mb-12"
@@ -46,20 +36,18 @@ const { frontmatter } = Astro.props;
         <p class="text-2xl text-black/70 leading-[1.5] max-w-[900px]">
           {frontmatter.excerpt}
         </p>
-        <div class="mt-12 w-32 h-2 bg-[#FFD700]"></div>
+        <div class="mt-12 w-32 h-2 bg-yellow"></div>
       </header>
 
-      <!-- Article Content -->
       <div class="prose prose-lg max-w-none">
         <slot />
       </div>
 
-      <!-- Article Footer -->
       <footer class="mt-32 pt-16 border-t-4 border-black">
         <div class="flex justify-between items-center">
           <a
             href="/blog"
-            class="inline-flex items-center gap-4 font-bold uppercase text-sm tracking-wide"
+            class="inline-flex items-center gap-4 font-bold uppercase text-sm tracking-wide hover:text-yellow"
           >
             <svg
               class="w-6 h-6"
@@ -77,8 +65,9 @@ const { frontmatter } = Astro.props;
           </a>
           <div class="flex gap-6">
             <button
-              class="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-[#FFD700]"
+              class="share-button w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-yellow"
               title="Share on Twitter"
+              data-platform="twitter"
             >
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -87,8 +76,9 @@ const { frontmatter } = Astro.props;
               </svg>
             </button>
             <button
-              class="w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-[#FFD700]"
+              class="share-button w-12 h-12 border-2 border-black flex items-center justify-center hover:bg-yellow"
               title="Share on LinkedIn"
+              data-platform="linkedin"
             >
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -101,114 +91,45 @@ const { frontmatter } = Astro.props;
       </footer>
     </div>
   </article>
-</Layout>
 
-<style is:global>
-  /* Swiss Design Prose Styles */
-  .prose {
-    color: #000;
-    max-width: 900px;
+  <Footer variant="dark" />
+</BaseLayout>
+
+<script>
+  document.querySelectorAll(".share-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const platform = button.getAttribute("data-platform");
+      const url = window.location.href;
+      const title = document.title;
+
+      let shareUrl = "";
+      if (platform === "twitter") {
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+      } else if (platform === "linkedin") {
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+      }
+
+      if (shareUrl) {
+        window.open(shareUrl, "_blank", "width=600,height=400");
+      }
+    });
+  });
+</script>
+
+<style>
+  .bg-yellow {
+    background-color: #ffd700;
   }
 
-  .prose h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-top: 4rem;
-    margin-bottom: 2rem;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    border-left: 8px solid #ffd700;
-    padding-left: 2rem;
-  }
-
-  .prose h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-top: 3rem;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.02em;
-  }
-
-  .prose p {
-    margin-bottom: 2rem;
-    line-height: 1.7;
-    color: rgba(0, 0, 0, 0.8);
-    font-size: 1.25rem;
-  }
-
-  .prose a {
-    color: #000;
-    text-decoration: none;
-    border-bottom: 3px solid #ffd700;
-    font-weight: 600;
-  }
-
-  .prose strong {
-    font-weight: 700;
-    color: #000;
-  }
-
-  .prose code {
-    background: #f5f5f5;
-    border: 2px solid #000;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.9em;
-    font-family: "Courier New", monospace;
-    font-weight: 600;
-  }
-
-  .prose pre {
-    background: #000;
-    color: #fff;
-    padding: 2rem;
-    border: 4px solid #ffd700;
-    overflow-x: auto;
-    margin: 3rem 0;
-  }
-
-  .prose pre code {
-    background: transparent;
-    padding: 0;
-    border: none;
-  }
-
-  .prose blockquote {
-    border-left: 8px solid #ffd700;
-    padding-left: 2rem;
-    margin: 3rem 0;
-    font-style: normal;
-    font-weight: 600;
-    color: rgba(0, 0, 0, 0.8);
-    font-size: 1.5rem;
-    line-height: 1.6;
-  }
-
-  .prose ul,
-  .prose ol {
-    margin: 2rem 0;
-    padding-left: 2rem;
-  }
-
-  .prose li {
-    margin-bottom: 1rem;
-    line-height: 1.7;
-    font-size: 1.25rem;
-  }
-
-  .prose li::marker {
+  .text-yellow {
     color: #ffd700;
-    font-weight: 700;
   }
 
-  .prose img {
-    width: 100%;
-    margin: 3rem 0;
-    border: 4px solid #000;
+  .hover\:bg-yellow:hover {
+    background-color: #ffd700;
   }
 
-  .prose hr {
-    border: none;
-    border-top: 4px solid #000;
-    margin: 4rem 0;
+  .hover\:text-yellow:hover {
+    color: #ffd700;
   }
 </style>
