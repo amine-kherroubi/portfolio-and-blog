@@ -1,12 +1,11 @@
 export const SITE = {
-  name: 'Your Name',
-  title: 'Your Name — Designer & Developer',
+  name: 'Mohamed El Amine Kherroubi',
+  title: 'Mohamed El Amine Kherrobi — Designer & Developer',
   description: 'Minimal portfolio focused on clarity, function, and timeless design',
-  email: 'your.email@example.com',
+  email: 'elaminekherroubi@gmail.com',
 } as const;
 
 export const SOCIAL = {
-  github: 'https://github.com/yourusername',
-  linkedin: 'https://linkedin.com/in/yourusername',
-  twitter: 'https://twitter.com/yourusername',
+  github: 'https://github.com/amine-kherroubi',
+  linkedin: 'https://linkedin.com/in/mohamed-el-amine-kherroubi',
 } as const;

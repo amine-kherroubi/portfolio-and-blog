@@ -17,7 +17,7 @@ import { SITE, SOCIAL } from "../config/site";
       <h1
         class="text-[clamp(4rem,15vw,12rem)] font-bold leading-[0.9] tracking-[-0.03em] mb-32 lg:mb-40"
       >
-        YOUR<br />NAME
+        Amine<br />Kherroubi
       </h1>
 
       <!-- Content Grid -->
@@ -36,32 +36,6 @@ import { SITE, SOCIAL } from "../config/site";
           >
             Focused on clarity, function, and timeless solutions
           </p>
-        </div>
-
-        <!-- CTA Buttons -->
-        <div
-          class="col-span-12 lg:col-span-5 lg:col-start-8 flex flex-col gap-6"
-        >
-          <a
-            href="/portfolio"
-            class="px-12 py-7 bg-black text-white text-center transition-all duration-200 hover:bg-black/90"
-          >
-            <span
-              class="text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
-            >
-              Portfolio
-            </span>
-          </a>
-          <a
-            href="/blog"
-            class="px-12 py-7 border-2 border-black text-center transition-all duration-200 hover:bg-black hover:text-white"
-          >
-            <span
-              class="text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
-            >
-              Blog
-            </span>
-          </a>
         </div>
       </div>
     </div>
@@ -152,18 +126,6 @@ import { SITE, SOCIAL } from "../config/site";
                   class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200"
                 >
                   LinkedIn
-                </a>
-              )
-            }
-            {
-              SOCIAL.twitter && (
-                <a
-                  href={SOCIAL.twitter}
-                  target="_blank"
-                  rel="noopener"
-                  class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200"
-                >
-                  Twitter
                 </a>
               )
             }
