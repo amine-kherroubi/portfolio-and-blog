@@ -1,253 +1,258 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 
-const projects = [
+const quotes = [
   {
-    title: "NEURAL NETWORKS",
-    subtitle: "Deep Learning Architecture",
-    year: "2024",
-    tags: ["AI", "Python", "TensorFlow"],
-    link: "/projects/neural-networks"
+    text: "Form follows function — that has been misunderstood. Form and function should be one, joined in a spiritual union.",
+    author: "Frank Lloyd Wright",
   },
   {
-    title: "SWISS GRID SYSTEM",
-    subtitle: "Interactive Design Tool",
-    year: "2024",
-    tags: ["Design", "TypeScript", "WebGL"],
-    link: "/projects/grid-system"
+    text: "Simplicity is not the goal. It is the by-product of a good idea and modest expectations.",
+    author: "Paul Rand",
   },
   {
-    title: "QUANTUM COMPUTING",
-    subtitle: "Algorithm Optimization",
-    year: "2023",
-    tags: ["Research", "Qiskit", "Mathematics"],
-    link: "/projects/quantum"
+    text: "Design is not just what it looks like and feels like. Design is how it works.",
+    author: "Steve Jobs",
   },
   {
-    title: "TYPOGRAPHIC EXPLORER",
-    subtitle: "Generative Art Project",
-    year: "2024",
-    tags: ["Creative", "Canvas API", "Animation"],
-    link: "/projects/typography"
-  }
+    text: "The details are not the details. They make the design.",
+    author: "Charles Eames",
+  },
 ];
 
-const blogPosts = [
-  {
-    title: "The Beauty of Constraint",
-    excerpt: "How limitations in design lead to creative breakthroughs and elegant solutions.",
-    date: "2024-03-15",
-    readTime: "5 min read",
-    slug: "beauty-of-constraint"
-  },
-  {
-    title: "Swiss Design in Digital Age",
-    excerpt: "Adapting timeless principles to modern web interfaces and user experiences.",
-    date: "2024-03-01",
-    readTime: "7 min read",
-    slug: "swiss-design-digital"
-  }
-];
+const currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
 ---
 
-<Layout title="Portfolio — Designer & Developer">
-  <!-- Navigation with precise spacing -->
+<Layout title="Your Name — Designer & Developer">
+  <!-- Fixed Navigation -->
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
-    <div class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center">
-      <a href="/" class="text-lg font-bold tracking-tight">
-        PORTFOLIO
+    <div
+      class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center"
+    >
+      <a href="/" class="text-lg font-bold tracking-tight uppercase">
+        YOUR NAME
       </a>
       <ul class="flex gap-12 text-sm font-bold uppercase tracking-wide">
-        <li><a href="#work">WORK</a></li>
-        <li><a href="#blog">BLOG</a></li>
+        <li><a href="/portfolio">PORTFOLIO</a></li>
+        <li><a href="/blog">BLOG</a></li>
         <li><a href="#contact">CONTACT</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- Hero Section - Bold and Static -->
-  <section class="min-h-screen flex items-center px-16 lg:px-24 pt-32">
+  <!-- Hero Section with Art -->
+  <section
+    class="min-h-screen flex items-center justify-center px-16 lg:px-24 pt-32 pb-32"
+  >
     <div class="max-w-[1600px] w-full mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-24">
-        <!-- Text Content with Swiss precision -->
-        <div class="lg:col-span-7">
-          <h1 class="text-[clamp(4rem,10vw,9rem)] font-bold leading-[0.85] tracking-tighter mb-16">
-            YOUR<br/>
-            NAME<br/>
-            <span class="text-[#FFD700]">HERE</span>
-          </h1>
-          <div class="w-32 h-2 bg-black mb-12"></div>
-          <p class="text-2xl lg:text-3xl text-black/80 max-w-[700px] mb-20 leading-[1.4]">
-            Computer scientist & designer crafting minimal, purposeful digital experiences 
-            at the intersection of technology and art.
-          </p>
-          <div class="flex gap-8">
-            <a href="#work" class="px-12 py-6 bg-black text-white font-bold uppercase text-sm tracking-wide">
-              VIEW WORK
-            </a>
-            <a href="#contact" class="px-12 py-6 border-4 border-black font-bold uppercase text-sm tracking-wide">
-              CONTACT
-            </a>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+        <!-- Generative Art Grid -->
+        <div class="order-2 lg:order-1">
+          <div class="aspect-square grid grid-cols-4 grid-rows-4 gap-4">
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
+            <div class="border-4 border-black"></div>
+            <div class="bg-black"></div>
+
+            <div class="border-4 border-black"></div>
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
+            <div class="border-4 border-black"></div>
+
+            <div class="bg-[#FFD700]"></div>
+            <div class="border-4 border-black"></div>
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
+
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
+            <div class="border-4 border-black"></div>
+            <div class="bg-black"></div>
           </div>
         </div>
 
-        <!-- Geometric Element - Swiss Grid -->
-        <div class="lg:col-span-5 relative h-[500px] lg:h-[600px]">
-          <div class="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-6">
-            <div class="bg-black"></div>
-            <div class="bg-[#FFD700]"></div>
-            <div class="border-4 border-black"></div>
-            <div class="border-4 border-black"></div>
-            <div class="bg-black"></div>
-            <div class="bg-[#FFD700]"></div>
-            <div class="bg-[#FFD700]"></div>
-            <div class="border-4 border-black"></div>
-            <div class="bg-black"></div>
+        <!-- Quote and CTA -->
+        <div class="order-1 lg:order-2">
+          <div class="w-32 h-2 bg-[#FFD700] mb-16"></div>
+
+          <blockquote class="mb-24">
+            <p
+              class="text-3xl lg:text-4xl font-bold leading-[1.3] tracking-tight mb-12"
+            >
+              "{currentQuote.text}"
+            </p>
+            <footer class="flex items-center gap-6">
+              <div class="w-16 h-1 bg-black"></div>
+              <cite
+                class="text-xl font-bold uppercase tracking-wide not-italic"
+              >
+                {currentQuote.author}
+              </cite>
+            </footer>
+          </blockquote>
+
+          <div class="space-y-8">
+            <a
+              href="/portfolio"
+              class="block w-full px-16 py-8 bg-black text-white text-center font-bold uppercase text-sm tracking-wide border-4 border-black"
+            >
+              VIEW PORTFOLIO
+            </a>
+            <a
+              href="/blog"
+              class="block w-full px-16 py-8 bg-white text-black text-center font-bold uppercase text-sm tracking-wide border-4 border-black"
+            >
+              READ BLOG
+            </a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Work Section - Precise Grid -->
-  <section id="work" class="py-40 px-16 lg:px-24 bg-[#F5F5F5]">
+  <!-- Secondary Art Section -->
+  <section class="py-32 px-16 lg:px-24 bg-[#F5F5F5]">
     <div class="max-w-[1600px] mx-auto">
-      <div class="mb-24">
-        <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
-        <h2 class="text-[clamp(3rem,7vw,8rem)] font-bold leading-[0.85] tracking-tighter">
-          SELECTED<br/>WORK
-        </h2>
-      </div>
-
-      <!-- Swiss Asymmetric Grid -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {projects.map((project, index) => (
-          <div 
-            class={`
-              group relative overflow-hidden bg-white border-4 border-black
-              ${index === 0 ? 'lg:col-span-8 lg:row-span-2' : ''}
-              ${index === 1 ? 'lg:col-span-4' : ''}
-              ${index === 2 ? 'lg:col-span-5' : ''}
-              ${index === 3 ? 'lg:col-span-7' : ''}
-            `}
-          >
-            <a href={project.link} class="block p-12 lg:p-16 h-full min-h-[350px] flex flex-col justify-between">
-              <!-- Year Badge -->
-              <div class="flex justify-between items-start">
-                <span class="text-sm font-bold bg-[#FFD700] px-4 py-2">{project.year}</span>
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-                  <path stroke-linecap="square" stroke-linejoin="miter" d="M7 17L17 7m0 0H7m10 0v10"/>
-                </svg>
-              </div>
-
-              <!-- Content -->
-              <div>
-                <h3 class="text-4xl lg:text-5xl font-bold mb-4 leading-[0.9]">
-                  {project.title}
-                </h3>
-                <p class="text-xl text-black/70 mb-8 font-medium">
-                  {project.subtitle}
-                </p>
-                <div class="flex flex-wrap gap-3">
-                  {project.tags.map(tag => (
-                    <span class="text-xs font-bold px-4 py-2 border-2 border-black uppercase tracking-wide">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </a>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-16">
+        <!-- Art Piece 1 -->
+        <div class="aspect-square">
+          <div class="h-full grid grid-cols-3 grid-rows-3 gap-3">
+            <div class="bg-[#FFD700]"></div>
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
+            <div class="bg-black"></div>
+            <div class="border-4 border-black"></div>
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
           </div>
-        ))}
+        </div>
+
+        <!-- Art Piece 2 -->
+        <div class="aspect-square">
+          <div class="h-full grid grid-cols-2 grid-rows-2 gap-6">
+            <div class="border-4 border-black"></div>
+            <div class="bg-black"></div>
+            <div class="bg-[#FFD700]"></div>
+            <div class="border-4 border-black"></div>
+          </div>
+        </div>
+
+        <!-- Art Piece 3 -->
+        <div class="aspect-square">
+          <div class="h-full flex flex-col gap-4">
+            <div class="flex-1 bg-black"></div>
+            <div class="flex-1 bg-[#FFD700]"></div>
+            <div class="flex-1 border-4 border-black"></div>
+            <div class="flex-1 bg-black"></div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Blog Section -->
-  <section id="blog" class="py-40 px-16 lg:px-24">
-    <div class="max-w-[1600px] mx-auto">
-      <div class="mb-24">
-        <div class="w-32 h-2 bg-black mb-12"></div>
-        <h2 class="text-[clamp(3rem,7vw,8rem)] font-bold leading-[0.85] tracking-tighter">
-          LATEST<br/>THOUGHTS
-        </h2>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-        {blogPosts.map(post => (
-          <article class="border-l-8 border-[#FFD700] pl-12">
-            <a href={`/blog/${post.slug}`} class="block">
-              <div class="mb-8 flex items-center gap-6 text-sm font-bold uppercase tracking-wide">
-                <time>{post.date}</time>
-                <span class="w-2 h-2 bg-black"></span>
-                <span>{post.readTime}</span>
-              </div>
-              <h3 class="text-4xl lg:text-5xl font-bold mb-6 leading-[1]">
-                {post.title}
-              </h3>
-              <p class="text-xl text-black/70 leading-[1.6] mb-8">
-                {post.excerpt}
-              </p>
-              <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-wide">
-                Read Article
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-                  <path stroke-linecap="square" stroke-linejoin="miter" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-              </span>
-            </a>
-          </article>
-        ))}
-      </div>
-
-      <div class="mt-24 text-center">
-        <a href="/blog" class="inline-block px-12 py-6 border-4 border-black font-bold uppercase text-sm tracking-wide">
-          ALL ARTICLES
+  <!-- Philosophy Section -->
+  <section class="py-32 px-16 lg:px-24">
+    <div class="max-w-[1200px] mx-auto">
+      <div class="w-32 h-2 bg-black mb-16"></div>
+      <h2
+        class="text-[clamp(3rem,7vw,7rem)] font-bold leading-[0.85] tracking-tighter mb-16"
+      >
+        DESIGN<br />WITH<br />
+        <span class="text-[#FFD700]">PURPOSE</span>
+      </h2>
+      <p class="text-2xl lg:text-3xl text-black/80 leading-[1.5] mb-16">
+        At the intersection of form and function, where every pixel serves a
+        purpose and every decision is deliberate. Creating digital experiences
+        that honor the principles of Swiss design: clarity, precision, and
+        timeless elegance.
+      </p>
+      <div class="flex gap-8">
+        <a
+          href="/portfolio"
+          class="px-12 py-6 bg-black text-white font-bold uppercase text-sm tracking-wide"
+        >
+          EXPLORE WORK
+        </a>
+        <a
+          href="/blog"
+          class="px-12 py-6 border-4 border-black font-bold uppercase text-sm tracking-wide"
+        >
+          READ THOUGHTS
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Contact Section - Bold Swiss Style -->
-  <section id="contact" class="py-40 px-16 lg:px-24 bg-black text-white">
+  <!-- Contact Section -->
+  <section id="contact" class="py-32 px-16 lg:px-24 bg-black text-white">
     <div class="max-w-[1600px] mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
         <div>
-          <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
-          <h2 class="text-[clamp(3rem,7vw,8rem)] font-bold leading-[0.85] tracking-tighter mb-16">
-            LET'S<br/>WORK<br/>
-            <span class="text-[#FFD700]">TOGETHER</span>
+          <div class="w-32 h-2 bg-[#FFD700] mb-16"></div>
+          <h2
+            class="text-[clamp(3rem,7vw,7rem)] font-bold leading-[0.85] tracking-tighter mb-16"
+          >
+            LET'S<br />CONNECT
           </h2>
           <p class="text-2xl text-white/80 leading-[1.5]">
-            Available for select freelance projects and full-time opportunities. 
-            Let's create something exceptional.
+            Available for collaboration, freelance projects, and creative
+            partnerships.
           </p>
         </div>
 
-        <div class="space-y-12 pt-16">
+        <div class="space-y-16">
           <a href="mailto:your.email@example.com" class="block group">
-            <span class="text-sm text-white/60 mb-3 block font-bold uppercase tracking-wide">EMAIL</span>
-            <span class="text-3xl font-bold border-b-4 border-transparent group-hover:border-[#FFD700]">
+            <span
+              class="text-sm text-white/60 mb-4 block font-bold uppercase tracking-wide"
+              >EMAIL</span
+            >
+            <span
+              class="text-3xl font-bold border-b-4 border-transparent group-hover:border-[#FFD700]"
+            >
               your.email@example.com
             </span>
           </a>
-          
-          <div class="flex gap-8 pt-12">
-            <a href="https://github.com" target="_blank" class="w-16 h-16 border-2 border-white flex items-center justify-center hover:bg-[#FFD700] hover:border-[#FFD700] hover:text-black">
+
+          <div class="flex gap-8">
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener"
+              class="w-16 h-16 border-2 border-white flex items-center justify-center hover:bg-[#FFD700] hover:border-[#FFD700] hover:text-black"
+            >
               <span class="sr-only">GitHub</span>
               <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                <path
+                  d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                ></path>
               </svg>
             </a>
-            <a href="https://linkedin.com" target="_blank" class="w-16 h-16 border-2 border-white flex items-center justify-center hover:bg-[#FFD700] hover:border-[#FFD700] hover:text-black">
+            <a
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener"
+              class="w-16 h-16 border-2 border-white flex items-center justify-center hover:bg-[#FFD700] hover:border-[#FFD700] hover:text-black"
+            >
               <span class="sr-only">LinkedIn</span>
               <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                ></path>
               </svg>
             </a>
-            <a href="https://twitter.com" target="_blank" class="w-16 h-16 border-2 border-white flex items-center justify-center hover:bg-[#FFD700] hover:border-[#FFD700] hover:text-black">
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener"
+              class="w-16 h-16 border-2 border-white flex items-center justify-center hover:bg-[#FFD700] hover:border-[#FFD700] hover:text-black"
+            >
               <span class="sr-only">Twitter</span>
               <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                <path
+                  d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"
+                ></path>
               </svg>
             </a>
           </div>
@@ -256,12 +261,14 @@ const blogPosts = [
     </div>
   </section>
 
-  <!-- Footer - Swiss Precision -->
-  <footer class="py-12 px-16 lg:px-24 bg-black text-white border-t-2 border-white/20">
-    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-      <p class="text-sm font-bold uppercase tracking-wide">
-        © 2024 Your Name
-      </p>
+  <!-- Footer -->
+  <footer
+    class="py-12 px-16 lg:px-24 bg-black text-white border-t-2 border-white/20"
+  >
+    <div
+      class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
+    >
+      <p class="text-sm font-bold uppercase tracking-wide">© 2024 Your Name</p>
       <p class="text-sm font-bold uppercase tracking-wide">
         Designed with <span class="text-[#FFD700]">precision</span> using Astro
       </p>
