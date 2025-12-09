@@ -4,31 +4,21 @@ interface Props {
 }
 
 const { variant = "dark" } = Astro.props;
-const currentYear = new Date().getFullYear();
+const year = new Date().getFullYear();
 ---
 
 <footer
   class:list={[
-    "py-12 px-16 lg:px-24",
+    "py-8 px-8 lg:px-16 border-t-2",
     variant === "dark"
-      ? "bg-black text-white border-t-2 border-white/20"
-      : "bg-white text-black border-t-4 border-black",
+      ? "bg-black text-white border-white/20"
+      : "bg-white text-black border-black",
   ]}
 >
   <div
-    class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
+    class="max-w-7xl mx-auto flex justify-between items-center text-xs uppercase tracking-wider"
   >
-    <p class="text-sm font-bold uppercase tracking-wide">
-      © {currentYear} Your Name
-    </p>
-    <p class="text-sm font-bold uppercase tracking-wide">
-      Designed with <span class="text-yellow">precision</span> using Astro
-    </p>
+    <p>© {year}</p>
+    <p>Built with Astro</p>
   </div>
 </footer>
-
-<style>
-  .text-yellow {
-    color: #ffd700;
-  }
-</style>
