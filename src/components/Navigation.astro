@@ -6,50 +6,45 @@ interface Props {
 const { currentPage } = Astro.props;
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-2 border-black">
   <div
-    class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center"
+    class="max-w-7xl mx-auto px-8 lg:px-16 py-6 flex justify-between items-center"
   >
     <a
       href="/"
-      class="text-lg font-bold tracking-tight uppercase hover:text-yellow transition-colors"
+      class="text-sm font-bold tracking-wider uppercase hover:text-yellow transition-colors"
     >
-      {currentPage !== "home" ? "← HOME" : "YOUR NAME"}
+      {currentPage !== "home" ? "← Home" : "Your Name"}
     </a>
-    <ul class="flex gap-12 text-sm font-bold uppercase tracking-wide">
+
+    <ul class="flex gap-8 text-sm font-bold uppercase tracking-wider">
       <li>
         <a
           href="/portfolio"
           class:list={[
-            "hover:text-yellow transition-colors",
-            { "text-yellow": currentPage === "portfolio" },
+            "transition-colors",
+            currentPage === "portfolio" ? "text-yellow" : "hover:text-yellow",
           ]}
         >
-          PORTFOLIO
+          Portfolio
         </a>
       </li>
       <li>
         <a
           href="/blog"
           class:list={[
-            "hover:text-yellow transition-colors",
-            { "text-yellow": currentPage === "blog" },
+            "transition-colors",
+            currentPage === "blog" ? "text-yellow" : "hover:text-yellow",
           ]}
         >
-          BLOG
+          Blog
         </a>
       </li>
       <li>
         <a href="/#contact" class="hover:text-yellow transition-colors">
-          CONTACT
+          Contact
         </a>
       </li>
     </ul>
   </div>
 </nav>
-
-<style>
-  .text-yellow {
-    color: #ffd700;
-  }
-</style>

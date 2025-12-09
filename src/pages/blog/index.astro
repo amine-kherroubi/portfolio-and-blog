@@ -1,183 +1,83 @@
 ---
-import Layout from "../../layouts/BaseLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navigation from "../../components/Navigation.astro";
+import Footer from "../../components/Footer.astro";
 
-const allPosts = [
+const posts = [
   {
     title: "The Beauty of Constraint",
-    excerpt:
-      "How limitations in design lead to creative breakthroughs and elegant solutions.",
+    excerpt: "How limitations in design lead to creative breakthroughs",
     date: "2024-03-15",
-    readTime: "5 min read",
+    readTime: "5 min",
     slug: "beauty-of-constraint",
-    featured: true,
   },
   {
     title: "Swiss Design in Digital Age",
-    excerpt:
-      "Adapting timeless principles to modern web interfaces and user experiences.",
+    excerpt: "Adapting timeless principles to modern interfaces",
     date: "2024-03-01",
-    readTime: "7 min read",
+    readTime: "7 min",
     slug: "swiss-design-digital",
-    featured: true,
   },
   {
     title: "Minimalism in Code",
-    excerpt:
-      "Writing cleaner, more maintainable software through deliberate simplicity.",
+    excerpt: "Writing cleaner software through deliberate simplicity",
     date: "2024-02-20",
-    readTime: "6 min read",
+    readTime: "6 min",
     slug: "minimalism-in-code",
-    featured: false,
   },
   {
     title: "Grid Systems Explained",
-    excerpt:
-      "A deep dive into the mathematics and psychology behind effective layouts.",
+    excerpt: "Mathematics and psychology behind effective layouts",
     date: "2024-02-05",
-    readTime: "10 min read",
+    readTime: "10 min",
     slug: "grid-systems",
-    featured: false,
-  },
-  {
-    title: "The Art of Typography",
-    excerpt:
-      "Choosing and combining typefaces for maximum impact and readability.",
-    date: "2024-01-15",
-    readTime: "8 min read",
-    slug: "typography-art",
-    featured: false,
   },
 ];
-
-const featuredPosts = allPosts.filter((post) => post.featured);
-const regularPosts = allPosts.filter((post) => !post.featured);
 ---
 
-<Layout title="Blog — Thoughts on Design & Development">
-  <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
-    <div
-      class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center"
-    >
-      <a href="/" class="text-lg font-bold tracking-tight uppercase">
-        ← HOME
-      </a>
-      <ul class="flex gap-12 text-sm font-bold uppercase tracking-wide">
-        <li><a href="/portfolio">PORTFOLIO</a></li>
-        <li><a class="text-[#FFD700]">BLOG</a></li>
-        <li><a href="/#contact">CONTACT</a></li>
-      </ul>
-    </div>
-  </nav>
+<BaseLayout title="Blog">
+  <Navigation currentPage="blog" />
 
-  <!-- Hero Section -->
-  <section class="pt-40 pb-32 px-16 lg:px-24">
-    <div class="max-w-[1600px] mx-auto">
-      <div class="w-32 h-2 bg-[#FFD700] mb-16"></div>
+  <!-- Hero -->
+  <section class="pt-32 pb-24 px-8 lg:px-16">
+    <div class="max-w-7xl mx-auto">
+      <div class="h-px bg-yellow w-24 mb-8"></div>
       <h1
-        class="text-[clamp(4rem,10vw,9rem)] font-bold leading-[0.85] tracking-tighter mb-16"
+        class="text-[clamp(3rem,10vw,8rem)] font-bold leading-[0.9] tracking-tight mb-8"
       >
-        BLOG
+        Blog
       </h1>
-      <p
-        class="text-2xl lg:text-3xl text-black/80 max-w-[1000px] leading-[1.5]"
-      >
-        Exploring the intersection of design, technology, and creative thinking.
-        Thoughts on minimalism, craftsmanship, and building for the web.
+      <p class="text-xl text-black/80 max-w-3xl">
+        Thoughts on design, technology, and the creative process
       </p>
     </div>
   </section>
 
-  <!-- Featured Posts -->
-  <section class="py-32 px-16 lg:px-24 bg-[#F5F5F5]">
-    <div class="max-w-[1600px] mx-auto">
-      <h2 class="text-3xl font-bold mb-24 tracking-tight uppercase">
-        FEATURED ARTICLES
-      </h2>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {
-          featuredPosts.map((post) => (
-            <article class="group bg-white border-4 border-black">
-              <a href={`/blog/${post.slug}`} class="block p-12 lg:p-16 h-full">
-                <div class="flex items-center gap-6 text-sm font-bold uppercase tracking-wide mb-8">
-                  <time>{post.date}</time>
-                  <span class="w-2 h-2 bg-black" />
-                  <span>{post.readTime}</span>
-                </div>
-
-                <h3 class="text-4xl lg:text-5xl font-bold mb-6 leading-[1]">
-                  {post.title}
-                </h3>
-
-                <p class="text-xl text-black/70 leading-[1.6] mb-8">
-                  {post.excerpt}
-                </p>
-
-                <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-wide">
-                  Read Article
-                  <svg
-                    class="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="3"
-                  >
-                    <path
-                      stroke-linecap="square"
-                      stroke-linejoin="miter"
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </span>
-              </a>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- All Posts -->
-  <section class="py-32 px-16 lg:px-24">
-    <div class="max-w-[1600px] mx-auto">
-      <h2 class="text-3xl font-bold mb-24 tracking-tight uppercase">
-        ALL ARTICLES
-      </h2>
-
+  <!-- Posts -->
+  <section class="py-16 px-8 lg:px-16">
+    <div class="max-w-7xl mx-auto">
       <div class="space-y-2">
         {
-          regularPosts.map((post) => (
-            <article class="group border-b-4 border-black hover:bg-[#F5F5F5]">
-              <a
-                href={`/blog/${post.slug}`}
-                class="flex flex-col lg:flex-row lg:items-center lg:justify-between py-12 gap-8"
-              >
-                <div class="flex-1">
-                  <h3 class="text-3xl lg:text-4xl font-bold mb-4 leading-[1.1]">
-                    {post.title}
-                  </h3>
-                  <p class="text-lg text-black/70 leading-[1.6]">
-                    {post.excerpt}
-                  </p>
-                </div>
+          posts.map((post) => (
+            <article class="border-b-2 border-black hover:bg-gray-50 transition-colors">
+              <a href={`/blog/${post.slug}`} class="block py-12">
+                <div class="grid grid-cols-12 gap-8">
+                  <div class="col-span-12 lg:col-span-2">
+                    <time class="text-sm font-bold uppercase tracking-wider">
+                      {post.date}
+                    </time>
+                  </div>
 
-                <div class="flex items-center gap-8 text-sm font-bold uppercase tracking-wide lg:shrink-0">
-                  <time class="whitespace-nowrap">{post.date}</time>
-                  <span class="whitespace-nowrap">{post.readTime}</span>
-                  <svg
-                    class="w-8 h-8"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="3"
-                  >
-                    <path
-                      stroke-linecap="square"
-                      stroke-linejoin="miter"
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
+                  <div class="col-span-12 lg:col-span-8">
+                    <h2 class="text-3xl lg:text-4xl font-bold mb-3 tracking-tight">
+                      {post.title}
+                    </h2>
+                    <p class="text-lg text-black/70">{post.excerpt}</p>
+                  </div>
+
+                  <div class="col-span-12 lg:col-span-2 flex items-center justify-end">
+                    <span class="text-sm text-black/60">{post.readTime}</span>
+                  </div>
                 </div>
               </a>
             </article>
@@ -187,50 +87,5 @@ const regularPosts = allPosts.filter((post) => !post.featured);
     </div>
   </section>
 
-  <!-- Newsletter Section -->
-  <section class="py-32 px-16 lg:px-24 bg-black text-white">
-    <div class="max-w-[1000px] mx-auto">
-      <div class="w-32 h-2 bg-[#FFD700] mb-16"></div>
-      <h2 class="text-5xl lg:text-6xl font-bold mb-8 tracking-tighter">
-        STAY UPDATED
-      </h2>
-      <p class="text-2xl text-white/80 mb-16 leading-[1.5]">
-        Get new articles delivered straight to your inbox. No spam, just quality
-        content.
-      </p>
-
-      <form class="flex flex-col sm:flex-row gap-6">
-        <input
-          type="email"
-          placeholder="YOUR@EMAIL.COM"
-          class="flex-1 px-8 py-6 bg-white text-black font-bold uppercase text-sm tracking-wide focus:outline-none focus:ring-4 focus:ring-[#FFD700]"
-          required
-        />
-        <button
-          type="submit"
-          class="px-12 py-6 bg-[#FFD700] text-black font-bold uppercase text-sm tracking-wide hover:bg-white whitespace-nowrap"
-        >
-          SUBSCRIBE
-        </button>
-      </form>
-
-      <p class="text-sm font-bold uppercase tracking-wide mt-8 text-white/60">
-        Join 500+ designers and developers
-      </p>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer
-    class="py-12 px-16 lg:px-24 bg-black text-white border-t-2 border-white/20"
-  >
-    <div
-      class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
-    >
-      <p class="text-sm font-bold uppercase tracking-wide">© 2024 Your Name</p>
-      <p class="text-sm font-bold uppercase tracking-wide">
-        Designed with <span class="text-[#FFD700]">precision</span> using Astro
-      </p>
-    </div>
-  </footer>
-</Layout>
+  <Footer variant="light" />
+</BaseLayout>

@@ -1,208 +1,153 @@
 ---
-import Layout from '../../layouts/BaseLayout.astro';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navigation from "../../components/Navigation.astro";
+import Footer from "../../components/Footer.astro";
 
 const projects = [
   {
-    title: "NEURAL NETWORKS",
-    subtitle: "Deep Learning Architecture",
+    title: "Neural Networks",
+    description: "Deep learning architecture optimization",
     year: "2024",
-    tags: ["AI", "Python", "TensorFlow"],
-    link: "/projects/neural-networks"
+    tags: ["AI", "Python"],
+    link: "/portfolio/neural-networks",
   },
   {
-    title: "SWISS GRID SYSTEM",
-    subtitle: "Interactive Design Tool",
+    title: "Swiss Grid System",
+    description: "Interactive design tool for web layouts",
     year: "2024",
-    tags: ["Design", "TypeScript", "WebGL"],
-    link: "/projects/grid-system"
+    tags: ["Design", "TypeScript"],
+    link: "/portfolio/grid-system",
   },
   {
-    title: "QUANTUM COMPUTING",
-    subtitle: "Algorithm Optimization",
+    title: "Quantum Computing",
+    description: "Algorithm research and optimization",
     year: "2023",
-    tags: ["Research", "Qiskit", "Mathematics"],
-    link: "/projects/quantum"
+    tags: ["Research", "Qiskit"],
+    link: "/portfolio/quantum",
   },
   {
-    title: "TYPOGRAPHIC EXPLORER",
-    subtitle: "Generative Art Project",
+    title: "Typographic Explorer",
+    description: "Generative art with computational design",
     year: "2024",
-    tags: ["Creative", "Canvas API", "Animation"],
-    link: "/projects/typography"
-  }
+    tags: ["Creative", "Canvas API"],
+    link: "/portfolio/typography",
+  },
 ];
 ---
 
-<Layout title="Portfolio — Selected Work">
-  <!-- Navigation -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
-    <div class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center">
-      <a href="/" class="text-lg font-bold tracking-tight uppercase">
-        ← HOME
-      </a>
-      <ul class="flex gap-12 text-sm font-bold uppercase tracking-wide">
-        <li><a class="text-[#FFD700]">PORTFOLIO</a></li>
-        <li><a href="/blog">BLOG</a></li>
-        <li><a href="/#contact">CONTACT</a></li>
-      </ul>
-    </div>
-  </nav>
+<BaseLayout title="Portfolio">
+  <Navigation currentPage="portfolio" />
 
-  <!-- Hero Section -->
-  <section class="pt-40 pb-32 px-16 lg:px-24">
-    <div class="max-w-[1600px] mx-auto">
-      <div class="w-32 h-2 bg-[#FFD700] mb-16"></div>
-      <h1 class="text-[clamp(4rem,10vw,9rem)] font-bold leading-[0.85] tracking-tighter mb-16">
-        PORTFOLIO
+  <!-- Hero -->
+  <section class="pt-32 pb-24 px-8 lg:px-16">
+    <div class="max-w-7xl mx-auto">
+      <div class="h-px bg-yellow w-24 mb-8"></div>
+      <h1
+        class="text-[clamp(3rem,10vw,8rem)] font-bold leading-[0.9] tracking-tight mb-8"
+      >
+        Portfolio
       </h1>
-      <p class="text-2xl lg:text-3xl text-black/80 max-w-[1000px] leading-[1.5]">
-        Selected projects demonstrating expertise in design systems, algorithm development, 
-        and creative technology. Each work reflects a commitment to precision, elegance, 
-        and purposeful problem-solving.
+      <p class="text-xl text-black/80 max-w-3xl">
+        Selected projects demonstrating technical expertise and design thinking
       </p>
     </div>
   </section>
 
-  <!-- Work Grid - Swiss Asymmetric Layout -->
-  <section class="py-32 px-16 lg:px-24 bg-[#F5F5F5]">
-    <div class="max-w-[1600px] mx-auto">
-      <h2 class="text-3xl font-bold mb-24 tracking-tight uppercase">
-        SELECTED WORK
-      </h2>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {projects.map((project, index) => (
-          <div 
-            class={`
-              group relative overflow-hidden bg-white border-4 border-black
-              ${index === 0 ? 'lg:col-span-8 lg:row-span-2' : ''}
-              ${index === 1 ? 'lg:col-span-4' : ''}
-              ${index === 2 ? 'lg:col-span-5' : ''}
-              ${index === 3 ? 'lg:col-span-7' : ''}
-            `}
-          >
-            <a href={project.link} class="block p-12 lg:p-16 h-full min-h-[350px] flex flex-col justify-between">
-              <!-- Year Badge -->
-              <div class="flex justify-between items-start">
-                <span class="text-sm font-bold bg-[#FFD700] px-4 py-2">{project.year}</span>
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
-                  <path stroke-linecap="square" stroke-linejoin="miter" d="M7 17L17 7m0 0H7m10 0v10"/>
-                </svg>
-              </div>
-
-              <!-- Content -->
-              <div>
-                <h3 class="text-4xl lg:text-5xl font-bold mb-4 leading-[0.9]">
-                  {project.title}
-                </h3>
-                <p class="text-xl text-black/70 mb-8 font-medium">
-                  {project.subtitle}
-                </p>
-                <div class="flex flex-wrap gap-3">
-                  {project.tags.map(tag => (
-                    <span class="text-xs font-bold px-4 py-2 border-2 border-black uppercase tracking-wide">
-                      {tag}
+  <!-- Projects Grid -->
+  <section class="py-16 px-8 lg:px-16">
+    <div class="max-w-7xl mx-auto">
+      <div class="space-y-2">
+        {
+          projects.map((project) => (
+            <article class="border-b-2 border-black hover:bg-gray-50 transition-colors">
+              <a href={project.link} class="block py-12">
+                <div class="grid grid-cols-12 gap-8 items-baseline">
+                  <div class="col-span-12 lg:col-span-2">
+                    <span class="text-sm font-bold uppercase tracking-wider">
+                      {project.year}
                     </span>
-                  ))}
+                  </div>
+
+                  <div class="col-span-12 lg:col-span-6">
+                    <h2 class="text-3xl lg:text-4xl font-bold mb-2 tracking-tight">
+                      {project.title}
+                    </h2>
+                    <p class="text-lg text-black/70">{project.description}</p>
+                  </div>
+
+                  <div class="col-span-12 lg:col-span-4 flex items-center justify-end gap-4">
+                    {project.tags.map((tag) => (
+                      <span class="text-xs font-bold px-3 py-1 border border-black uppercase tracking-wider">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </a>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="py-24 px-8 lg:px-16 border-t-2 border-black">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-12 gap-8">
+        <div class="col-span-12 lg:col-span-4">
+          <div class="h-px bg-yellow w-16 mb-6"></div>
+          <h2 class="text-3xl font-bold">Capabilities</h2>
+        </div>
+
+        <div class="col-span-12 lg:col-span-8">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <div>
+              <h3
+                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-yellow pl-4"
+              >
+                Design
+              </h3>
+              <ul class="space-y-2 text-sm text-black/70">
+                <li>Interface Design</li>
+                <li>Design Systems</li>
+                <li>Typography</li>
+                <li>Visual Identity</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3
+                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-yellow pl-4"
+              >
+                Development
+              </h3>
+              <ul class="space-y-2 text-sm text-black/70">
+                <li>Frontend Engineering</li>
+                <li>Python / TypeScript</li>
+                <li>Machine Learning</li>
+                <li>Algorithm Design</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3
+                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-yellow pl-4"
+              >
+                Strategy
+              </h3>
+              <ul class="space-y-2 text-sm text-black/70">
+                <li>Technical Architecture</li>
+                <li>Problem Solving</li>
+                <li>Research & Analysis</li>
+                <li>Process Optimization</li>
+              </ul>
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Capabilities Section -->
-  <section class="py-32 px-16 lg:px-24">
-    <div class="max-w-[1600px] mx-auto">
-      <div class="w-32 h-2 bg-black mb-16"></div>
-      <h2 class="text-[clamp(3rem,7vw,7rem)] font-bold leading-[0.85] tracking-tighter mb-24">
-        CAPABILITIES
-      </h2>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-16">
-        <!-- Design -->
-        <div class="border-l-8 border-[#FFD700] pl-12">
-          <h3 class="text-3xl font-bold mb-8 tracking-tight uppercase">
-            DESIGN
-          </h3>
-          <ul class="space-y-4 text-xl text-black/70">
-            <li>Interface Design</li>
-            <li>Design Systems</li>
-            <li>Typography</li>
-            <li>Grid Systems</li>
-            <li>Visual Identity</li>
-          </ul>
-        </div>
-
-        <!-- Development -->
-        <div class="border-l-8 border-black pl-12">
-          <h3 class="text-3xl font-bold mb-8 tracking-tight uppercase">
-            DEVELOPMENT
-          </h3>
-          <ul class="space-y-4 text-xl text-black/70">
-            <li>Frontend Engineering</li>
-            <li>Python / TypeScript</li>
-            <li>Machine Learning</li>
-            <li>Algorithm Design</li>
-            <li>Performance Optimization</li>
-          </ul>
-        </div>
-
-        <!-- Strategy -->
-        <div class="border-l-8 border-[#FFD700] pl-12">
-          <h3 class="text-3xl font-bold mb-8 tracking-tight uppercase">
-            STRATEGY
-          </h3>
-          <ul class="space-y-4 text-xl text-black/70">
-            <li>Technical Architecture</li>
-            <li>Problem Solving</li>
-            <li>Research & Analysis</li>
-            <li>Creative Direction</li>
-            <li>Process Optimization</li>
-          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="py-32 px-16 lg:px-24 bg-black text-white">
-    <div class="max-w-[1200px] mx-auto text-center">
-      <div class="w-32 h-2 bg-[#FFD700] mb-16 mx-auto"></div>
-      <h2 class="text-[clamp(3rem,7vw,7rem)] font-bold leading-[0.85] tracking-tighter mb-16">
-        READY TO<br/>
-        <span class="text-[#FFD700]">COLLABORATE?</span>
-      </h2>
-      <p class="text-2xl text-white/80 mb-16 leading-[1.5] max-w-[800px] mx-auto">
-        Available for select freelance projects and full-time opportunities. 
-        Let's create something exceptional together.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-8 justify-center">
-        <a 
-          href="/#contact" 
-          class="px-16 py-8 bg-[#FFD700] text-black font-bold uppercase text-sm tracking-wide"
-        >
-          GET IN TOUCH
-        </a>
-        <a 
-          href="/blog" 
-          class="px-16 py-8 border-4 border-white font-bold uppercase text-sm tracking-wide"
-        >
-          READ BLOG
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="py-12 px-16 lg:px-24 bg-black text-white border-t-2 border-white/20">
-    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-      <p class="text-sm font-bold uppercase tracking-wide">© 2024 Your Name</p>
-      <p class="text-sm font-bold uppercase tracking-wide">
-        Designed with <span class="text-[#FFD700]">precision</span> using Astro
-      </p>
-    </div>
-  </footer>
-</Layout>
+  <Footer variant="light" />
+</BaseLayout>
