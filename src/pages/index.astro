@@ -8,13 +8,13 @@ import { SITE, SOCIAL } from "../config/site";
 <BaseLayout>
   <Navigation currentPage="home" />
 
-  <!-- Hero Section - Pure Typography -->
-  <section class="min-h-screen flex items-center px-8 lg:px-16 pt-32">
+  <!-- Hero Section -->
+  <section class="min-h-screen flex items-center px-8 lg:px-16 pt-32 pb-32">
     <div class="max-w-7xl w-full mx-auto">
-      <div class="mb-4 h-px bg-yellow w-24"></div>
+      <div class="mb-8 h-px bg-black w-24"></div>
 
       <h1
-        class="text-[clamp(3rem,12vw,10rem)] font-bold leading-[0.9] tracking-tight mb-12"
+        class="text-[clamp(3rem,12vw,10rem)] font-bold leading-[0.9] tracking-tight mb-16"
       >
         YOUR<br />NAME
       </h1>
@@ -31,7 +31,7 @@ import { SITE, SOCIAL } from "../config/site";
           <div class="space-y-4 w-full">
             <a
               href="/portfolio"
-              class="block px-8 py-4 bg-black text-white text-center text-sm font-bold uppercase tracking-wider hover:bg-yellow hover:text-black transition-colors"
+              class="block px-8 py-4 bg-black text-white text-center text-sm font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors"
             >
               Portfolio
             </a>
@@ -47,13 +47,13 @@ import { SITE, SOCIAL } from "../config/site";
     </div>
   </section>
 
-  <!-- Philosophy Section - Grid Based -->
+  <!-- Philosophy Section -->
   <section class="py-32 px-8 lg:px-16 border-t-2 border-black">
     <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-12 gap-8">
+      <div class="grid grid-cols-12 gap-8 lg:gap-16">
         <div class="col-span-12 lg:col-span-4">
-          <div class="h-px bg-yellow w-16 mb-6"></div>
-          <h2 class="text-4xl font-bold mb-4">Philosophy</h2>
+          <div class="h-px bg-black w-16 mb-6"></div>
+          <h2 class="text-4xl font-bold leading-tight mb-4">Philosophy</h2>
         </div>
 
         <div class="col-span-12 lg:col-span-8">
@@ -73,28 +73,28 @@ import { SITE, SOCIAL } from "../config/site";
   <!-- Contact Section -->
   <section id="contact" class="py-32 px-8 lg:px-16 bg-black text-white">
     <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-12 gap-8">
+      <div class="grid grid-cols-12 gap-8 lg:gap-16">
         <div class="col-span-12 lg:col-span-4">
-          <div class="h-px bg-yellow w-16 mb-6"></div>
-          <h2 class="text-4xl font-bold">Contact</h2>
+          <div class="h-px bg-white w-16 mb-6"></div>
+          <h2 class="text-4xl font-bold leading-tight">Contact</h2>
         </div>
 
         <div class="col-span-12 lg:col-span-8">
           <a
             href={`mailto:${SITE.email}`}
-            class="block text-2xl font-bold mb-12 border-b-2 border-transparent hover:border-yellow transition-colors inline-block"
+            class="block text-2xl font-bold mb-12 border-b-2 border-transparent hover:border-white transition-colors inline-block"
           >
             {SITE.email}
           </a>
 
-          <div class="flex gap-6">
+          <div class="flex gap-8">
             {
               SOCIAL.github && (
                 <a
                   href={SOCIAL.github}
                   target="_blank"
                   rel="noopener"
-                  class="text-sm font-bold uppercase tracking-wider hover:text-yellow transition-colors"
+                  class="text-sm font-bold uppercase tracking-wider hover:opacity-60 transition-opacity"
                 >
                   GitHub
                 </a>
@@ -106,7 +106,7 @@ import { SITE, SOCIAL } from "../config/site";
                   href={SOCIAL.linkedin}
                   target="_blank"
                   rel="noopener"
-                  class="text-sm font-bold uppercase tracking-wider hover:text-yellow transition-colors"
+                  class="text-sm font-bold uppercase tracking-wider hover:opacity-60 transition-opacity"
                 >
                   LinkedIn
                 </a>
@@ -118,7 +118,7 @@ import { SITE, SOCIAL } from "../config/site";
                   href={SOCIAL.twitter}
                   target="_blank"
                   rel="noopener"
-                  class="text-sm font-bold uppercase tracking-wider hover:text-yellow transition-colors"
+                  class="text-sm font-bold uppercase tracking-wider hover:opacity-60 transition-opacity"
                 >
                   Twitter
                 </a>

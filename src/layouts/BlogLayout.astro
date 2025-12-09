@@ -31,7 +31,7 @@ const { frontmatter } = Astro.props;
         </div>
 
         <h1
-          class="text-[clamp(2.5rem,7vw,5rem)] font-bold leading-[0.95] tracking-tight mb-8"
+          class="text-[clamp(2.5rem,7vw,5rem)] font-bold leading-tight tracking-tight mb-8"
         >
           {frontmatter.title}
         </h1>
@@ -40,7 +40,7 @@ const { frontmatter } = Astro.props;
           {frontmatter.excerpt}
         </p>
 
-        <div class="h-px bg-yellow w-24 mt-12"></div>
+        <div class="h-px bg-black w-24 mt-12"></div>
       </header>
 
       <!-- Content -->
@@ -52,7 +52,7 @@ const { frontmatter } = Astro.props;
       <footer class="mt-24 pt-12 border-t-2 border-black">
         <a
           href="/blog"
-          class="inline-block text-sm font-bold uppercase tracking-wider hover:text-yellow transition-colors"
+          class="inline-block text-sm font-bold uppercase tracking-wider hover:opacity-60 transition-opacity"
         >
           ← All Posts
         </a>

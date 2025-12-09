@@ -9,11 +9,11 @@ const { title, description, accent = true } = Astro.props;
 ---
 
 <div class="section-header">
-  {accent && <div class="h-px bg-yellow w-24 mb-8" />}
+  {accent && <div class="h-px bg-black w-24 mb-8" />}
 
   {
     title && (
-      <h2 class="text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+      <h2 class="text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
         <slot name="title">{title}</slot>
       </h2>
     )

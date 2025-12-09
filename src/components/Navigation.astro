@@ -12,7 +12,7 @@ const { currentPage } = Astro.props;
   >
     <a
       href="/"
-      class="text-sm font-bold tracking-wider uppercase hover:text-yellow transition-colors"
+      class="text-sm font-bold tracking-wider uppercase hover:opacity-60 transition-opacity"
     >
       {currentPage !== "home" ? "← Home" : "Your Name"}
     </a>
@@ -22,8 +22,10 @@ const { currentPage } = Astro.props;
         <a
           href="/portfolio"
           class:list={[
-            "transition-colors",
-            currentPage === "portfolio" ? "text-yellow" : "hover:text-yellow",
+            "transition-opacity",
+            currentPage === "portfolio"
+              ? "opacity-100"
+              : "opacity-60 hover:opacity-100",
           ]}
         >
           Portfolio
@@ -33,15 +35,20 @@ const { currentPage } = Astro.props;
         <a
           href="/blog"
           class:list={[
-            "transition-colors",
-            currentPage === "blog" ? "text-yellow" : "hover:text-yellow",
+            "transition-opacity",
+            currentPage === "blog"
+              ? "opacity-100"
+              : "opacity-60 hover:opacity-100",
           ]}
         >
           Blog
         </a>
       </li>
       <li>
-        <a href="/#contact" class="hover:text-yellow transition-colors">
+        <a
+          href="/#contact"
+          class="opacity-60 hover:opacity-100 transition-opacity"
+        >
           Contact
         </a>
       </li>

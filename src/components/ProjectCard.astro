@@ -13,7 +13,7 @@ const { title, subtitle, year, tags, link, gridSpan = "" } = Astro.props;
 
 <div
   class:list={[
-    "group relative overflow-hidden bg-white border-4 border-black",
+    "group relative overflow-hidden bg-white border-4 border-black hover:bg-gray-50 transition-colors",
     gridSpan,
   ]}
 >
@@ -22,7 +22,8 @@ const { title, subtitle, year, tags, link, gridSpan = "" } = Astro.props;
     class="block p-12 lg:p-16 h-full min-h-[350px] flex flex-col justify-between"
   >
     <div class="flex justify-between items-start">
-      <span class="text-sm font-bold bg-yellow px-4 py-2">{year}</span>
+      <span class="text-sm font-bold bg-black text-white px-4 py-2">{year}</span
+      >
       <svg
         class="w-8 h-8"
         fill="none"
@@ -38,10 +39,10 @@ const { title, subtitle, year, tags, link, gridSpan = "" } = Astro.props;
     </div>
 
     <div>
-      <h3 class="text-4xl lg:text-5xl font-bold mb-4 leading-[0.9]">
+      <h3 class="text-4xl lg:text-5xl font-bold leading-tight mb-4">
         {title}
       </h3>
-      <p class="text-xl text-black/70 mb-8 font-medium">
+      <p class="text-xl text-black/70 leading-relaxed mb-8 font-medium">
         {subtitle}
       </p>
       <div class="flex flex-wrap gap-3">

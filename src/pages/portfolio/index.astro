@@ -41,13 +41,13 @@ const projects = [
   <!-- Hero -->
   <section class="pt-32 pb-24 px-8 lg:px-16">
     <div class="max-w-7xl mx-auto">
-      <div class="h-px bg-yellow w-24 mb-8"></div>
+      <div class="h-px bg-black w-24 mb-8"></div>
       <h1
         class="text-[clamp(3rem,10vw,8rem)] font-bold leading-[0.9] tracking-tight mb-8"
       >
         Portfolio
       </h1>
-      <p class="text-xl text-black/80 max-w-3xl">
+      <p class="text-xl text-black/80 leading-relaxed max-w-3xl">
         Selected projects demonstrating technical expertise and design thinking
       </p>
     </div>
@@ -56,7 +56,7 @@ const projects = [
   <!-- Projects Grid -->
   <section class="py-16 px-8 lg:px-16">
     <div class="max-w-7xl mx-auto">
-      <div class="space-y-2">
+      <div class="space-y-0">
         {
           projects.map((project) => (
             <article class="border-b-2 border-black hover:bg-gray-50 transition-colors">
@@ -69,10 +69,12 @@ const projects = [
                   </div>
 
                   <div class="col-span-12 lg:col-span-6">
-                    <h2 class="text-3xl lg:text-4xl font-bold mb-2 tracking-tight">
+                    <h2 class="text-3xl lg:text-4xl font-bold leading-tight tracking-tight mb-2">
                       {project.title}
                     </h2>
-                    <p class="text-lg text-black/70">{project.description}</p>
+                    <p class="text-lg text-black/70 leading-relaxed">
+                      {project.description}
+                    </p>
                   </div>
 
                   <div class="col-span-12 lg:col-span-4 flex items-center justify-end gap-4">
@@ -94,21 +96,21 @@ const projects = [
   <!-- Capabilities -->
   <section class="py-24 px-8 lg:px-16 border-t-2 border-black">
     <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-12 gap-8">
+      <div class="grid grid-cols-12 gap-8 lg:gap-16">
         <div class="col-span-12 lg:col-span-4">
-          <div class="h-px bg-yellow w-16 mb-6"></div>
-          <h2 class="text-3xl font-bold">Capabilities</h2>
+          <div class="h-px bg-black w-16 mb-6"></div>
+          <h2 class="text-3xl font-bold leading-tight">Capabilities</h2>
         </div>
 
         <div class="col-span-12 lg:col-span-8">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
               <h3
-                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-yellow pl-4"
+                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-black pl-4"
               >
                 Design
               </h3>
-              <ul class="space-y-2 text-sm text-black/70">
+              <ul class="space-y-2 text-sm text-black/70 leading-relaxed">
                 <li>Interface Design</li>
                 <li>Design Systems</li>
                 <li>Typography</li>
@@ -118,11 +120,11 @@ const projects = [
 
             <div>
               <h3
-                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-yellow pl-4"
+                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-black pl-4"
               >
                 Development
               </h3>
-              <ul class="space-y-2 text-sm text-black/70">
+              <ul class="space-y-2 text-sm text-black/70 leading-relaxed">
                 <li>Frontend Engineering</li>
                 <li>Python / TypeScript</li>
                 <li>Machine Learning</li>
@@ -132,11 +134,11 @@ const projects = [
 
             <div>
               <h3
-                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-yellow pl-4"
+                class="text-sm font-bold uppercase tracking-wider mb-4 border-l-2 border-black pl-4"
               >
                 Strategy
               </h3>
-              <ul class="space-y-2 text-sm text-black/70">
+              <ul class="space-y-2 text-sm text-black/70 leading-relaxed">
                 <li>Technical Architecture</li>
                 <li>Problem Solving</li>
                 <li>Research & Analysis</li>

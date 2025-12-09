@@ -43,22 +43,28 @@ const relatedProjects = [
   <!-- Navigation -->
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
     <div
-      class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center"
+      class="max-w-8xl mx-auto px-8 lg:px-16 py-6 flex justify-between items-center"
     >
-      <a href="/" class="text-lg font-bold tracking-tight uppercase">
+      <a
+        href="/"
+        class="text-sm font-bold tracking-wider uppercase hover:opacity-60 transition-opacity"
+      >
         ← HOME
       </a>
-      <a href="/#work" class="text-sm font-bold uppercase tracking-wide">
+      <a
+        href="/portfolio"
+        class="text-sm font-bold uppercase tracking-wider hover:opacity-60 transition-opacity"
+      >
         ALL PROJECTS
       </a>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="pt-40 pb-32 px-16 lg:px-24">
-    <div class="max-w-[1600px] mx-auto">
+  <section class="pt-32 pb-24 px-8 lg:px-16">
+    <div class="max-w-8xl mx-auto">
       <div
-        class="mb-12 flex items-center gap-6 text-sm font-bold uppercase tracking-wide"
+        class="mb-8 flex items-center gap-6 text-sm font-bold uppercase tracking-wide"
       >
         <span>{project.year}</span>
         <span class="w-2 h-2 bg-black"></span>
@@ -67,14 +73,14 @@ const relatedProjects = [
         <span>{project.duration}</span>
       </div>
 
-      <div class="w-32 h-2 bg-yellow mb-12"></div>
+      <div class="w-24 h-px bg-black mb-8"></div>
       <h1
-        class="text-[clamp(3rem,8vw,8rem)] font-bold leading-[0.85] tracking-tighter mb-12"
+        class="text-[clamp(3rem,8vw,8rem)] font-bold leading-[0.9] tracking-tight mb-8"
       >
         {project.title}
       </h1>
       <p
-        class="text-3xl lg:text-4xl text-black/70 mb-16 max-w-[1200px] leading-[1.3]"
+        class="text-3xl lg:text-4xl text-black/70 leading-snug mb-16 max-w-[1200px]"
       >
         {project.subtitle}
       </p>
@@ -82,12 +88,12 @@ const relatedProjects = [
   </section>
 
   <!-- Project Image -->
-  <section class="px-16 lg:px-24 mb-32">
-    <div class="max-w-[1600px] mx-auto">
+  <section class="px-8 lg:px-16 mb-24">
+    <div class="max-w-8xl mx-auto">
       <div
-        class="aspect-video bg-black border-8 border-yellow flex items-center justify-center"
+        class="aspect-video bg-gray-100 border-4 border-black flex items-center justify-center"
       >
-        <p class="text-white/70 text-2xl font-bold uppercase tracking-wide">
+        <p class="text-black/40 text-2xl font-bold uppercase tracking-wide">
           PROJECT VISUALIZATION
         </p>
       </div>
@@ -95,46 +101,52 @@ const relatedProjects = [
   </section>
 
   <!-- Project Details -->
-  <section class="px-16 lg:px-24 mb-32">
-    <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-24">
+  <section class="px-8 lg:px-16 mb-24">
+    <div class="max-w-8xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
       <!-- Main Content -->
       <div class="lg:col-span-8">
         <div class="space-y-24">
           <!-- Overview -->
           <div>
-            <div class="w-24 h-2 bg-yellow mb-8"></div>
-            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+            <div class="w-24 h-px bg-black mb-8"></div>
+            <h2
+              class="text-4xl font-bold leading-tight tracking-tight uppercase mb-8"
+            >
               Overview
             </h2>
-            <p class="text-2xl text-black/70 leading-[1.6]">
+            <p class="text-2xl text-black/70 leading-relaxed">
               {project.description}
             </p>
           </div>
 
           <!-- Challenge -->
           <div>
-            <div class="w-24 h-2 bg-black mb-8"></div>
-            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+            <div class="w-24 h-px bg-black mb-8"></div>
+            <h2
+              class="text-4xl font-bold leading-tight tracking-tight uppercase mb-8"
+            >
               The Challenge
             </h2>
-            <p class="text-2xl text-black/70 leading-[1.6]">
+            <p class="text-2xl text-black/70 leading-relaxed">
               {project.challenge}
             </p>
           </div>
 
           <!-- Solution -->
           <div>
-            <div class="w-24 h-2 bg-yellow mb-8"></div>
-            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+            <div class="w-24 h-px bg-black mb-8"></div>
+            <h2
+              class="text-4xl font-bold leading-tight tracking-tight uppercase mb-8"
+            >
               The Solution
             </h2>
-            <p class="text-2xl text-black/70 leading-[1.6] mb-12">
+            <p class="text-2xl text-black/70 leading-relaxed mb-12">
               {project.solution}
             </p>
 
             <!-- Code Example -->
             <div
-              class="bg-black text-white p-12 border-8 border-yellow overflow-x-auto"
+              class="bg-black text-white p-8 border-4 border-gray-300 overflow-x-auto"
             >
               <pre
                 class="text-base font-mono"><code>{`class OptimizedNetwork(nn.Module):
@@ -154,16 +166,20 @@ const relatedProjects = [
 
           <!-- Results -->
           <div>
-            <div class="w-24 h-2 bg-black mb-8"></div>
-            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+            <div class="w-24 h-px bg-black mb-8"></div>
+            <h2
+              class="text-4xl font-bold leading-tight tracking-tight uppercase mb-8"
+            >
               Results
             </h2>
             <ul class="space-y-6">
               {
                 project.results.map((result) => (
                   <li class="flex items-start gap-6">
-                    <div class="w-4 h-4 bg-yellow mt-2 shrink-0" />
-                    <p class="text-2xl text-black/70">{result}</p>
+                    <div class="w-3 h-3 bg-black mt-2 shrink-0" />
+                    <p class="text-2xl text-black/70 leading-relaxed">
+                      {result}
+                    </p>
                   </li>
                 ))
               }
@@ -175,11 +191,13 @@ const relatedProjects = [
       <!-- Sidebar -->
       <div class="lg:col-span-4">
         <div
-          class="lg:sticky lg:top-40 space-y-16 border-l-4 border-black pl-12"
+          class="lg:sticky lg:top-32 space-y-16 border-l-4 border-black pl-8"
         >
           <!-- Project Info -->
           <div>
-            <h3 class="text-xl font-bold mb-8 uppercase tracking-wide">
+            <h3
+              class="text-xl font-bold leading-tight mb-8 uppercase tracking-wide"
+            >
               PROJECT INFO
             </h3>
             <dl class="space-y-6">
@@ -212,7 +230,9 @@ const relatedProjects = [
 
           <!-- Technologies -->
           <div>
-            <h3 class="text-xl font-bold mb-8 uppercase tracking-wide">
+            <h3
+              class="text-xl font-bold leading-tight mb-8 uppercase tracking-wide"
+            >
               TECHNOLOGIES
             </h3>
             <div class="flex flex-wrap gap-3">
@@ -227,13 +247,13 @@ const relatedProjects = [
           </div>
 
           <!-- Links -->
-          <div class="space-y-6">
+          <div class="space-y-4">
             {
               project.github && (
                 <a
                   href={project.github}
                   target="_blank"
-                  class="flex items-center justify-between w-full px-8 py-6 bg-black text-white hover:bg-yellow hover:text-black transition-colors group"
+                  class="flex items-center justify-between w-full px-6 py-4 bg-black text-white hover:bg-gray-800 transition-colors"
                 >
                   <span class="font-bold uppercase text-sm tracking-wide">
                     GitHub
@@ -259,7 +279,7 @@ const relatedProjects = [
                 <a
                   href={project.demo}
                   target="_blank"
-                  class="flex items-center justify-between w-full px-8 py-6 border-4 border-black hover:bg-black hover:text-white transition-colors group"
+                  class="flex items-center justify-between w-full px-6 py-4 border-4 border-black hover:bg-black hover:text-white transition-colors"
                 >
                   <span class="font-bold uppercase text-sm tracking-wide">
                     Live Demo
@@ -287,23 +307,25 @@ const relatedProjects = [
   </section>
 
   <!-- Related Projects -->
-  <section class="py-32 px-16 lg:px-24 bg-gray-50">
-    <div class="max-w-[1600px] mx-auto">
-      <div class="w-32 h-2 bg-yellow mb-12"></div>
-      <h2 class="text-4xl font-bold mb-16 uppercase tracking-tight">
+  <section class="py-24 px-8 lg:px-16 bg-gray-50">
+    <div class="max-w-8xl mx-auto">
+      <div class="w-24 h-px bg-black mb-8"></div>
+      <h2
+        class="text-4xl font-bold leading-tight mb-16 uppercase tracking-tight"
+      >
         MORE PROJECTS
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {
           relatedProjects.map((related) => (
             <a
-              href={`/projects/${related.slug}`}
-              class="group bg-white p-12 border-4 border-black hover:border-yellow transition-colors"
+              href={`/portfolio/${related.slug}`}
+              class="group bg-white p-12 border-4 border-black hover:bg-gray-100 transition-colors"
             >
-              <h3 class="text-3xl lg:text-4xl font-bold mb-4 leading-[1.1]">
+              <h3 class="text-3xl lg:text-4xl font-bold leading-tight mb-4">
                 {related.title}
               </h3>
-              <p class="text-xl text-black/60 mb-8 font-medium">
+              <p class="text-xl text-black/60 leading-relaxed mb-8 font-medium">
                 {related.subtitle}
               </p>
               <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-wide">
@@ -331,15 +353,13 @@ const relatedProjects = [
 
   <!-- Footer -->
   <footer
-    class="py-12 px-16 lg:px-24 bg-black text-white border-t-2 border-white/20"
+    class="py-8 px-8 lg:px-16 bg-black text-white border-t-2 border-white/20"
   >
     <div
-      class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
+      class="max-w-8xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6"
     >
       <p class="text-sm font-bold uppercase tracking-wide">© 2024 Your Name</p>
-      <p class="text-sm font-bold uppercase tracking-wide">
-        Designed with <span class="text-yellow">precision</span> using Astro
-      </p>
+      <p class="text-sm font-bold uppercase tracking-wide">Built with Astro</p>
     </div>
   </footer>
 </BaseLayout>
