@@ -1,1 +1,1 @@
-# Protfolio and blog under development using Astro
+# Portfolio and blog under development using Astro
