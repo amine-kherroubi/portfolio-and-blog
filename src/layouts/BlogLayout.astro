@@ -17,44 +17,29 @@ const { frontmatter } = Astro.props;
 
 <BaseLayout title={frontmatter.title} description={frontmatter.excerpt}>
   <Navigation currentPage="blog" />
-
   <article class="py-32 lg:py-40 px-8 md:px-16 lg:px-20 xl:px-32">
     <div class="max-w-5xl mx-auto">
-      <!-- Header -->
       <header class="mb-32 lg:mb-40">
-        <!-- Meta -->
         <div
           class="flex gap-8 text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-16 text-black/50"
         >
           <time>{frontmatter.date}</time>
-          <span>·</span>
           <span>{frontmatter.readTime}</span>
         </div>
-
-        <!-- Title -->
         <h1
           class="text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-[0.95] tracking-[-0.03em] mb-16"
         >
           {frontmatter.title}
         </h1>
-
-        <!-- Excerpt -->
         <p
           class="text-[1.5rem] lg:text-[1.75rem] leading-[1.6] font-light text-black/70 max-w-3xl mb-20"
         >
           {frontmatter.excerpt}
         </p>
-
-        <!-- Accent Line -->
-        <div class="w-20 h-0.5 bg-black"></div>
       </header>
-
-      <!-- Content -->
       <div class="prose prose-lg max-w-none">
         <slot />
       </div>
-
-      <!-- Footer -->
       <footer class="mt-40 pt-16 border-t-2 border-black">
         <a
           href="/blog"
@@ -65,6 +50,5 @@ const { frontmatter } = Astro.props;
       </footer>
     </div>
   </article>
-
   <Footer variant="light" />
 </BaseLayout>

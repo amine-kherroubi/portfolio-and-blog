@@ -10,15 +10,12 @@ const { currentPage } = Astro.props;
   <div
     class="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-20 xl:px-24 h-24 lg:h-28 flex justify-between items-center"
   >
-    <!-- Logo/Home -->
     <a
       href="/"
       class="text-[0.8125rem] font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200"
     >
       {currentPage !== "home" ? "Home" : "Your Name"}
     </a>
-
-    <!-- Navigation Links -->
     <ul
       class="flex gap-8 md:gap-12 lg:gap-16 text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
     >

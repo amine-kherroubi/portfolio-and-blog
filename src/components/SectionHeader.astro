@@ -10,7 +10,6 @@ const { title, description, accent = true } = Astro.props;
 
 <div class="section-header">
   {accent && <div class="h-px bg-black w-24 mb-8" />}
-
   {
     title && (
       <h2 class="text-4xl lg:text-5xl font-bold tracking-tight leading-tight mb-6">
@@ -18,13 +17,11 @@ const { title, description, accent = true } = Astro.props;
       </h2>
     )
   }
-
   {
     description && (
       <p class="text-xl text-black/80 leading-relaxed">{description}</p>
     )
   }
-
   <slot name="description" />
   <slot />
 </div>
