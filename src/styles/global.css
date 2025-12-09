@@ -3,12 +3,27 @@
 :root {
     --black: #000000;
     --white: #FFFFFF;
-    --gray-50: #F9FAFB;
-    --gray-100: #F3F4F6;
-    --gray-200: #E5E7EB;
-    --gray-300: #D1D5DB;
-    --gray-700: #374151;
-    --gray-900: #111827;
+    --gray-100: #F5F5F5;
+    --gray-200: #E8E8E8;
+
+    /* Geometric spacing scale (8px base) */
+    --space-1: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+    --space-5: 40px;
+    --space-6: 48px;
+    --space-8: 64px;
+    --space-10: 80px;
+    --space-12: 96px;
+    --space-16: 128px;
+    --space-20: 160px;
+    --space-24: 192px;
+
+    /* Border weights */
+    --border-thin: 1px;
+    --border-medium: 2px;
+    --border-thick: 4px;
 }
 
 * {
@@ -19,16 +34,19 @@
 
 html {
     scroll-behavior: smooth;
+    font-size: 16px;
 }
 
 body {
     font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-    font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: var(--white);
+    color: var(--black);
 }
 
+/* Typography Scale */
 h1,
 h2,
 h3,
@@ -36,85 +54,92 @@ h4,
 h5,
 h6 {
     font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
 }
 
 ::selection {
-    background: var(--gray-900);
+    background: var(--black);
     color: var(--white);
 }
 
 *:focus-visible {
-    outline: 2px solid var(--black);
+    outline: var(--border-medium) solid var(--black);
     outline-offset: 4px;
 }
 
 /* Minimal Scrollbar */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
     background: var(--white);
+    border-left: var(--border-thin) solid var(--black);
 }
 
 ::-webkit-scrollbar-thumb {
     background: var(--black);
+    border: 2px solid var(--white);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--gray-700);
+    border: 1px solid var(--white);
 }
 
 /* Blog Prose Styles */
 .prose {
-    max-width: 65ch;
+    max-width: 680px;
 }
 
 .prose h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    margin-top: 48px;
-    margin-bottom: 24px;
-    line-height: 1.2;
-    border-left: 4px solid var(--black);
-    padding-left: 24px;
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-6);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
 }
 
 .prose h3 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    margin-top: 32px;
-    margin-bottom: 16px;
-    line-height: 1.3;
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
 }
 
 .prose p {
-    margin-bottom: 24px;
-    line-height: 1.7;
+    margin-bottom: var(--space-6);
+    line-height: 1.75;
     color: rgba(0, 0, 0, 0.85);
+    font-size: 1.125rem;
 }
 
 .prose a {
     color: var(--black);
     text-decoration: none;
-    border-bottom: 2px solid var(--black);
-    transition: opacity 0.2s;
+    border-bottom: var(--border-medium) solid var(--black);
+    transition: opacity 0.15s ease;
 }
 
 .prose a:hover {
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 .prose strong {
     font-weight: 700;
 }
 
+.prose em {
+    font-style: italic;
+}
+
 .prose code {
     background: var(--gray-100);
-    border: 1px solid var(--gray-300);
-    padding: 4px 8px;
+    border: var(--border-thin) solid var(--gray-200);
+    padding: 2px 8px;
     font-size: 0.9em;
     font-family: "Courier New", monospace;
 }
@@ -122,10 +147,10 @@ h6 {
 .prose pre {
     background: var(--black);
     color: var(--white);
-    padding: 24px;
+    padding: var(--space-6);
     overflow-x: auto;
-    margin: 32px 0;
-    border-left: 4px solid var(--gray-300);
+    margin: var(--space-8) 0;
+    border: var(--border-medium) solid var(--black);
 }
 
 .prose pre code {
@@ -133,37 +158,55 @@ h6 {
     border: none;
     padding: 0;
     color: var(--white);
+    font-size: 0.875rem;
 }
 
 .prose blockquote {
-    border-left: 4px solid var(--black);
-    padding-left: 24px;
-    margin: 32px 0;
+    border-left: var(--border-thick) solid var(--black);
+    padding-left: var(--space-6);
+    margin: var(--space-8) 0;
     font-style: normal;
-    color: rgba(0, 0, 0, 0.85);
+    font-size: 1.25rem;
+    line-height: 1.6;
 }
 
 .prose ul,
 .prose ol {
-    margin: 24px 0;
-    padding-left: 32px;
+    margin: var(--space-6) 0;
+    padding-left: var(--space-6);
 }
 
 .prose li {
-    margin-bottom: 8px;
-    line-height: 1.7;
+    margin-bottom: var(--space-3);
+    line-height: 1.75;
 }
 
 .prose img {
     width: 100%;
-    margin: 32px 0;
-    border: 2px solid var(--black);
+    margin: var(--space-10) 0;
+    border: var(--border-medium) solid var(--black);
 }
 
 .prose hr {
     border: none;
-    border-top: 2px solid var(--black);
-    margin: 48px 0;
+    height: var(--border-medium);
+    background: var(--black);
+    margin: var(--space-12) 0;
+}
+
+/* Utility Classes */
+.border-accent {
+    position: relative;
+}
+
+.border-accent::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 64px;
+    height: var(--border-medium);
+    background: var(--black);
 }
 
 /* Reduced Motion */

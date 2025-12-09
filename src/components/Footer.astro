@@ -9,16 +9,16 @@ const year = new Date().getFullYear();
 
 <footer
   class:list={[
-    "py-8 px-8 lg:px-16 border-t-2",
+    "py-8 px-16 lg:px-24 border-t-2",
     variant === "dark"
-      ? "bg-black text-white border-white/20"
+      ? "bg-black text-white border-white"
       : "bg-white text-black border-black",
   ]}
 >
   <div
-    class="max-w-7xl mx-auto flex justify-between items-center text-xs uppercase tracking-wider"
+    class="max-w-[1600px] mx-auto flex justify-between items-center text-[0.6875rem] uppercase tracking-[0.15em] font-bold"
   >
-    <p>© {year}</p>
-    <p>Built with Astro</p>
+    <p class="opacity-60">© {year}</p>
+    <p class="opacity-60">Built with Astro</p>
   </div>
 </footer>

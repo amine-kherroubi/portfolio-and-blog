@@ -18,43 +18,61 @@ const { frontmatter } = Astro.props;
 <BaseLayout title={frontmatter.title} description={frontmatter.excerpt}>
   <Navigation currentPage="blog" />
 
-  <article class="pt-32 pb-24 px-8 lg:px-16">
-    <div class="max-w-4xl mx-auto">
+  <article class="py-24 px-16 lg:px-24">
+    <div class="max-w-5xl mx-auto">
       <!-- Header -->
-      <header class="mb-16">
+      <header class="mb-24">
+        <!-- Meta -->
         <div
-          class="flex gap-6 text-sm font-bold uppercase tracking-wider mb-8 text-black/60"
+          class="flex gap-8 text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-12 text-black/50"
         >
           <time>{frontmatter.date}</time>
           <span>·</span>
           <span>{frontmatter.readTime}</span>
         </div>
 
+        <!-- Title -->
         <h1
-          class="text-[clamp(2.5rem,7vw,5rem)] font-bold leading-tight tracking-tight mb-8"
+          class="text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-[0.95] tracking-[-0.03em] mb-12"
         >
           {frontmatter.title}
         </h1>
 
-        <p class="text-xl text-black/70 leading-relaxed max-w-2xl">
+        <!-- Excerpt -->
+        <p
+          class="text-[1.5rem] leading-[1.5] font-light text-black/70 max-w-3xl mb-16"
+        >
           {frontmatter.excerpt}
         </p>
 
-        <div class="h-px bg-black w-24 mt-12"></div>
+        <!-- Accent Line -->
+        <div class="w-16 h-0.5 bg-black"></div>
       </header>
 
       <!-- Content -->
-      <div class="prose prose-lg">
+      <div class="prose prose-lg max-w-none">
         <slot />
       </div>
 
       <!-- Footer -->
-      <footer class="mt-24 pt-12 border-t-2 border-black">
+      <footer class="mt-32 pt-12 border-t-2 border-black">
         <a
           href="/blog"
-          class="inline-block text-sm font-bold uppercase tracking-wider hover:opacity-60 transition-opacity"
+          class="inline-flex items-center gap-3 text-[0.8125rem] font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200"
         >
-          ← All Posts
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="miter"
+              d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+          </svg>
+          All Posts
         </a>
       </footer>
     </div>
