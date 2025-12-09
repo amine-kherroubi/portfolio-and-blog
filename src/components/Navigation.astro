@@ -8,7 +8,7 @@ const { currentPage } = Astro.props;
 
 <nav class="bg-white border-b-2 border-black">
   <div
-    class="max-w-[1600px] mx-auto px-16 lg:px-24 h-20 flex justify-between items-center"
+    class="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-20 xl:px-24 h-24 lg:h-28 flex justify-between items-center"
   >
     <!-- Logo/Home -->
     <a
@@ -20,7 +20,7 @@ const { currentPage } = Astro.props;
 
     <!-- Navigation Links -->
     <ul
-      class="flex gap-12 text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
+      class="flex gap-8 md:gap-12 lg:gap-16 text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
     >
       <li>
         <a
@@ -28,7 +28,7 @@ const { currentPage } = Astro.props;
           class:list={[
             "transition-opacity duration-200 relative",
             currentPage === "portfolio"
-              ? "opacity-100 after:content-[''] after:absolute after:bottom-[-10px] after:left-0 after:right-0 after:h-0.5 after:bg-black"
+              ? "opacity-100 after:content-[''] after:absolute after:bottom-[-12px] after:left-0 after:right-0 after:h-0.5 after:bg-black"
               : "opacity-50 hover:opacity-100",
           ]}
         >
@@ -41,7 +41,7 @@ const { currentPage } = Astro.props;
           class:list={[
             "transition-opacity duration-200 relative",
             currentPage === "blog"
-              ? "opacity-100 after:content-[''] after:absolute after:bottom-[-10px] after:left-0 after:right-0 after:h-0.5 after:bg-black"
+              ? "opacity-100 after:content-[''] after:absolute after:bottom-[-12px] after:left-0 after:right-0 after:h-0.5 after:bg-black"
               : "opacity-50 hover:opacity-100",
           ]}
         >

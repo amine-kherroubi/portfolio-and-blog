@@ -38,33 +38,33 @@ const projects = [
 <BaseLayout title="Portfolio">
   <Navigation currentPage="portfolio" />
 
-  <!-- Hero -->
-  <section class="py-24 px-16 lg:px-24">
-    <div class="max-w-[1600px] mx-auto">
-      <div class="w-16 h-0.5 bg-black mb-16"></div>
+  <!-- Hero with more breathing room -->
+  <section class="py-32 lg:py-40 px-8 md:px-16 lg:px-20 xl:px-32">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="w-20 h-0.5 bg-black mb-20"></div>
       <h1
-        class="text-[clamp(4rem,12vw,10rem)] font-bold leading-[0.9] tracking-[-0.03em] mb-12"
+        class="text-[clamp(4rem,12vw,10rem)] font-bold leading-[0.9] tracking-[-0.03em] mb-16 lg:mb-20"
       >
         Portfolio
       </h1>
-      <p class="text-[1.5rem] leading-[1.4] font-light tracking-[-0.01em] max-w-3xl text-black/80">
+      <p class="text-[1.5rem] lg:text-[1.75rem] leading-[1.5] font-light tracking-[-0.01em] max-w-3xl text-black/80">
         Selected projects demonstrating technical expertise and design thinking
       </p>
     </div>
   </section>
 
-  <!-- Projects Grid -->
-  <section class="py-16 px-16 lg:px-24 border-t-2 border-black">
-    <div class="max-w-[1600px] mx-auto">
+  <!-- Projects Grid with generous spacing -->
+  <section class="py-20 lg:py-24 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black">
+    <div class="max-w-[1400px] mx-auto">
       <div class="space-y-0">
         {
           projects.map((project, index) => (
             <article class:list={["border-b-2 border-black", index === projects.length - 1 && "border-b-0"]}>
               <a
                 href={project.link}
-                class="group block py-12 transition-colors duration-200 hover:bg-black hover:text-white"
+                class="group block py-16 lg:py-20 transition-colors duration-200 hover:bg-black hover:text-white"
               >
-                <div class="grid grid-cols-12 gap-x-8 items-center">
+                <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 items-center">
                   <!-- Year -->
                   <div class="col-span-12 lg:col-span-2">
                     <span class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100">
@@ -73,19 +73,19 @@ const projects = [
                   </div>
 
                   <!-- Title & Description -->
-                  <div class="col-span-12 lg:col-span-6 mt-4 lg:mt-0">
-                    <h2 class="text-[2.25rem] lg:text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-3">
+                  <div class="col-span-12 lg:col-span-6 mt-6 lg:mt-0">
+                    <h2 class="text-[2.25rem] lg:text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-5">
                       {project.title}
                     </h2>
-                    <p class="text-[1.125rem] leading-[1.5] opacity-70 group-hover:opacity-100">
+                    <p class="text-[1.125rem] lg:text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100">
                       {project.description}
                     </p>
                   </div>
 
                   <!-- Tags -->
-                  <div class="col-span-12 lg:col-span-4 flex items-center justify-start lg:justify-end gap-3 mt-6 lg:mt-0">
+                  <div class="col-span-12 lg:col-span-4 flex items-center justify-start lg:justify-end gap-4 mt-8 lg:mt-0">
                     {project.tags.map((tag) => (
-                      <span class="px-4 py-2 text-[0.6875rem] font-bold uppercase tracking-[0.15em] border border-current">
+                      <span class="px-4 py-2.5 text-[0.6875rem] font-bold uppercase tracking-[0.15em] border border-current">
                         {tag}
                       </span>
                     ))}
@@ -112,27 +112,27 @@ const projects = [
     </div>
   </section>
 
-  <!-- Capabilities -->
-  <section class="py-32 px-16 lg:px-24 border-t-2 border-black">
-    <div class="max-w-[1600px] mx-auto">
-      <div class="grid grid-cols-12 gap-x-8 gap-y-16">
+  <!-- Capabilities with better spacing -->
+  <section class="py-40 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black">
+    <div class="max-w-[1400px] mx-auto">
+      <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 gap-y-20">
         <!-- Label -->
         <div class="col-span-12 lg:col-span-3">
-          <div class="w-16 h-0.5 bg-black mb-8"></div>
-          <h2 class="text-[2rem] font-bold leading-[1.1] tracking-[-0.02em]">
+          <div class="w-20 h-0.5 bg-black mb-10"></div>
+          <h2 class="text-[2rem] lg:text-[2.25rem] font-bold leading-[1.1] tracking-[-0.02em]">
             Capabilities
           </h2>
         </div>
 
         <!-- Capabilities Grid -->
         <div class="col-span-12 lg:col-span-9">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-x-12 lg:gap-x-16 gap-y-20">
             <!-- Design -->
-            <div class="border-l-2 border-black pl-6">
-              <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-6">
+            <div class="border-l-2 border-black pl-8">
+              <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-8">
                 Design
               </h3>
-              <ul class="space-y-3 text-[0.9375rem] leading-[1.6] text-black/70">
+              <ul class="space-y-4 text-[0.9375rem] leading-[1.7] text-black/70">
                 <li>Interface Design</li>
                 <li>Design Systems</li>
                 <li>Typography</li>
@@ -141,11 +141,11 @@ const projects = [
             </div>
 
             <!-- Development -->
-            <div class="border-l-2 border-black pl-6">
-              <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-6">
+            <div class="border-l-2 border-black pl-8">
+              <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-8">
                 Development
               </h3>
-              <ul class="space-y-3 text-[0.9375rem] leading-[1.6] text-black/70">
+              <ul class="space-y-4 text-[0.9375rem] leading-[1.7] text-black/70">
                 <li>Frontend Engineering</li>
                 <li>Python / TypeScript</li>
                 <li>Machine Learning</li>
@@ -154,11 +154,11 @@ const projects = [
             </div>
 
             <!-- Strategy -->
-            <div class="border-l-2 border-black pl-6">
-              <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-6">
+            <div class="border-l-2 border-black pl-8">
+              <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-8">
                 Strategy
               </h3>
-              <ul class="space-y-3 text-[0.9375rem] leading-[1.6] text-black/70">
+              <ul class="space-y-4 text-[0.9375rem] leading-[1.7] text-black/70">
                 <li>Technical Architecture</li>
                 <li>Problem Solving</li>
                 <li>Research & Analysis</li>

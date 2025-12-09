@@ -6,7 +6,7 @@
     --gray-100: #F5F5F5;
     --gray-200: #E8E8E8;
 
-    /* Geometric spacing scale (8px base) */
+    /* Expanded geometric spacing scale for more breathing room */
     --space-1: 8px;
     --space-2: 16px;
     --space-3: 24px;
@@ -19,6 +19,8 @@
     --space-16: 128px;
     --space-20: 160px;
     --space-24: 192px;
+    --space-32: 256px;
+    --space-40: 320px;
 
     /* Border weights */
     --border-thin: 1px;
@@ -39,14 +41,14 @@ html {
 
 body {
     font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-    line-height: 1.5;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: var(--white);
     color: var(--black);
 }
 
-/* Typography Scale */
+/* Typography Scale with improved spacing */
 h1,
 h2,
 h3,
@@ -55,7 +57,7 @@ h5,
 h6 {
     font-weight: 700;
     letter-spacing: -0.03em;
-    line-height: 0.95;
+    line-height: 1.05;
 }
 
 ::selection {
@@ -65,7 +67,7 @@ h6 {
 
 *:focus-visible {
     outline: var(--border-medium) solid var(--black);
-    outline-offset: 4px;
+    outline-offset: 6px;
 }
 
 /* Minimal Scrollbar */
@@ -87,7 +89,7 @@ h6 {
     border: 1px solid var(--white);
 }
 
-/* Blog Prose Styles */
+/* Blog Prose Styles with more generous spacing */
 .prose {
     max-width: 680px;
 }
@@ -95,24 +97,24 @@ h6 {
 .prose h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-top: var(--space-12);
-    margin-bottom: var(--space-6);
-    line-height: 1.1;
+    margin-top: var(--space-16);
+    margin-bottom: var(--space-8);
+    line-height: 1.15;
     letter-spacing: -0.02em;
 }
 
 .prose h3 {
     font-size: 1.75rem;
     font-weight: 700;
-    margin-top: var(--space-8);
-    margin-bottom: var(--space-4);
-    line-height: 1.2;
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-6);
+    line-height: 1.25;
     letter-spacing: -0.01em;
 }
 
 .prose p {
-    margin-bottom: var(--space-6);
-    line-height: 1.75;
+    margin-bottom: var(--space-8);
+    line-height: 1.85;
     color: rgba(0, 0, 0, 0.85);
     font-size: 1.125rem;
 }
@@ -139,7 +141,7 @@ h6 {
 .prose code {
     background: var(--gray-100);
     border: var(--border-thin) solid var(--gray-200);
-    padding: 2px 8px;
+    padding: 3px 10px;
     font-size: 0.9em;
     font-family: "Courier New", monospace;
 }
@@ -147,9 +149,9 @@ h6 {
 .prose pre {
     background: var(--black);
     color: var(--white);
-    padding: var(--space-6);
+    padding: var(--space-8);
     overflow-x: auto;
-    margin: var(--space-8) 0;
+    margin: var(--space-12) 0;
     border: var(--border-medium) solid var(--black);
 }
 
@@ -159,31 +161,34 @@ h6 {
     padding: 0;
     color: var(--white);
     font-size: 0.875rem;
+    line-height: 1.7;
 }
 
 .prose blockquote {
     border-left: var(--border-thick) solid var(--black);
-    padding-left: var(--space-6);
-    margin: var(--space-8) 0;
+    padding-left: var(--space-8);
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+    margin: var(--space-12) 0;
     font-style: normal;
     font-size: 1.25rem;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .prose ul,
 .prose ol {
-    margin: var(--space-6) 0;
-    padding-left: var(--space-6);
+    margin: var(--space-8) 0;
+    padding-left: var(--space-8);
 }
 
 .prose li {
-    margin-bottom: var(--space-3);
-    line-height: 1.75;
+    margin-bottom: var(--space-4);
+    line-height: 1.85;
 }
 
 .prose img {
     width: 100%;
-    margin: var(--space-10) 0;
+    margin: var(--space-16) 0;
     border: var(--border-medium) solid var(--black);
 }
 
@@ -191,7 +196,7 @@ h6 {
     border: none;
     height: var(--border-medium);
     background: var(--black);
-    margin: var(--space-12) 0;
+    margin: var(--space-16) 0;
 }
 
 /* Utility Classes */
