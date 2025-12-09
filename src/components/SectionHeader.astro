@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  accentColor?: "yellow" | "black";
+  size?: "small" | "medium" | "large";
+}
+
+const {
+  title,
+  description,
+  accentColor = "yellow",
+  size = "large",
+} = Astro.props;
+
+const sizeClasses = {
+  small: "text-3xl",
+  medium: "text-[clamp(3rem,7vw,7rem)]",
+  large: "text-[clamp(4rem,10vw,9rem)]",
+};
+
+const accentClasses = {
+  yellow: "bg-yellow",
+  black: "bg-black",
+};
+---
+
+<div class="section-header">
+  <div class:list={["w-32 h-2 mb-16", accentClasses[accentColor]]}></div>
+  <h1
+    class:list={[
+      sizeClasses[size],
+      "font-bold leading-[0.85] tracking-tighter mb-16",
+    ]}
+  >
+    <slot name="title">{title}</slot>
+  </h1>
+  {
+    description && (
+      <p class="text-2xl lg:text-3xl text-black/80 max-w-[1000px] leading-[1.5]">
+        {description}
+      </p>
+    )
+  }
+  <slot name="description" />
+</div>
+
+<style>
+  .bg-yellow {
+    background-color: #ffd700;
+  }
+</style>

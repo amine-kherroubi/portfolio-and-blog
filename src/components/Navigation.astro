@@ -1,0 +1,55 @@
+---
+interface Props {
+  currentPage?: "home" | "portfolio" | "blog";
+}
+
+const { currentPage } = Astro.props;
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
+  <div
+    class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center"
+  >
+    <a
+      href="/"
+      class="text-lg font-bold tracking-tight uppercase hover:text-yellow transition-colors"
+    >
+      {currentPage !== "home" ? "← HOME" : "YOUR NAME"}
+    </a>
+    <ul class="flex gap-12 text-sm font-bold uppercase tracking-wide">
+      <li>
+        <a
+          href="/portfolio"
+          class:list={[
+            "hover:text-yellow transition-colors",
+            { "text-yellow": currentPage === "portfolio" },
+          ]}
+        >
+          PORTFOLIO
+        </a>
+      </li>
+      <li>
+        <a
+          href="/blog"
+          class:list={[
+            "hover:text-yellow transition-colors",
+            { "text-yellow": currentPage === "blog" },
+          ]}
+        >
+          BLOG
+        </a>
+      </li>
+      <li>
+        <a href="/#contact" class="hover:text-yellow transition-colors">
+          CONTACT
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .text-yellow {
+    color: #ffd700;
+  }
+</style>
