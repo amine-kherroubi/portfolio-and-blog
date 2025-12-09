@@ -21,10 +21,6 @@ const project = {
     "3x faster inference time",
     "Successfully deployed on edge devices",
   ],
-  images: [
-    "/images/projects/neural-nets-1.jpg",
-    "/images/projects/neural-nets-2.jpg",
-  ],
   github: "https://github.com/yourusername/neural-networks",
   demo: "https://demo.example.com",
 };
@@ -45,98 +41,103 @@ const relatedProjects = [
 
 <Layout title={`${project.title} — Project`}>
   <!-- Navigation -->
-  <nav
-    class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-black/10"
-  >
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
     <div
-      class="max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex justify-between items-center"
+      class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center"
     >
-      <a
-        href="/"
-        class="text-lg font-bold tracking-tight hover:text-red-600 transition-colors"
-      >
+      <a href="/" class="text-lg font-bold tracking-tight uppercase">
         ← HOME
       </a>
-      <a
-        href="/#work"
-        class="text-sm font-medium hover:text-red-600 transition-colors"
-      >
+      <a href="/#work" class="text-sm font-bold uppercase tracking-wide">
         ALL PROJECTS
       </a>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="pt-32 pb-20 px-6 lg:px-12">
-    <div class="max-w-[1400px] mx-auto">
+  <section class="pt-40 pb-32 px-16 lg:px-24">
+    <div class="max-w-[1600px] mx-auto">
       <div
-        class="mb-8 flex items-center gap-4 text-sm font-medium text-black/60"
+        class="mb-12 flex items-center gap-6 text-sm font-bold uppercase tracking-wide"
       >
         <span>{project.year}</span>
-        <span>•</span>
+        <span class="w-2 h-2 bg-black"></span>
         <span>{project.client}</span>
-        <span>•</span>
+        <span class="w-2 h-2 bg-black"></span>
         <span>{project.duration}</span>
       </div>
 
+      <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
       <h1
-        class="text-[clamp(3rem,8vw,7rem)] font-bold leading-[0.9] tracking-tight mb-6"
+        class="text-[clamp(3rem,8vw,8rem)] font-bold leading-[0.85] tracking-tighter mb-12"
       >
         {project.title}
       </h1>
-      <p class="text-3xl text-black/70 mb-12 max-w-[800px]">
+      <p
+        class="text-3xl lg:text-4xl text-black/70 mb-16 max-w-[1200px] leading-[1.3]"
+      >
         {project.subtitle}
       </p>
-      <div class="w-24 h-1 bg-red-600"></div>
     </div>
   </section>
 
   <!-- Project Image -->
-  <section class="px-6 lg:px-12 mb-20">
-    <div class="max-w-[1400px] mx-auto">
+  <section class="px-16 lg:px-24 mb-32">
+    <div class="max-w-[1600px] mx-auto">
       <div
-        class="aspect-video bg-linear-to-br from-black to-red-600/20 flex items-center justify-center"
+        class="aspect-video bg-black border-8 border-[#FFD700] flex items-center justify-center"
       >
-        <p class="text-white/50 text-lg">
-          Project Image / Screenshot / Visualization
+        <p class="text-white/70 text-2xl font-bold uppercase tracking-wide">
+          PROJECT VISUALIZATION
         </p>
       </div>
     </div>
   </section>
 
   <!-- Project Details -->
-  <section class="px-6 lg:px-12 mb-20">
-    <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
+  <section class="px-16 lg:px-24 mb-32">
+    <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-24">
       <!-- Main Content -->
       <div class="lg:col-span-8">
-        <div class="space-y-16">
+        <div class="space-y-24">
           <!-- Overview -->
           <div>
-            <h2 class="text-4xl font-bold mb-6">Overview</h2>
-            <p class="text-xl text-black/70 leading-relaxed">
+            <div class="w-24 h-2 bg-[#FFD700] mb-8"></div>
+            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+              Overview
+            </h2>
+            <p class="text-2xl text-black/70 leading-[1.6]">
               {project.description}
             </p>
           </div>
 
           <!-- Challenge -->
           <div>
-            <h2 class="text-4xl font-bold mb-6">The Challenge</h2>
-            <p class="text-xl text-black/70 leading-relaxed">
+            <div class="w-24 h-2 bg-black mb-8"></div>
+            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+              The Challenge
+            </h2>
+            <p class="text-2xl text-black/70 leading-[1.6]">
               {project.challenge}
             </p>
           </div>
 
           <!-- Solution -->
           <div>
-            <h2 class="text-4xl font-bold mb-6">The Solution</h2>
-            <p class="text-xl text-black/70 leading-relaxed mb-8">
+            <div class="w-24 h-2 bg-[#FFD700] mb-8"></div>
+            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+              The Solution
+            </h2>
+            <p class="text-2xl text-black/70 leading-[1.6] mb-12">
               {project.solution}
             </p>
 
             <!-- Code Example -->
-            <div class="bg-black text-white p-8 rounded-lg overflow-x-auto">
+            <div
+              class="bg-black text-white p-12 border-8 border-[#FFD700] overflow-x-auto"
+            >
               <pre
-                class="text-sm"><code>{`class OptimizedNetwork(nn.Module):
+                class="text-base font-mono"><code>{`class OptimizedNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super().__init__()
         self.layers = nn.Sequential(
@@ -153,13 +154,16 @@ const relatedProjects = [
 
           <!-- Results -->
           <div>
-            <h2 class="text-4xl font-bold mb-6">Results</h2>
-            <ul class="space-y-4">
+            <div class="w-24 h-2 bg-black mb-8"></div>
+            <h2 class="text-4xl font-bold mb-8 tracking-tight uppercase">
+              Results
+            </h2>
+            <ul class="space-y-6">
               {
                 project.results.map((result) => (
-                  <li class="flex items-start gap-4">
-                    <div class="w-2 h-2 bg-red-600 mt-2 shrink-0" />
-                    <p class="text-xl text-black/70">{result}</p>
+                  <li class="flex items-start gap-6">
+                    <div class="w-4 h-4 bg-[#FFD700] mt-2 shrink-0" />
+                    <p class="text-2xl text-black/70">{result}</p>
                   </li>
                 ))
               }
@@ -170,33 +174,51 @@ const relatedProjects = [
 
       <!-- Sidebar -->
       <div class="lg:col-span-4">
-        <div class="lg:sticky lg:top-32 space-y-12">
+        <div
+          class="lg:sticky lg:top-40 space-y-16 border-l-4 border-black pl-12"
+        >
           <!-- Project Info -->
           <div>
-            <h3 class="text-lg font-bold mb-6">PROJECT INFO</h3>
-            <dl class="space-y-4">
+            <h3 class="text-xl font-bold mb-8 uppercase tracking-wide">
+              PROJECT INFO
+            </h3>
+            <dl class="space-y-6">
               <div>
-                <dt class="text-sm text-black/60 mb-1">Role</dt>
-                <dd class="font-medium">{project.role}</dd>
+                <dt
+                  class="text-sm font-bold uppercase tracking-wide text-black/60 mb-2"
+                >
+                  Role
+                </dt>
+                <dd class="text-lg font-bold">{project.role}</dd>
               </div>
               <div>
-                <dt class="text-sm text-black/60 mb-1">Duration</dt>
-                <dd class="font-medium">{project.duration}</dd>
+                <dt
+                  class="text-sm font-bold uppercase tracking-wide text-black/60 mb-2"
+                >
+                  Duration
+                </dt>
+                <dd class="text-lg font-bold">{project.duration}</dd>
               </div>
               <div>
-                <dt class="text-sm text-black/60 mb-1">Year</dt>
-                <dd class="font-medium">{project.year}</dd>
+                <dt
+                  class="text-sm font-bold uppercase tracking-wide text-black/60 mb-2"
+                >
+                  Year
+                </dt>
+                <dd class="text-lg font-bold">{project.year}</dd>
               </div>
             </dl>
           </div>
 
           <!-- Technologies -->
           <div>
-            <h3 class="text-lg font-bold mb-6">TECHNOLOGIES</h3>
-            <div class="flex flex-wrap gap-2">
+            <h3 class="text-xl font-bold mb-8 uppercase tracking-wide">
+              TECHNOLOGIES
+            </h3>
+            <div class="flex flex-wrap gap-3">
               {
                 project.technologies.map((tech) => (
-                  <span class="px-4 py-2 bg-black text-white text-sm font-medium">
+                  <span class="px-4 py-2 bg-black text-white text-sm font-bold uppercase tracking-wide">
                     {tech}
                   </span>
                 ))
@@ -205,25 +227,27 @@ const relatedProjects = [
           </div>
 
           <!-- Links -->
-          <div class="space-y-4">
+          <div class="space-y-6">
             {
               project.github && (
                 <a
                   href={project.github}
                   target="_blank"
-                  class="flex items-center justify-between w-full px-6 py-4 bg-black text-white hover:bg-red-600 transition-colors group"
+                  class="flex items-center justify-between w-full px-8 py-6 bg-black text-white hover:bg-[#FFD700] hover:text-black group"
                 >
-                  <span class="font-medium">View on GitHub</span>
+                  <span class="font-bold uppercase text-sm tracking-wide">
+                    GitHub
+                  </span>
                   <svg
-                    class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                    class="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    stroke-width="3"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"
                       d="M17 8l4 4m0 0l-4 4m4-4H3"
                     />
                   </svg>
@@ -235,19 +259,21 @@ const relatedProjects = [
                 <a
                   href={project.demo}
                   target="_blank"
-                  class="flex items-center justify-between w-full px-6 py-4 border-2 border-black hover:bg-black hover:text-white transition-all group"
+                  class="flex items-center justify-between w-full px-8 py-6 border-4 border-black hover:bg-black hover:text-white group"
                 >
-                  <span class="font-medium">Live Demo</span>
+                  <span class="font-bold uppercase text-sm tracking-wide">
+                    Live Demo
+                  </span>
                   <svg
-                    class="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                    class="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    stroke-width="3"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
@@ -261,32 +287,37 @@ const relatedProjects = [
   </section>
 
   <!-- Related Projects -->
-  <section class="py-20 px-6 lg:px-12 bg-gray-50">
-    <div class="max-w-[1400px] mx-auto">
-      <h2 class="text-4xl font-bold mb-12">MORE PROJECTS</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <section class="py-32 px-16 lg:px-24 bg-[#F5F5F5]">
+    <div class="max-w-[1600px] mx-auto">
+      <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
+      <h2 class="text-4xl font-bold mb-16 uppercase tracking-tight">
+        MORE PROJECTS
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
         {
           relatedProjects.map((related) => (
             <a
               href={`/projects/${related.slug}`}
-              class="group bg-white p-8 hover:shadow-2xl transition-all duration-500"
+              class="group bg-white p-12 border-4 border-black hover:border-[#FFD700]"
             >
-              <h3 class="text-3xl font-bold mb-3 group-hover:text-red-600 transition-colors">
+              <h3 class="text-3xl lg:text-4xl font-bold mb-4 leading-[1.1]">
                 {related.title}
               </h3>
-              <p class="text-lg text-black/60 mb-6">{related.subtitle}</p>
-              <span class="inline-flex items-center gap-2 font-medium group-hover:gap-4 transition-all">
+              <p class="text-xl text-black/60 mb-8 font-medium">
+                {related.subtitle}
+              </p>
+              <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-wide">
                 View Project
                 <svg
-                  class="w-5 h-5"
+                  class="w-6 h-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  stroke-width="3"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
                     d="M17 8l4 4m0 0l-4 4m4-4H3"
                   />
                 </svg>
@@ -299,16 +330,15 @@ const relatedProjects = [
   </section>
 
   <!-- Footer -->
-  <footer class="py-12 px-6 lg:px-12 bg-black text-white">
+  <footer
+    class="py-12 px-16 lg:px-24 bg-black text-white border-t-2 border-white/20"
+  >
     <div
-      class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6"
+      class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
     >
-      <p class="text-sm text-white/60">
-        © 2024 Your Name. All rights reserved.
-      </p>
-      <p class="text-sm text-white/60">
-        Designed & Built with <span class="text-red-600">♥</span> using Astro &
-        TailwindCSS
+      <p class="text-sm font-bold uppercase tracking-wide">© 2024 Your Name</p>
+      <p class="text-sm font-bold uppercase tracking-wide">
+        Designed with <span class="text-[#FFD700]">precision</span> using Astro
       </p>
     </div>
   </footer>

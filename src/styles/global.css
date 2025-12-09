@@ -1,87 +1,48 @@
 @import "tailwindcss";
 
-/* Custom utilities and animations */
+/* Swiss Design: Mathematical precision, bold color, static elegance */
+
+/* Custom utilities */
 @layer utilities {
     .text-balance {
         text-wrap: balance;
     }
 }
 
-/* Smooth scrolling */
-html {
-    scroll-behavior: smooth;
-}
-
-/* Selection styling */
+/* Selection styling with Swiss yellow accent */
 ::selection {
-    background-color: #dc2626;
-    color: white;
+    background-color: #FFD700;
+    color: black;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar with Swiss precision */
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #000;
-    border-radius: 5px;
+    background: #000000;
+    border: 2px solid #ffffff;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #dc2626;
+    background: #FFD700;
 }
 
 /* Focus styles for accessibility */
 *:focus-visible {
-    outline: 2px solid #dc2626;
+    outline: 3px solid #FFD700;
     outline-offset: 4px;
 }
 
-/* Custom animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-/* Animate elements on scroll */
-.animate-on-scroll {
-    animation: fadeIn 0.8s ease-out forwards;
+/* Remove all animations - Swiss design is static */
+* {
+    animation: none !important;
+    transition: none !important;
 }
 
 /* Print styles */
@@ -103,15 +64,46 @@ html {
     }
 }
 
-/* Reduced motion support */
+/* Accessibility: Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+    * {
+        animation: none !important;
+        transition: none !important;
         scroll-behavior: auto !important;
     }
+}
+
+/* Swiss Design Typography Precision */
+body {
+    letter-spacing: -0.02em;
+    line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    letter-spacing: -0.03em;
+    font-weight: 700;
+}
+
+/* Grid precision */
+.swiss-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 32px;
+}
+
+/* Mathematical spacing system */
+:root {
+    --space-unit: 8px;
+    --space-xs: calc(var(--space-unit) * 2);
+    --space-sm: calc(var(--space-unit) * 3);
+    --space-md: calc(var(--space-unit) * 4);
+    --space-lg: calc(var(--space-unit) * 6);
+    --space-xl: calc(var(--space-unit) * 8);
+    --space-2xl: calc(var(--space-unit) * 12);
+    --space-3xl: calc(var(--space-unit) * 16);
 }

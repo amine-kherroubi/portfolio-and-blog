@@ -55,86 +55,77 @@ const regularPosts = allPosts.filter((post) => !post.featured);
 
 <Layout title="Blog — Thoughts on Design & Development">
   <!-- Navigation -->
-  <nav
-    class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-black/10"
-  >
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black">
     <div
-      class="max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex justify-between items-center"
+      class="max-w-[1600px] mx-auto px-16 lg:px-24 py-8 flex justify-between items-center"
     >
-      <a
-        href="/"
-        class="text-lg font-bold tracking-tight hover:text-red-600 transition-colors"
-      >
+      <a href="/" class="text-lg font-bold tracking-tight uppercase">
         ← HOME
       </a>
-      <ul class="flex gap-8 text-sm font-medium">
-        <li>
-          <a href="/#work" class="hover:text-red-600 transition-colors">WORK</a>
-        </li>
-        <li><a href="/blog" class="text-red-600">BLOG</a></li>
-        <li>
-          <a href="/#contact" class="hover:text-red-600 transition-colors"
-            >CONTACT</a
-          >
-        </li>
+      <ul class="flex gap-12 text-sm font-bold uppercase tracking-wide">
+        <li><a href="/#work">WORK</a></li>
+        <li><a class="text-[#FFD700]">BLOG</a></li>
+        <li><a href="/#contact">CONTACT</a></li>
       </ul>
     </div>
   </nav>
 
   <!-- Hero Section -->
-  <section class="pt-32 pb-20 px-6 lg:px-12">
-    <div class="max-w-[1400px] mx-auto">
+  <section class="pt-40 pb-32 px-16 lg:px-24">
+    <div class="max-w-[1600px] mx-auto">
+      <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
       <h1
-        class="text-[clamp(3rem,8vw,7rem)] font-bold leading-[0.9] tracking-tight mb-8"
+        class="text-[clamp(4rem,10vw,9rem)] font-bold leading-[0.85] tracking-tighter mb-16"
       >
         BLOG
       </h1>
       <p
-        class="text-xl lg:text-2xl text-black/70 max-w-[800px] leading-relaxed"
+        class="text-2xl lg:text-3xl text-black/80 max-w-[1000px] leading-[1.5]"
       >
         Exploring the intersection of design, technology, and creative thinking.
         Thoughts on minimalism, craftsmanship, and building for the web.
       </p>
-      <div class="mt-8 w-24 h-1 bg-red-600"></div>
     </div>
   </section>
 
   <!-- Featured Posts -->
-  <section class="py-12 px-6 lg:px-12 bg-gray-50">
-    <div class="max-w-[1400px] mx-auto">
-      <h2 class="text-2xl font-bold mb-12 tracking-tight">FEATURED ARTICLES</h2>
+  <section class="py-32 px-16 lg:px-24 bg-[#F5F5F5]">
+    <div class="max-w-[1600px] mx-auto">
+      <h2 class="text-3xl font-bold mb-16 tracking-tight uppercase">
+        FEATURED ARTICLES
+      </h2>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {
           featuredPosts.map((post) => (
-            <article class="group bg-white hover:shadow-2xl transition-all duration-500">
-              <a href={`/blog/${post.slug}`} class="block p-8 lg:p-12 h-full">
-                <div class="flex items-center gap-4 text-sm text-black/60 mb-6">
+            <article class="group bg-white border-4 border-black">
+              <a href={`/blog/${post.slug}`} class="block p-12 lg:p-16 h-full">
+                <div class="flex items-center gap-6 text-sm font-bold uppercase tracking-wide mb-8">
                   <time>{post.date}</time>
-                  <span>•</span>
+                  <span class="w-2 h-2 bg-black" />
                   <span>{post.readTime}</span>
                 </div>
 
-                <h3 class="text-3xl lg:text-4xl font-bold mb-4 group-hover:text-red-600 transition-colors">
+                <h3 class="text-4xl lg:text-5xl font-bold mb-6 leading-[1]">
                   {post.title}
                 </h3>
 
-                <p class="text-lg text-black/70 leading-relaxed mb-6">
+                <p class="text-xl text-black/70 leading-[1.6] mb-8">
                   {post.excerpt}
                 </p>
 
-                <span class="inline-flex items-center gap-2 font-medium group-hover:gap-4 transition-all">
+                <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-wide">
                   Read Article
                   <svg
-                    class="w-5 h-5"
+                    class="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    stroke-width="3"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"
                       d="M17 8l4 4m0 0l-4 4m4-4H3"
                     />
                   </svg>
@@ -148,38 +139,42 @@ const regularPosts = allPosts.filter((post) => !post.featured);
   </section>
 
   <!-- All Posts -->
-  <section class="py-20 px-6 lg:px-12">
-    <div class="max-w-[1400px] mx-auto">
-      <h2 class="text-2xl font-bold mb-12 tracking-tight">ALL ARTICLES</h2>
+  <section class="py-32 px-16 lg:px-24">
+    <div class="max-w-[1600px] mx-auto">
+      <h2 class="text-3xl font-bold mb-16 tracking-tight uppercase">
+        ALL ARTICLES
+      </h2>
 
-      <div class="space-y-1">
+      <div class="space-y-2">
         {
           regularPosts.map((post) => (
-            <article class="group border-b border-black/10 hover:bg-gray-50 transition-colors">
+            <article class="group border-b-4 border-black hover:bg-[#F5F5F5]">
               <a
                 href={`/blog/${post.slug}`}
-                class="flex flex-col lg:flex-row lg:items-center lg:justify-between py-8 gap-6"
+                class="flex flex-col lg:flex-row lg:items-center lg:justify-between py-12 gap-8"
               >
                 <div class="flex-1">
-                  <h3 class="text-2xl lg:text-3xl font-bold mb-3 group-hover:text-red-600 transition-colors">
+                  <h3 class="text-3xl lg:text-4xl font-bold mb-4 leading-[1.1]">
                     {post.title}
                   </h3>
-                  <p class="text-black/70 leading-relaxed">{post.excerpt}</p>
+                  <p class="text-lg text-black/70 leading-[1.6]">
+                    {post.excerpt}
+                  </p>
                 </div>
 
-                <div class="flex items-center gap-8 text-sm text-black/60 lg:shrink-0">
+                <div class="flex items-center gap-8 text-sm font-bold uppercase tracking-wide lg:shrink-0">
                   <time class="whitespace-nowrap">{post.date}</time>
                   <span class="whitespace-nowrap">{post.readTime}</span>
                   <svg
-                    class="w-6 h-6 group-hover:translate-x-2 transition-transform"
+                    class="w-8 h-8"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    stroke-width="3"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      stroke-linecap="square"
+                      stroke-linejoin="miter"
                       d="M17 8l4 4m0 0l-4 4m4-4H3"
                     />
                   </svg>
@@ -193,30 +188,33 @@ const regularPosts = allPosts.filter((post) => !post.featured);
   </section>
 
   <!-- Newsletter Section -->
-  <section class="py-20 px-6 lg:px-12 bg-black text-white">
-    <div class="max-w-[800px] mx-auto text-center">
-      <h2 class="text-4xl lg:text-5xl font-bold mb-6">STAY UPDATED</h2>
-      <p class="text-xl text-white/70 mb-12">
+  <section class="py-32 px-16 lg:px-24 bg-black text-white">
+    <div class="max-w-[1000px] mx-auto">
+      <div class="w-32 h-2 bg-[#FFD700] mb-12"></div>
+      <h2 class="text-5xl lg:text-6xl font-bold mb-8 tracking-tighter">
+        STAY UPDATED
+      </h2>
+      <p class="text-2xl text-white/80 mb-16 leading-[1.5]">
         Get new articles delivered straight to your inbox. No spam, just quality
         content.
       </p>
 
-      <form class="flex flex-col sm:flex-row gap-4 max-w-[500px] mx-auto">
+      <form class="flex flex-col sm:flex-row gap-6">
         <input
           type="email"
-          placeholder="your@email.com"
-          class="flex-1 px-6 py-4 bg-white text-black focus:outline-none focus:ring-2 focus:ring-red-600"
+          placeholder="YOUR@EMAIL.COM"
+          class="flex-1 px-8 py-6 bg-white text-black font-bold uppercase text-sm tracking-wide focus:outline-none focus:ring-4 focus:ring-[#FFD700]"
           required
         />
         <button
           type="submit"
-          class="px-8 py-4 bg-red-600 text-white font-medium hover:bg-red-700 transition-colors whitespace-nowrap"
+          class="px-12 py-6 bg-[#FFD700] text-black font-bold uppercase text-sm tracking-wide hover:bg-white whitespace-nowrap"
         >
           SUBSCRIBE
         </button>
       </form>
 
-      <p class="text-sm text-white/50 mt-6">
+      <p class="text-sm font-bold uppercase tracking-wide mt-8 text-white/60">
         Join 500+ designers and developers
       </p>
     </div>
@@ -224,17 +222,14 @@ const regularPosts = allPosts.filter((post) => !post.featured);
 
   <!-- Footer -->
   <footer
-    class="py-12 px-6 lg:px-12 bg-black text-white border-t border-white/10"
+    class="py-12 px-16 lg:px-24 bg-black text-white border-t-2 border-white/20"
   >
     <div
-      class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6"
+      class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
     >
-      <p class="text-sm text-white/60">
-        © 2024 Your Name. All rights reserved.
-      </p>
-      <p class="text-sm text-white/60">
-        Designed & Built with <span class="text-red-600">♥</span> using Astro &
-        TailwindCSS
+      <p class="text-sm font-bold uppercase tracking-wide">© 2024 Your Name</p>
+      <p class="text-sm font-bold uppercase tracking-wide">
+        Designed with <span class="text-[#FFD700]">precision</span> using Astro
       </p>
     </div>
   </footer>
