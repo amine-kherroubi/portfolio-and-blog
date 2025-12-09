@@ -1,233 +1,225 @@
 @import "tailwindcss";
 
 :root {
-    --black: #000000;
-    --white: #FFFFFF;
-    --gray-100: #F5F5F5;
-    --gray-200: #E8E8E8;
+  --black: #000000;
+  --white: #ffffff;
+  --gray-100: #f5f5f5;
+  --gray-200: #e8e8e8;
 
-    /* Expanded geometric spacing scale for more breathing room */
-    --space-1: 8px;
-    --space-2: 16px;
-    --space-3: 24px;
-    --space-4: 32px;
-    --space-5: 40px;
-    --space-6: 48px;
-    --space-8: 64px;
-    --space-10: 80px;
-    --space-12: 96px;
-    --space-16: 128px;
-    --space-20: 160px;
-    --space-24: 192px;
-    --space-32: 256px;
-    --space-40: 320px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+  --space-16: 128px;
+  --space-20: 160px;
+  --space-24: 192px;
+  --space-32: 256px;
+  --space-40: 320px;
 
-    /* Border weights */
-    --border-thin: 1px;
-    --border-medium: 2px;
-    --border-thick: 4px;
+  --border-thin: 1px;
+  --border-medium: 2px;
+  --border-thick: 4px;
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-    overscroll-behavior: none;
-    overflow-x: hidden;
+  scroll-behavior: smooth;
+  font-size: 16px;
+  overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 body {
-    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background: var(--white);
-    color: var(--black);
-    overscroll-behavior: none;
-    overflow-x: hidden;
-    position: relative;
+  font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--white);
+  color: var(--black);
+  overscroll-behavior: none;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* Typography Scale with improved spacing */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
 }
 
 ::selection {
-    background: var(--black);
-    color: var(--white);
+  background: var(--black);
+  color: var(--white);
 }
 
 *:focus-visible {
-    outline: var(--border-medium) solid var(--black);
-    outline-offset: 6px;
+  outline: var(--border-medium) solid var(--black);
+  outline-offset: 6px;
 }
 
-/* Minimal Scrollbar */
 ::-webkit-scrollbar {
-    width: 12px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--white);
-    border-left: var(--border-thin) solid var(--black);
+  background: var(--white);
+  border-left: var(--border-thin) solid var(--black);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--black);
-    border: 2px solid var(--white);
+  background: var(--black);
+  border: 2px solid var(--white);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    border: 1px solid var(--white);
+  border: 1px solid var(--white);
 }
 
-/* Blog Prose Styles with more generous spacing */
 .prose {
-    max-width: 680px;
+  max-width: 680px;
 }
 
 .prose h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-top: var(--space-16);
-    margin-bottom: var(--space-8);
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: var(--space-16);
+  margin-bottom: var(--space-8);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 .prose h3 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-top: var(--space-12);
-    margin-bottom: var(--space-6);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-6);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .prose p {
-    margin-bottom: var(--space-8);
-    line-height: 1.85;
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 1.125rem;
+  margin-bottom: var(--space-8);
+  line-height: 1.85;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 1.125rem;
 }
 
 .prose a {
-    color: var(--black);
-    text-decoration: none;
-    border-bottom: var(--border-medium) solid var(--black);
-    transition: opacity 0.15s ease;
+  color: var(--black);
+  text-decoration: none;
+  border-bottom: var(--border-medium) solid var(--black);
+  transition: opacity 0.15s ease;
 }
 
 .prose a:hover {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .prose strong {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .prose em {
-    font-style: italic;
+  font-style: italic;
 }
 
 .prose code {
-    background: var(--gray-100);
-    border: var(--border-thin) solid var(--gray-200);
-    padding: 3px 10px;
-    font-size: 0.9em;
-    font-family: "Courier New", monospace;
+  background: var(--gray-100);
+  border: var(--border-thin) solid var(--gray-200);
+  padding: 3px 10px;
+  font-size: 0.9em;
+  font-family: "Courier New", monospace;
 }
 
 .prose pre {
-    background: var(--black);
-    color: var(--white);
-    padding: var(--space-8);
-    overflow-x: auto;
-    margin: var(--space-12) 0;
-    border: var(--border-medium) solid var(--black);
+  background: var(--black);
+  color: var(--white);
+  padding: var(--space-8);
+  overflow-x: auto;
+  margin: var(--space-12) 0;
+  border: var(--border-medium) solid var(--black);
 }
 
 .prose pre code {
-    background: transparent;
-    border: none;
-    padding: 0;
-    color: var(--white);
-    font-size: 0.875rem;
-    line-height: 1.7;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--white);
+  font-size: 0.875rem;
+  line-height: 1.7;
 }
 
 .prose blockquote {
-    border-left: var(--border-thick) solid var(--black);
-    padding-left: var(--space-8);
-    padding-top: var(--space-2);
-    padding-bottom: var(--space-2);
-    margin: var(--space-12) 0;
-    font-style: normal;
-    font-size: 1.25rem;
-    line-height: 1.7;
+  border-left: var(--border-thick) solid var(--black);
+  padding-left: var(--space-8);
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+  margin: var(--space-12) 0;
+  font-style: normal;
+  font-size: 1.25rem;
+  line-height: 1.7;
 }
 
 .prose ul,
 .prose ol {
-    margin: var(--space-8) 0;
-    padding-left: var(--space-8);
+  margin: var(--space-8) 0;
+  padding-left: var(--space-8);
 }
 
 .prose li {
-    margin-bottom: var(--space-4);
-    line-height: 1.85;
+  margin-bottom: var(--space-4);
+  line-height: 1.85;
 }
 
 .prose img {
-    width: 100%;
-    margin: var(--space-16) 0;
-    border: var(--border-medium) solid var(--black);
+  width: 100%;
+  margin: var(--space-16) 0;
+  border: var(--border-medium) solid var(--black);
 }
 
 .prose hr {
-    border: none;
-    height: var(--border-medium);
-    background: var(--black);
-    margin: var(--space-16) 0;
+  border: none;
+  height: var(--border-medium);
+  background: var(--black);
+  margin: var(--space-16) 0;
 }
 
-/* Utility Classes */
 .border-accent {
-    position: relative;
+  position: relative;
 }
 
 .border-accent::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 64px;
-    height: var(--border-medium);
-    background: var(--black);
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+  height: var(--border-medium);
+  background: var(--black);
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
