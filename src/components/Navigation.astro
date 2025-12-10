@@ -1,12 +1,12 @@
 ---
 interface Props {
-  currentPage?: "home" | "portfolio" | "blog";
+  currentPage?: "home" | "portfolio" | "blog" | "about";
 }
 
 const { currentPage } = Astro.props;
 ---
 
-<nav class="bg-white border-b-2 border-black">
+<nav class="bg-white">
   <div
     class="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-20 xl:px-24 h-8 lg:h-8 flex justify-between items-center"
   >
@@ -19,6 +19,19 @@ const { currentPage } = Astro.props;
     <ul
       class="flex gap-8 md:gap-12 lg:gap-16 text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
     >
+      <li>
+        <a
+          href="/about"
+          class:list={[
+            "transition-opacity duration-200 relative",
+            currentPage === "about"
+              ? "opacity-100"
+              : "opacity-50 hover:opacity-100",
+          ]}
+        >
+          About
+        </a>
+      </li>
       <li>
         <a
           href="/portfolio"
