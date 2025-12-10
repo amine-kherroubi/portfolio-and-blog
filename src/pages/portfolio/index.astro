@@ -3,7 +3,10 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
 import FilterBar from "../../components/FilterBar.astro";
-import Tag from "../../components/Tag.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import PageHeader from "../../components/PageHeader.astro";
+import ContentList from "../../components/ContentList.astro";
+import CapabilitiesSection from "../../components/CapabilitiesSection.astro";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
 const projects = [
@@ -78,113 +81,35 @@ const capabilities = [
 <BaseLayout title="Portfolio">
   <Navigation currentPage="portfolio" />
 
-  <section class="py-32 lg:py-40 px-8 md:px-16 lg:px-20 xl:px-32">
-    <div class="max-w-[1400px] mx-auto">
-      <h1
-        class="text-[clamp(4rem,12vw,10rem)] font-bold leading-[0.9] tracking-[-0.03em] mb-16 lg:mb-20"
-      >
-        Portfolio
-      </h1>
-      <p
-        class="text-[1.5rem] lg:text-[1.75rem] leading-normal font-light tracking-[-0.01em] max-w-3xl text-black/80"
-      >
-        Selected projects demonstrating technical expertise and design thinking
-      </p>
-    </div>
-  </section>
+  <PageHeader
+    title="Portfolio"
+    description="Selected projects demonstrating technical expertise and design thinking"
+  />
 
   <FilterBar tags={allTags} type="portfolio" />
 
-  <section class="py-20 lg:py-24 px-8 md:px-16 lg:px-20 xl:px-32">
-    <div class="max-w-[1400px] mx-auto space-y-0">
-      {
-        projects.map((project, i) => (
-          <article
-            class:list={[
-              "border-b-2 border-black",
-              i === projects.length - 1 && "border-b-0",
-            ]}
-            data-portfolio-item
-            data-portfolio-tags={project.tags.join(",")}
-          >
-            <a
-              href={project.link}
-              class="group block py-16 lg:py-20 transition-colors duration-200 hover:bg-black hover:text-white"
-            >
-              <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 items-start">
-                <span class="col-span-12 lg:col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100">
-                  {project.year}
-                </span>
-
-                <div class="col-span-12 lg:col-span-6 mt-6 lg:mt-0">
-                  <h2 class="text-[2.25rem] lg:text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-5">
-                    {project.title}
-                  </h2>
-                  <p class="text-[1.125rem] lg:text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100 mb-6">
-                    {project.description}
-                  </p>
-                  <div class="flex flex-wrap gap-2">
-                    {getTagsByIds(project.tags).map((tag) => (
-                      <Tag label={tag.label} variant="default" />
-                    ))}
-                  </div>
-                </div>
-
-                <div class="col-span-12 lg:col-span-4 flex items-center justify-start lg:justify-end mt-8 lg:mt-0">
-                  <svg
-                    class="w-8 h-8 opacity-60 group-hover:opacity-100 transition-opacity"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="square"
-                      stroke-linejoin="miter"
-                      d="M17 8l4 4m0 0l-4 4m4-4H3"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </a>
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
-  <section
-    class="py-40 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black"
-  >
-    <div class="max-w-[1400px] mx-auto">
-      <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 gap-y-20">
-        <h2
-          class="col-span-12 lg:col-span-3 text-[2rem] lg:text-[2.25rem] font-bold leading-[1.1] tracking-[-0.02em]"
-        >
-          Capabilities
-        </h2>
-
+  <ContentList>
+    {
+      projects.map((project, i) => (
         <div
-          class="col-span-12 lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-x-12 lg:gap-x-16 gap-y-20"
+          data-portfolio-item
+          data-portfolio-tags={project.tags.join(",")}
+          class:list={[i === projects.length - 1 && "border-b-0"]}
         >
-          {
-            capabilities.map(({ title, items }) => (
-              <div class="border-l-2 border-black pl-8">
-                <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-8">
-                  {title}
-                </h3>
-                <ul class="space-y-4 text-[0.9375rem] leading-[1.7] text-black/70">
-                  {items.map((item) => (
-                    <li>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
+          <ProjectCard
+            title={project.title}
+            description={project.description}
+            year={project.year}
+            tags={project.tags}
+            link={project.link}
+            variant="list"
+          />
         </div>
-      </div>
-    </div>
-  </section>
+      ))
+    }
+  </ContentList>
 
-  <Footer variant="light" />
+  <CapabilitiesSection capabilities={capabilities} />
+
+  <Footer />
 </BaseLayout>

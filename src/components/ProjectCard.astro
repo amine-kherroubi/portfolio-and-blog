@@ -1,58 +1,121 @@
 ---
+import Tag from "./Tag.astro";
+import { getTagsByIds, type TagId } from "../config/tags";
+
 interface Props {
   title: string;
-  subtitle: string;
+  description: string;
   year: string;
-  tags: string[];
+  tags?: TagId[];
   link: string;
+  variant?: "grid" | "list";
   gridSpan?: string;
 }
 
-const { title, subtitle, year, tags, link, gridSpan = "" } = Astro.props;
+const {
+  title,
+  description,
+  year,
+  tags = [],
+  link,
+  variant = "list",
+  gridSpan = "",
+} = Astro.props;
+
+const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
 ---
 
-<div
-  class:list={[
-    "group relative overflow-hidden bg-white border-4 border-black hover:bg-gray-50 transition-colors",
-    gridSpan,
-  ]}
->
-  <a
-    href={link}
-    class="p-12 lg:p-16 h-full min-h-[350px] flex flex-col justify-between"
-  >
-    <div class="flex justify-between items-start">
-      <span class="text-sm font-bold bg-black text-white px-4 py-2">{year}</span
+{
+  variant === "grid" ? (
+    <div
+      class:list={[
+        "group relative overflow-hidden bg-white border-4 border-black hover:bg-gray-50 transition-colors",
+        gridSpan,
+      ]}
+    >
+      <a
+        href={link}
+        class="p-12 lg:p-16 h-full min-h-[350px] flex flex-col justify-between"
       >
-      <svg
-        class="w-8 h-8"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        stroke-width="3"
+        <div class="flex justify-between items-start">
+          <span class="text-sm font-bold bg-black text-white px-4 py-2">
+            {year}
+          </span>
+          <svg
+            class="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="3"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="miter"
+              d="M7 17L17 7m0 0H7m10 0v10"
+            />
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-4xl lg:text-5xl font-bold leading-tight mb-4">
+            {title}
+          </h3>
+          <p class="text-xl text-black/70 leading-relaxed mb-8 font-medium">
+            {description}
+          </p>
+          {tagObjects.length > 0 && (
+            <div class="flex flex-wrap gap-3">
+              {tagObjects.map((tag) => (
+                <Tag label={tag.label} variant="default" />
+              ))}
+            </div>
+          )}
+        </div>
+      </a>
+    </div>
+  ) : (
+    <article class="border-b-2 border-black">
+      <a
+        href={link}
+        class="group block py-16 lg:py-20 transition-colors duration-200 hover:bg-black hover:text-white"
       >
-        <path
-          stroke-linecap="square"
-          stroke-linejoin="miter"
-          d="M7 17L17 7m0 0H7m10 0v10"></path>
-      </svg>
-    </div>
-    <div>
-      <h3 class="text-4xl lg:text-5xl font-bold leading-tight mb-4">
-        {title}
-      </h3>
-      <p class="text-xl text-black/70 leading-relaxed mb-8 font-medium">
-        {subtitle}
-      </p>
-      <div class="flex flex-wrap gap-3">
-        {
-          tags.map((tag) => (
-            <span class="text-xs font-bold px-4 py-2 border-2 border-black uppercase tracking-wide">
-              {tag}
-            </span>
-          ))
-        }
-      </div>
-    </div>
-  </a>
-</div>
+        <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 items-start">
+          <span class="col-span-12 lg:col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100">
+            {year}
+          </span>
+
+          <div class="col-span-12 lg:col-span-6 mt-6 lg:mt-0">
+            <h3 class="text-[2.25rem] lg:text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-5">
+              {title}
+            </h3>
+            <p class="text-[1.125rem] lg:text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100 mb-6">
+              {description}
+            </p>
+            {tagObjects.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {tagObjects.map((tag) => (
+                  <Tag label={tag.label} variant="default" />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div class="col-span-12 lg:col-span-4 flex items-center justify-start lg:justify-end mt-8 lg:mt-0">
+            <svg
+              class="w-8 h-8 opacity-60 group-hover:opacity-100 transition-opacity"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="square"
+                stroke-linejoin="miter"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </div>
+        </div>
+      </a>
+    </article>
+  )
+}

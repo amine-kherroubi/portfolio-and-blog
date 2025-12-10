@@ -1,4 +1,9 @@
 ---
+interface Props {
+  variant?: "default" | "light";
+}
+
+const { variant = "default" } = Astro.props;
 const year = new Date().getFullYear();
 ---
 

@@ -1,0 +1,45 @@
+---
+interface Capability {
+  title: string;
+  items: string[];
+}
+
+interface Props {
+  capabilities: Capability[];
+}
+
+const { capabilities } = Astro.props;
+---
+
+<section
+  class="py-40 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black"
+>
+  <div class="max-w-[1400px] mx-auto">
+    <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 gap-y-20">
+      <h2
+        class="col-span-12 lg:col-span-3 text-[2rem] lg:text-[2.25rem] font-bold leading-[1.1] tracking-[-0.02em]"
+      >
+        Capabilities
+      </h2>
+
+      <div
+        class="col-span-12 lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-x-12 lg:gap-x-16 gap-y-20"
+      >
+        {
+          capabilities.map(({ title, items }) => (
+            <div class="border-l-2 border-black pl-8">
+              <h3 class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-8">
+                {title}
+              </h3>
+              <ul class="space-y-4 text-[0.9375rem] leading-[1.7] text-black/70">
+                {items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
