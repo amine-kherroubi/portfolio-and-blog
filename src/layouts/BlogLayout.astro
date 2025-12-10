@@ -18,24 +18,22 @@ const { frontmatter } = Astro.props;
 <BaseLayout title={frontmatter.title} description={frontmatter.excerpt}>
   <Navigation currentPage="blog" />
 
-  <article class="py-32 lg:py-40 px-8 md:px-16 lg:px-20 xl:px-32">
+  <article class="py-48 px-32">
     <div class="max-w-5xl mx-auto">
-      <header class="mb-32 lg:mb-40">
+      <header class="mb-48">
         <div
-          class="flex gap-8 text-[0.8125rem] font-bold uppercase tracking-[0.15em] mb-16 text-black/50"
+          class="flex gap-8 text-sm font-bold uppercase tracking-widest mb-24 text-black/50"
         >
           <time>{frontmatter.date}</time>
           <span>{frontmatter.readTime}</span>
         </div>
 
-        <h1
-          class="text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-[0.95] tracking-[-0.03em] mb-16"
-        >
+        <h1 class="text-8xl font-bold leading-tight tracking-tighter mb-24">
           {frontmatter.title}
         </h1>
 
         <p
-          class="text-[1.5rem] lg:text-[1.75rem] leading-[1.6] font-light text-black/70 max-w-3xl mb-20"
+          class="text-3xl leading-relaxed font-light text-black/70 max-w-3xl mb-32"
         >
           {frontmatter.excerpt}
         </p>
@@ -45,10 +43,10 @@ const { frontmatter } = Astro.props;
         <slot />
       </div>
 
-      <footer class="mt-40 pt-16 border-t-2 border-black">
+      <footer class="mt-48 pt-24 border-t-2 border-black">
         <a
           href="/blog"
-          class="inline-flex items-center gap-4 text-[0.8125rem] font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200"
+          class="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity"
         >
           All Posts
         </a>
@@ -56,5 +54,5 @@ const { frontmatter } = Astro.props;
     </div>
   </article>
 
-  <Footer variant="light" />
+  <Footer />
 </BaseLayout>

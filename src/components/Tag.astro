@@ -14,9 +14,9 @@ const {
 } = Astro.props;
 
 const sizeClasses = {
-  default: "text-[0.6875rem] px-3 py-1.5 border-2",
-  filter: "text-[0.6875rem] px-4 py-2 border-2",
-  large: "text-xs px-4 py-2.5 border-2",
+  default: "text-xs px-4 py-2 border-2",
+  filter: "text-xs px-5 py-2.5 border-2",
+  large: "text-sm px-5 py-3 border-2",
 };
 
 const colorClasses = active
@@ -28,7 +28,7 @@ const colorClasses = active
 
 <span
   class:list={[
-    "inline-block font-bold uppercase tracking-[0.15em] border-black transition-all duration-200",
+    "inline-block font-bold uppercase tracking-widest border-black transition-all",
     sizeClasses[variant],
     colorClasses,
     clickable && "cursor-pointer",

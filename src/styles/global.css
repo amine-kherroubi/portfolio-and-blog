@@ -81,7 +81,7 @@ h6 {
 .prose h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  margin: 128px 0 64px;
+  margin: 96px 0 48px;
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
@@ -89,13 +89,13 @@ h6 {
 .prose h3 {
   font-size: 1.75rem;
   font-weight: 700;
-  margin: 96px 0 48px;
+  margin: 64px 0 32px;
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
 .prose p {
-  margin-bottom: 64px;
+  margin-bottom: 48px;
   line-height: 1.85;
   color: rgba(0, 0, 0, 0.85);
   font-size: 1.125rem;
@@ -127,9 +127,9 @@ h6 {
 .prose pre {
   background: var(--black);
   color: var(--white);
-  padding: 64px;
+  padding: 48px;
   overflow-x: auto;
-  margin: 96px 0;
+  margin: 64px 0;
   border: 2px solid var(--black);
 }
 
@@ -144,26 +144,26 @@ h6 {
 
 .prose blockquote {
   border-left: 4px solid var(--black);
-  padding: 16px 0 16px 64px;
-  margin: 96px 0;
+  padding: 16px 0 16px 48px;
+  margin: 64px 0;
   font-size: 1.25rem;
   line-height: 1.7;
 }
 
 .prose ul,
 .prose ol {
-  margin: 64px 0;
-  padding-left: 64px;
+  margin: 48px 0;
+  padding-left: 48px;
 }
 
 .prose li {
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   line-height: 1.85;
 }
 
 .prose img {
   width: 100%;
-  margin: 128px 0;
+  margin: 96px 0;
   border: 2px solid var(--black);
 }
 
@@ -171,7 +171,7 @@ h6 {
   border: none;
   height: 2px;
   background: var(--black);
-  margin: 128px 0;
+  margin: 96px 0;
 }
 
 /* Accessibility */

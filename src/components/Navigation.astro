@@ -12,26 +12,24 @@ const links = [
 ] as const;
 ---
 
-<nav class="bg-white">
+<nav class="bg-white border-b-2 border-black">
   <div
-    class="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-20 xl:px-24 h-8 lg:h-8 flex justify-between items-center"
+    class="max-w-screen-2xl mx-auto px-32 h-24 flex justify-between items-center"
   >
     <a
       href="/"
-      class="text-[0.8125rem] font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200"
+      class="text-sm font-bold tracking-widest uppercase hover:opacity-50 transition-opacity"
     >
       {currentPage !== "home" ? "Home" : "Your Name"}
     </a>
-    <ul
-      class="flex gap-8 md:gap-12 lg:gap-16 text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
-    >
+    <ul class="flex gap-16 text-sm font-bold uppercase tracking-widest">
       {
         links.map(({ href, label, page }) => (
           <li>
             <a
               href={href}
               class:list={[
-                "transition-opacity duration-200",
+                "transition-opacity",
                 currentPage === page
                   ? "opacity-100"
                   : "opacity-50 hover:opacity-100",

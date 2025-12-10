@@ -1,27 +1,10 @@
 ---
-interface Props {
-  variant?: "light" | "dark";
-}
-
-const { variant = "dark" } = Astro.props;
 const year = new Date().getFullYear();
-
-const isDark = variant === "dark";
-const classes = {
-  bg: isDark ? "bg-black text-white" : "bg-white text-black",
-  border: isDark ? "border-white" : "border-black",
-};
 ---
 
-<footer
-  class:list={[
-    "py-12 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2",
-    classes.bg,
-    classes.border,
-  ]}
->
+<footer class="py-16 px-32 bg-white text-black border-t-2 border-black">
   <div
-    class="max-w-[1400px] mx-auto flex justify-between items-center text-[0.6875rem] uppercase tracking-[0.15em] font-bold"
+    class="max-w-screen-2xl mx-auto flex justify-between items-center text-xs uppercase tracking-widest font-bold"
   >
     <p class="opacity-60">© {year}</p>
     <p class="opacity-60">Built with Astro</p>

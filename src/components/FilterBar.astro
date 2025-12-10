@@ -17,21 +17,19 @@ const sortedTags = [...tags].sort((a, b) =>
 ---
 
 <div class="filter-bar border-b-2 border-black bg-white sticky top-0 z-10">
-  <div class="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-20 xl:px-32 py-8">
-    <div class="flex items-center gap-6 mb-6">
-      <span
-        class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] text-black/50"
-      >
+  <div class="max-w-screen-2xl mx-auto px-32 py-12">
+    <div class="flex items-center gap-8 mb-8">
+      <span class="text-sm font-bold uppercase tracking-widest text-black/50">
         Filter by:
       </span>
       <button
         id={`${type}-clear-filters`}
-        class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 hidden"
+        class="text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity hidden"
       >
         Clear All
       </button>
     </div>
-    <div class="flex flex-wrap gap-3" id={`${type}-filter-tags`}>
+    <div class="flex flex-wrap gap-4" id={`${type}-filter-tags`}>
       {
         sortedTags.map((tag) => (
           <button class="filter-tag-btn" data-tag-id={tag.id} data-type={type}>
@@ -42,7 +40,7 @@ const sortedTags = [...tags].sort((a, b) =>
     </div>
     <div
       id={`${type}-results-count`}
-      class="mt-6 text-sm text-black/60 font-bold uppercase tracking-[0.15em]"
+      class="mt-8 text-sm text-black/60 font-bold uppercase tracking-widest"
     >
     </div>
   </div>
