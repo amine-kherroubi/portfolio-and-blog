@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navigation from "../../components/Navigation.astro";
+import Footer from "../../components/Footer.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const blogPosts = await getCollection("blog");
+  return blogPosts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.excerpt}>
+  <Navigation currentPage="blog" />
+
+  <article class="py-48 px-32">
+    <div class="max-w-5xl mx-auto">
+      <header class="mb-48">
+        <div
+          class="flex gap-8 text-sm font-bold uppercase tracking-widest mb-24 text-black/50"
+        >
+          <time>{post.data.date}</time>
+          <span>{post.data.readTime}</span>
+        </div>
+
+        <h1 class="text-8xl font-bold leading-tight tracking-tighter mb-24">
+          {post.data.title}
+        </h1>
+
+        <p
+          class="text-3xl leading-relaxed font-light text-black/70 max-w-3xl mb-32"
+        >
+          {post.data.excerpt}
+        </p>
+      </header>
+
+      <div class="prose prose-lg max-w-none">
+        <Content />
+      </div>
+
+      <footer class="mt-48 pt-24 border-t-2 border-black">
+        <a
+          href="/blog"
+          class="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity"
+        >
+          All Posts
+        </a>
+      </footer>
+    </div>
+  </article>
+
+  <Footer />
+</BaseLayout>

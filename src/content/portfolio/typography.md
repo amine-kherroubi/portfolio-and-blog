@@ -1,0 +1,34 @@
+---
+title: "Typographic Explorer"
+description: "Generative art with computational design"
+year: "2024"
+tags: ["creative", "canvas", "typography", "frontend"]
+---
+
+# Typographic Explorer
+
+An interactive generative art tool that creates dynamic typographic compositions using computational design principles.
+
+## Concept
+
+Combines typography, motion, and code to create unique visual experiences that respond to user interaction.
+
+## Technical Implementation
+
+Built using HTML5 Canvas API and modern JavaScript, the tool generates real-time animations based on typographic forms and user input.
+
+## Features
+
+- Real-time generative compositions
+- Multiple algorithm modes
+- Interactive parameter controls
+- Export to high-resolution images
+- Responsive to mouse/touch input
+
+## Creative Approach
+
+Blends Swiss design principles with contemporary generative art techniques, creating a bridge between traditional typography and digital art.
+
+## Reception
+
+Featured in design communities and used as an educational tool for exploring the intersection of code and visual design.

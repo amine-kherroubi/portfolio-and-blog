@@ -1,0 +1,30 @@
+---
+title: "Swiss Grid System"
+description: "Interactive design tool for web layouts"
+year: "2024"
+tags: ["design", "typescript", "web-development", "design-systems"]
+---
+
+# Swiss Grid System
+
+An interactive tool for creating and visualizing grid-based layouts using Swiss design principles.
+
+## Project Goals
+
+Create an educational tool that helps designers understand and implement grid systems in their work.
+
+## Features
+
+- Real-time grid visualization
+- Multiple column configurations
+- Responsive breakpoint support
+- Export to CSS code
+- Swiss design templates
+
+## Technology
+
+Built with TypeScript and modern web APIs, the tool runs entirely in the browser with no backend required.
+
+## Impact
+
+Used by design students and professionals to quickly prototype layouts and learn grid system fundamentals.

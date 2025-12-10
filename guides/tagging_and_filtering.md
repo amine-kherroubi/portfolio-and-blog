@@ -4,10 +4,27 @@
 
 This modular tagging system allows you to:
 - Define tags in a centralized configuration
-- Add tags to blog posts and portfolio projects
+- Add tags to blog posts and portfolio projects using Content Collections
 - Display tags on cards
 - Filter content by tags with URL persistence
 - Easily extend with new tags and categories
+
+## Content Collections Structure
+
+Content is organized using Astro's Content Collections in `src/content/`:
+
+```
+src/content/
+├── config.ts          # Collection schemas
+├── blog/             # Blog posts (MDX)
+│   ├── beauty-of-constraint.mdx
+│   ├── swiss-design-digital.mdx
+│   └── ...
+└── portfolio/        # Portfolio projects (Markdown)
+    ├── neural-networks.md
+    ├── grid-system.md
+    └── ...
+```
 
 ## Adding New Tags
 
@@ -35,51 +52,48 @@ export const TAGS: Record<string, Tag> = {
 
 ### 2. Add Tags to Blog Posts
 
-**For MDX Posts** (in frontmatter):
+Create or edit an MDX file in `src/content/blog/`:
 
 ```yaml
 ---
-layout: ../../layouts/BlogLayout.astro
 title: "Your Post Title"
 date: "2024-03-15"
 excerpt: "Your excerpt"
 readTime: "5 min read"
-tags: ['design', 'minimalism', 'swiss-design']
+tags: ["design", "minimalism", "swiss-design"]
 ---
-```
 
-**For Posts in index.astro** (in the posts array):
-
-```typescript
-const posts = [
-  {
-    title: "Your Post",
-    excerpt: "...",
-    date: "2024-03-15",
-    readTime: "5 min",
-    slug: "your-post",
-    tags: ['design', 'minimalism'] as TagId[],
-  },
-]
+Your post content here...
 ```
 
 ### 3. Add Tags to Portfolio Projects
 
-Edit `src/pages/portfolio/index.astro`:
+Create or edit a Markdown file in `src/content/portfolio/`:
 
-```typescript
-const projects = [
-  {
-    title: "Your Project",
-    description: "...",
-    year: "2024",
-    tags: ['ai', 'python', 'machine-learning'] as TagId[],
-    link: "/portfolio/your-project",
-  },
-]
+```yaml
+---
+title: "Your Project"
+description: "Project description"
+year: "2024"
+tags: ["ai", "python", "machine-learning"]
+---
+
+Your project content here...
 ```
 
 ## How It Works
+
+### Content Collections
+
+**`src/content/config.ts`**
+- Defines schemas for blog and portfolio collections
+- Uses Zod for type validation
+- Configures the glob loader for file-based content
+
+**Content Queries**
+- Pages use `getCollection()` from `astro:content`
+- Automatically loads all content from collections
+- Provides type-safe access to frontmatter
 
 ### Components
 
@@ -122,6 +136,45 @@ Or for portfolio:
 >
 ```
 
+## Adding New Content
+
+### Add a New Blog Post
+
+1. Create a new `.mdx` file in `src/content/blog/`:
+
+```markdown
+---
+title: "Building with Svelte"
+date: "2024-12-10"
+excerpt: "My experience with Svelte framework"
+readTime: "8 min read"
+tags: ["svelte", "web-development", "frontend"]
+---
+
+Your content here...
+```
+
+2. The blog index page will automatically include it
+3. A dynamic route at `/blog/[slug]` will render it
+
+### Add a New Portfolio Project
+
+1. Create a new `.md` file in `src/content/portfolio/`:
+
+```markdown
+---
+title: "Your Project"
+description: "Project description"
+year: "2024"
+tags: ["svelte", "typescript", "web-development"]
+---
+
+Your project content here...
+```
+
+2. The portfolio index will automatically include it
+3. A dynamic route at `/portfolio/[slug]` will render it
+
 ## Extending the System
 
 ### Add New Tag Category
@@ -132,21 +185,6 @@ export interface Tag {
   label: string;
   category: 'technology' | 'design' | 'domain' | 'skill' | 'industry'; // Add new
 }
-```
-
-### Use Tags Dynamically from MDX
-
-To fetch and display tags from MDX posts:
-
-```astro
----
-const posts = await Astro.glob('./blog/*.mdx');
-const postsWithTags = posts.map(post => ({
-  ...post.frontmatter,
-  slug: post.file.split('/').pop()?.replace('.mdx', ''),
-  tags: post.frontmatter.tags || []
-}));
----
 ```
 
 ### Custom Tag Styling
@@ -180,63 +218,37 @@ categorySelect?.addEventListener('change', (e) => {
 3. **Categories**: Group related tags for easier navigation
 4. **Consistency**: Use same tag IDs across blog and portfolio
 5. **URL Friendly**: Avoid special characters in tag IDs
+6. **Type Safety**: Always define tags in `src/config/tags.ts` first
 
-## Examples
+## Content Collection Benefits
 
-### Adding a New Technology Tag
-
-```typescript
-// 1. Add to config
-'svelte': { id: 'svelte', label: 'Svelte', category: 'technology' },
-
-// 2. Use in project
-tags: ['svelte', 'typescript', 'web-development'] as TagId[],
-
-// 3. Use in blog post
-tags: ['svelte', 'design', 'web-development']
-```
-
-### Creating a Blog Post with Tags
-
-```markdown
----
-layout: ../../layouts/BlogLayout.astro
-title: "Building with Svelte"
-date: "2024-12-10"
-excerpt: "My experience with Svelte framework"
-readTime: "8 min read"
-tags: ['svelte', 'web-development', 'frontend']
----
-
-Your content here...
-```
-
-### Sharing Filtered Views
-
-Filtered URLs are shareable:
-- `yoursite.com/blog?tags=design,minimalism`
-- `yoursite.com/portfolio?tags=ai,python`
+- **Type Safety**: Zod schemas validate frontmatter
+- **Centralized**: All content in one location
+- **Easy Queries**: Use `getCollection()` for data access
+- **Auto-generated Routes**: Dynamic pages for all content
+- **Performance**: Optimized for build-time rendering
 
 ## Troubleshooting
 
 **Tags not showing?**
 - Verify tag IDs exist in `src/config/tags.ts`
 - Check `data-{type}-tags` attributes match exactly
-- Ensure TypeScript types are correct (`as TagId[]`)
+- Ensure frontmatter schema matches `src/content/config.ts`
+
+**Content not appearing?**
+- Check file location in correct collection folder
+- Verify frontmatter matches schema in `config.ts`
+- Run `astro dev` and check console for errors
 
 **Filtering not working?**
 - Check browser console for JavaScript errors
 - Verify `data-{type}-item` attributes exist
 - Ensure FilterBar is imported and rendered
 
-**Tags not filtering correctly?**
-- Confirm tag IDs in data attributes match config
-- Check for whitespace in tag lists
-- Verify script initialization in FilterBar
-
 ## Performance Notes
 
 - Filtering is client-side (instant, no page reload)
-- Tags are static at build time
+- Content is static at build time
+- Collections are queried at build time
 - No runtime dependencies
 - Minimal JavaScript footprint (~2KB)

@@ -6,42 +6,25 @@ import FilterBar from "../../components/FilterBar.astro";
 import BlogCard from "../../components/BlogCard.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import ContentList from "../../components/ContentList.astro";
+import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
-const posts = [
-  {
-    title: "The Beauty of Constraint",
-    excerpt: "How limitations in design lead to creative breakthroughs",
-    date: "2024-03-15",
-    readTime: "5 min",
-    slug: "beauty-of-constraint",
-    tags: ["design", "minimalism", "swiss-design"] as TagId[],
-  },
-  {
-    title: "Swiss Design in Digital Age",
-    excerpt: "Adapting timeless principles to modern interfaces",
-    date: "2024-03-01",
-    readTime: "7 min",
-    slug: "swiss-design-digital",
-    tags: ["design", "swiss-design", "web-development"] as TagId[],
-  },
-  {
-    title: "Minimalism in Code",
-    excerpt: "Writing cleaner software through deliberate simplicity",
-    date: "2024-02-20",
-    readTime: "6 min",
-    slug: "minimalism-in-code",
-    tags: ["python", "typescript", "minimalism"] as TagId[],
-  },
-  {
-    title: "Grid Systems Explained",
-    excerpt: "Mathematics and psychology behind effective layouts",
-    date: "2024-02-05",
-    readTime: "10 min",
-    slug: "grid-systems",
-    tags: ["design", "design-systems", "typography"] as TagId[],
-  },
-];
+const allBlogPosts = await getCollection("blog");
+
+const posts = allBlogPosts
+  .map((post) => {
+    // post.id is the filename without extension in Astro v5
+    const slug = post.id;
+    return {
+      title: post.data.title,
+      excerpt: post.data.excerpt,
+      date: post.data.date,
+      readTime: post.data.readTime,
+      slug: slug,
+      tags: post.data.tags as TagId[],
+    };
+  })
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 const allTags = getTagsByIds([...new Set(posts.flatMap((p) => p.tags))]);
 ---

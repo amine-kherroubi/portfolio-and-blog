@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navigation from "../../components/Navigation.astro";
+import Footer from "../../components/Footer.astro";
+import { getCollection, render } from "astro:content";
+import Tag from "../../components/Tag.astro";
+import { getTagsByIds, type TagId } from "../../config/tags";
+
+export async function getStaticPaths() {
+  const portfolioProjects = await getCollection("portfolio");
+  return portfolioProjects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const tagObjects = getTagsByIds(project.data.tags as TagId[]);
+---
+
+<BaseLayout title={`${project.data.title} — Project`}>
+  <Navigation currentPage="portfolio" />
+
+  <section class="py-32 px-32">
+    <div class="max-w-screen-2xl mx-auto">
+      <div
+        class="mb-16 flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-black/50"
+      >
+        <span>{project.data.year}</span>
+      </div>
+      <div class="w-16 h-0.5 bg-black mb-16"></div>
+      <h1 class="text-9xl font-bold leading-tight tracking-tighter mb-12">
+        {project.data.title}
+      </h1>
+      <p
+        class="text-4xl text-black/70 leading-normal font-light tracking-tight max-w-5xl mb-12"
+      >
+        {project.data.description}
+      </p>
+      {
+        tagObjects.length > 0 && (
+          <div class="flex flex-wrap gap-3 mt-8">
+            {tagObjects.map((tag) => (
+              <Tag label={tag.label} variant="large" />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="px-32 mb-48">
+    <div class="max-w-screen-2xl mx-auto">
+      <div
+        class="aspect-video bg-gray-100 border-2 border-black flex items-center justify-center"
+      >
+        <p class="text-black/30 text-xl font-bold uppercase tracking-widest">
+          Project Visualization
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="px-32 mb-48">
+    <div class="max-w-screen-2xl mx-auto">
+      <div class="prose prose-lg max-w-4xl">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  <section class="px-32 mb-48">
+    <div class="max-w-screen-2xl mx-auto">
+      <a
+        href="/portfolio"
+        class="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity"
+      >
+        All Projects
+      </a>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

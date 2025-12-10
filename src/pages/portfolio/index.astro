@@ -7,43 +7,24 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import ContentList from "../../components/ContentList.astro";
 import CapabilitiesSection from "../../components/CapabilitiesSection.astro";
+import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
-const projects = [
-  {
-    title: "Neural Networks",
-    description: "Deep learning architecture optimization",
-    year: "2024",
-    tags: ["ai", "python", "machine-learning", "optimization"] as TagId[],
-    link: "/portfolio/neural-networks",
-  },
-  {
-    title: "Swiss Grid System",
-    description: "Interactive design tool for web layouts",
-    year: "2024",
-    tags: [
-      "design",
-      "typescript",
-      "web-development",
-      "design-systems",
-    ] as TagId[],
-    link: "/portfolio/grid-system",
-  },
-  {
-    title: "Quantum Computing",
-    description: "Algorithm research and optimization",
-    year: "2023",
-    tags: ["research", "qiskit", "quantum-computing", "python"] as TagId[],
-    link: "/portfolio/quantum",
-  },
-  {
-    title: "Typographic Explorer",
-    description: "Generative art with computational design",
-    year: "2024",
-    tags: ["creative", "canvas", "typography", "frontend"] as TagId[],
-    link: "/portfolio/typography",
-  },
-];
+const allPortfolioProjects = await getCollection("portfolio");
+
+const projects = allPortfolioProjects
+  .map((project) => {
+    // project.id is the filename without extension
+    const slug = project.id;
+    return {
+      title: project.data.title,
+      description: project.data.description,
+      year: project.data.year,
+      tags: project.data.tags as TagId[],
+      link: `/portfolio/${slug}`,
+    };
+  })
+  .sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
 const allTags = getTagsByIds([...new Set(projects.flatMap((p) => p.tags))]);
 
