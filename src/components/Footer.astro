@@ -5,14 +5,19 @@ interface Props {
 
 const { variant = "dark" } = Astro.props;
 const year = new Date().getFullYear();
+
+const isDark = variant === "dark";
+const classes = {
+  bg: isDark ? "bg-black text-white" : "bg-white text-black",
+  border: isDark ? "border-white" : "border-black",
+};
 ---
 
 <footer
   class:list={[
     "py-12 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2",
-    variant === "dark"
-      ? "bg-black text-white border-white"
-      : "bg-white text-black border-black",
+    classes.bg,
+    classes.border,
   ]}
 >
   <div

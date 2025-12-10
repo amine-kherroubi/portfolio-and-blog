@@ -4,6 +4,12 @@ interface Props {
 }
 
 const { currentPage } = Astro.props;
+
+const links = [
+  { href: "/about", label: "About", page: "about" },
+  { href: "/portfolio", label: "Portfolio", page: "portfolio" },
+  { href: "/blog", label: "Blog", page: "blog" },
+] as const;
 ---
 
 <nav class="bg-white">
@@ -19,45 +25,23 @@ const { currentPage } = Astro.props;
     <ul
       class="flex gap-8 md:gap-12 lg:gap-16 text-[0.8125rem] font-bold uppercase tracking-[0.15em]"
     >
-      <li>
-        <a
-          href="/about"
-          class:list={[
-            "transition-opacity duration-200 relative",
-            currentPage === "about"
-              ? "opacity-100"
-              : "opacity-50 hover:opacity-100",
-          ]}
-        >
-          About
-        </a>
-      </li>
-      <li>
-        <a
-          href="/portfolio"
-          class:list={[
-            "transition-opacity duration-200 relative",
-            currentPage === "portfolio"
-              ? "opacity-100"
-              : "opacity-50 hover:opacity-100",
-          ]}
-        >
-          Portfolio
-        </a>
-      </li>
-      <li>
-        <a
-          href="/blog"
-          class:list={[
-            "transition-opacity duration-200 relative",
-            currentPage === "blog"
-              ? "opacity-100"
-              : "opacity-50 hover:opacity-100",
-          ]}
-        >
-          Blog
-        </a>
-      </li>
+      {
+        links.map(({ href, label, page }) => (
+          <li>
+            <a
+              href={href}
+              class:list={[
+                "transition-opacity duration-200",
+                currentPage === page
+                  ? "opacity-100"
+                  : "opacity-50 hover:opacity-100",
+              ]}
+            >
+              {label}
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </div>
 </nav>

@@ -12,22 +12,26 @@ const {
   active = false,
   clickable = false,
 } = Astro.props;
+
+const sizeClasses = {
+  default: "text-[0.6875rem] px-3 py-1.5 border-2",
+  filter: "text-[0.6875rem] px-4 py-2 border-2",
+  large: "text-xs px-4 py-2.5 border-2",
+};
+
+const colorClasses = active
+  ? "bg-black text-white"
+  : clickable
+    ? "bg-white text-black hover:bg-black hover:text-white"
+    : "bg-white text-black";
 ---
 
 <span
   class:list={[
-    "inline-block font-bold uppercase tracking-[0.15em] transition-all duration-200",
-    {
-      "text-[0.6875rem] px-3 py-1.5 border-2 border-black":
-        variant === "default",
-      "text-[0.6875rem] px-4 py-2 border-2 border-black": variant === "filter",
-      "text-xs px-4 py-2.5 border-2 border-black": variant === "large",
-      "bg-black text-white": active,
-      "bg-white text-black hover:bg-black hover:text-white":
-        !active && clickable,
-      "bg-white text-black": !active && !clickable,
-      "cursor-pointer": clickable,
-    },
+    "inline-block font-bold uppercase tracking-[0.15em] border-black transition-all duration-200",
+    sizeClasses[variant],
+    colorClasses,
+    clickable && "cursor-pointer",
   ]}
   data-tag={clickable ? label : undefined}
 >

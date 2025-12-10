@@ -9,13 +9,11 @@ interface Props {
 
 const { tags, type } = Astro.props;
 
-// Sort tags by category and then by label
-const sortedTags = [...tags].sort((a, b) => {
-  if (a.category !== b.category) {
-    return a.category.localeCompare(b.category);
-  }
-  return a.label.localeCompare(b.label);
-});
+const sortedTags = [...tags].sort((a, b) =>
+  a.category === b.category
+    ? a.label.localeCompare(b.label)
+    : a.category.localeCompare(b.category)
+);
 ---
 
 <div class="filter-bar border-b-2 border-black bg-white sticky top-0 z-10">
@@ -46,7 +44,6 @@ const sortedTags = [...tags].sort((a, b) => {
       id={`${type}-results-count`}
       class="mt-6 text-sm text-black/60 font-bold uppercase tracking-[0.15em]"
     >
-      <!-- Results count will be inserted here -->
     </div>
   </div>
 </div>
@@ -58,43 +55,38 @@ const sortedTags = [...tags].sort((a, b) => {
     const resultsCount = document.getElementById(`${type}-results-count`);
     const items = document.querySelectorAll(`[data-${type}-item]`);
 
-    if (!filterTags || !clearBtn || !resultsCount) return;
+    if (!filterTags || !clearBtn || !resultsCount || !items.length) return;
 
-    let activeFilters = new Set<string>();
+    const activeFilters = new Set<string>();
 
-    // Get filters from URL on load
+    // Initialize from URL
     const urlParams = new URLSearchParams(window.location.search);
     const tagsParam = urlParams.get("tags");
     if (tagsParam) {
-      activeFilters = new Set(tagsParam.split(","));
+      tagsParam.split(",").forEach((tag) => activeFilters.add(tag));
       updateUI();
       filterItems();
     } else {
       updateResultsCount(items.length);
     }
 
-    // Handle filter button clicks
+    // Event listeners
     filterTags.addEventListener("click", (e) => {
       const btn = (e.target as HTMLElement).closest(
         ".filter-tag-btn"
       ) as HTMLButtonElement;
-      if (!btn) return;
+      if (!btn?.dataset.tagId) return;
 
       const tagId = btn.dataset.tagId;
-      if (!tagId) return;
-
-      if (activeFilters.has(tagId)) {
-        activeFilters.delete(tagId);
-      } else {
-        activeFilters.add(tagId);
-      }
+      activeFilters.has(tagId)
+        ? activeFilters.delete(tagId)
+        : activeFilters.add(tagId);
 
       updateUI();
       filterItems();
       updateURL();
     });
 
-    // Handle clear button
     clearBtn.addEventListener("click", () => {
       activeFilters.clear();
       updateUI();
@@ -103,83 +95,60 @@ const sortedTags = [...tags].sort((a, b) => {
     });
 
     function updateUI() {
-      // Update button states
-      const buttons = filterTags.querySelectorAll(".filter-tag-btn");
-      buttons.forEach((btn) => {
+      filterTags.querySelectorAll(".filter-tag-btn").forEach((btn) => {
         const tagId = (btn as HTMLButtonElement).dataset.tagId;
         const tag = btn.querySelector("[data-tag]");
-        if (tagId && activeFilters.has(tagId)) {
-          tag?.classList.add("bg-black", "text-white");
-          tag?.classList.remove("bg-white", "text-black");
-        } else {
-          tag?.classList.remove("bg-black", "text-white");
-          tag?.classList.add("bg-white", "text-black");
-        }
+        const isActive = tagId && activeFilters.has(tagId);
+
+        tag?.classList.toggle("bg-black", isActive);
+        tag?.classList.toggle("text-white", isActive);
+        tag?.classList.toggle("bg-white", !isActive);
+        tag?.classList.toggle("text-black", !isActive);
       });
 
-      // Show/hide clear button
-      if (activeFilters.size > 0) {
-        clearBtn.classList.remove("hidden");
-      } else {
-        clearBtn.classList.add("hidden");
-      }
+      clearBtn.classList.toggle("hidden", activeFilters.size === 0);
     }
 
     function filterItems() {
       let visibleCount = 0;
+      const hasFilters = activeFilters.size > 0;
 
       items.forEach((item) => {
         const itemTags =
-          (item as HTMLElement).dataset[`${type}Tags`]?.split(",") || [];
+          (item as HTMLElement).dataset[`${type}Tags`]
+            ?.split(",")
+            .map((t) => t.trim()) || [];
+        const isVisible =
+          !hasFilters || itemTags.some((tag) => activeFilters.has(tag));
 
-        if (activeFilters.size === 0) {
-          // No filters active, show all
-          (item as HTMLElement).style.display = "";
-          visibleCount++;
-        } else {
-          // Check if item has any of the active tags
-          const hasMatchingTag = itemTags.some((tag) =>
-            activeFilters.has(tag.trim())
-          );
-          if (hasMatchingTag) {
-            (item as HTMLElement).style.display = "";
-            visibleCount++;
-          } else {
-            (item as HTMLElement).style.display = "none";
-          }
-        }
+        (item as HTMLElement).style.display = isVisible ? "" : "none";
+        if (isVisible) visibleCount++;
       });
 
       updateResultsCount(visibleCount);
     }
 
     function updateResultsCount(count: number) {
-      if (resultsCount) {
-        resultsCount.textContent =
-          activeFilters.size > 0
-            ? `Showing ${count} of ${items.length} ${type === "blog" ? "posts" : "projects"}`
-            : `${items.length} ${type === "blog" ? "posts" : "projects"} total`;
-      }
+      const total = items.length;
+      const typeLabel = type === "blog" ? "posts" : "projects";
+      resultsCount.textContent =
+        activeFilters.size > 0
+          ? `Showing ${count} of ${total} ${typeLabel}`
+          : `${total} ${typeLabel} total`;
     }
 
     function updateURL() {
       const url = new URL(window.location.href);
-      if (activeFilters.size > 0) {
-        url.searchParams.set("tags", Array.from(activeFilters).join(","));
-      } else {
-        url.searchParams.delete("tags");
-      }
+      activeFilters.size > 0
+        ? url.searchParams.set("tags", Array.from(activeFilters).join(","))
+        : url.searchParams.delete("tags");
       window.history.replaceState({}, "", url);
     }
   }
 
-  // Initialize filters when DOM is ready
   document.addEventListener("DOMContentLoaded", () => {
     const path = window.location.pathname;
-    if (path.includes("/blog")) {
-      initializeFilters("blog");
-    } else if (path.includes("/portfolio")) {
-      initializeFilters("portfolio");
-    }
+    if (path.includes("/blog")) initializeFilters("blog");
+    else if (path.includes("/portfolio")) initializeFilters("portfolio");
   });
 </script>

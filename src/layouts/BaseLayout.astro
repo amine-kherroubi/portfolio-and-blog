@@ -8,7 +8,6 @@ interface Props {
 }
 
 const { title = SITE.title, description = SITE.description } = Astro.props;
-
 const canonicalURL = new URL(
   Astro.url.pathname,
   Astro.site || Astro.url.origin
@@ -25,12 +24,6 @@ const canonicalURL = new URL(
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body class="bg-white text-black">
     <slot />
