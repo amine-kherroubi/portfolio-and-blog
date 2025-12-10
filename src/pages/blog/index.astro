@@ -2,6 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
+import FilterBar from "../../components/FilterBar.astro";
+import Tag from "../../components/Tag.astro";
+import { TAGS, getTagsByIds, type TagId } from "../../config/tags";
 
 const posts = [
   {
@@ -10,6 +13,7 @@ const posts = [
     date: "2024-03-15",
     readTime: "5 min",
     slug: "beauty-of-constraint",
+    tags: ["design", "minimalism", "swiss-design"] as TagId[],
   },
   {
     title: "Swiss Design in Digital Age",
@@ -17,6 +21,7 @@ const posts = [
     date: "2024-03-01",
     readTime: "7 min",
     slug: "swiss-design-digital",
+    tags: ["design", "swiss-design", "web-development"] as TagId[],
   },
   {
     title: "Minimalism in Code",
@@ -24,6 +29,7 @@ const posts = [
     date: "2024-02-20",
     readTime: "6 min",
     slug: "minimalism-in-code",
+    tags: ["python", "typescript", "minimalism"] as TagId[],
   },
   {
     title: "Grid Systems Explained",
@@ -31,8 +37,13 @@ const posts = [
     date: "2024-02-05",
     readTime: "10 min",
     slug: "grid-systems",
+    tags: ["design", "design-systems", "typography"] as TagId[],
   },
 ];
+
+// Get all unique tags from posts
+const allTagIds = Array.from(new Set(posts.flatMap((post) => post.tags)));
+const allTags = getTagsByIds(allTagIds);
 ---
 
 <BaseLayout title="Blog">
@@ -51,9 +62,10 @@ const posts = [
       </p>
     </div>
   </section>
-  <section
-    class="py-20 lg:py-24 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black"
-  >
+
+  <FilterBar tags={allTags} type="blog" />
+
+  <section class="py-20 lg:py-24 px-8 md:px-16 lg:px-20 xl:px-32">
     <div class="max-w-[1400px] mx-auto">
       <div class="space-y-0">
         {
@@ -63,12 +75,14 @@ const posts = [
                 "border-b-2 border-black",
                 index === posts.length - 1 && "border-b-0",
               ]}
+              data-blog-item
+              data-blog-tags={post.tags.join(",")}
             >
               <a
                 href={`/blog/${post.slug}`}
                 class="group block py-16 lg:py-20 transition-colors duration-200 hover:bg-black hover:text-white"
               >
-                <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 items-center">
+                <div class="grid grid-cols-12 gap-x-6 md:gap-x-12 lg:gap-x-16 items-start">
                   <div class="col-span-12 lg:col-span-2">
                     <time class="text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100">
                       {post.date}
@@ -78,9 +92,14 @@ const posts = [
                     <h2 class="text-[2.25rem] lg:text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-5">
                       {post.title}
                     </h2>
-                    <p class="text-[1.125rem] lg:text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100">
+                    <p class="text-[1.125rem] lg:text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100 mb-6">
                       {post.excerpt}
                     </p>
+                    <div class="flex flex-wrap gap-2">
+                      {getTagsByIds(post.tags).map((tag) => (
+                        <Tag label={tag.label} variant="default" />
+                      ))}
+                    </div>
                   </div>
                   <div class="col-span-12 lg:col-span-3 flex items-center justify-start lg:justify-end mt-8 lg:mt-0">
                     <span class="text-[0.8125rem] uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100">
