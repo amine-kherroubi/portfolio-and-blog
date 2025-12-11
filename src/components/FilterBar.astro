@@ -22,20 +22,20 @@ const sortedTags = [...tags].sort((a, b) =>
   aria-label="Filter content"
 >
   <div
-    class="max-w-screen-2xl mx-auto px-8 md:px-16 lg:px-20 xl:px-32 py-8 md:py-12"
+    class="max-w-screen-2xl mx-auto px-8 md:px-16 lg:px-20 xl:px-32 py-6 md:py-8 lg:py-12"
   >
     <div
-      class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 mb-6 md:mb-8"
+      class="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6 mb-6 md:mb-8"
     >
       <span
-        class="text-xs md:text-sm font-bold uppercase tracking-widest text-black/50"
+        class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/50"
         id={`${type}-filter-label`}
       >
         Filter by:
       </span>
       <button
         id={`${type}-clear-filters`}
-        class="text-xs md:text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity focus-visible:opacity-50 hidden"
+        class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50 hidden"
         aria-label="Clear all filters"
       >
         Clear All
@@ -43,7 +43,7 @@ const sortedTags = [...tags].sort((a, b) =>
     </div>
 
     <div
-      class="flex flex-wrap gap-3 md:gap-4"
+      class="flex flex-wrap gap-2 md:gap-3"
       id={`${type}-filter-tags`}
       role="group"
       aria-labelledby={`${type}-filter-label`}
@@ -65,7 +65,7 @@ const sortedTags = [...tags].sort((a, b) =>
 
     <div
       id={`${type}-results-count`}
-      class="mt-6 md:mt-8 text-xs md:text-sm text-black/60 font-bold uppercase tracking-widest"
+      class="mt-6 md:mt-8 text-xs md:text-sm text-black/60 font-bold uppercase tracking-[0.15em]"
       role="status"
       aria-live="polite"
       aria-atomic="true"
@@ -223,8 +223,8 @@ const sortedTags = [...tags].sort((a, b) =>
   @media (prefers-reduced-motion: no-preference) {
     .filter-tag-btn [data-tag] {
       transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
+        background-color 0.2s ease,
+        color 0.2s ease;
     }
 
     [data-blog-item],

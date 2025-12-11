@@ -21,7 +21,7 @@ const links = [
       <!-- Logo/Home Link -->
       <a
         href="/"
-        class="text-sm font-bold tracking-widest uppercase hover:opacity-50 transition-opacity focus-visible:opacity-50"
+        class="text-xs md:text-sm font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
         aria-label={currentPage !== "home" ? "Go to home page" : "Home"}
       >
         {currentPage !== "home" ? "Home" : "Your Name"}
@@ -29,7 +29,7 @@ const links = [
 
       <!-- Desktop Navigation -->
       <ul
-        class="hidden md:flex gap-8 lg:gap-16 text-sm font-bold uppercase tracking-widest"
+        class="hidden md:flex gap-6 md:gap-8 lg:gap-12 text-xs md:text-sm font-bold uppercase tracking-[0.15em]"
         role="list"
       >
         {
@@ -38,7 +38,7 @@ const links = [
               <a
                 href={href}
                 class:list={[
-                  "transition-opacity focus-visible:opacity-100",
+                  "transition-opacity duration-200 focus-visible:opacity-100",
                   currentPage === page
                     ? "opacity-100"
                     : "opacity-50 hover:opacity-100",
@@ -83,14 +83,14 @@ const links = [
       role="dialog"
       aria-modal="true"
     >
-      <ul class="py-8 space-y-6 text-sm font-bold uppercase tracking-widest">
+      <ul class="py-6 md:py-8 space-y-4 md:space-y-6 text-sm font-bold uppercase tracking-[0.15em]">
         {
           links.map(({ href, label, page }) => (
             <li>
               <a
                 href={href}
                 class:list={[
-                  "block py-2 transition-opacity",
+                  "block py-2 transition-opacity duration-200",
                   currentPage === page
                     ? "opacity-100"
                     : "opacity-50 hover:opacity-100",
@@ -145,7 +145,7 @@ const links = [
   /* Smooth mobile menu animation */
   @media (prefers-reduced-motion: no-preference) {
     #mobile-menu {
-      animation: slideDown 0.2s ease-out;
+      animation: slideDown 0.2s ease;
     }
 
     @keyframes slideDown {

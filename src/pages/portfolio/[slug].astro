@@ -22,25 +22,25 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
 <BaseLayout title={`${project.data.title} — Project`}>
   <Navigation currentPage="portfolio" />
 
-  <section class="py-32 px-32">
+  <section class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32">
     <div class="max-w-screen-2xl mx-auto">
       <div
-        class="mb-16 flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-black/50"
+        class="mb-12 md:mb-16 flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/50"
       >
         <span>{project.data.year}</span>
       </div>
-      <div class="w-16 h-0.5 bg-black mb-16"></div>
-      <h1 class="text-9xl font-bold leading-tight tracking-tighter mb-12">
+      <div class="w-16 h-0.5 bg-black mb-12 md:mb-16"></div>
+      <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] tracking-[-0.02em] mb-8 md:mb-12">
         {project.data.title}
       </h1>
       <p
-        class="text-4xl text-black/70 leading-normal font-light tracking-tight max-w-5xl mb-12"
+        class="text-xl md:text-2xl lg:text-3xl xl:text-4xl text-black/70 leading-relaxed font-light tracking-tight max-w-5xl mb-8 md:mb-12"
       >
         {project.data.description}
       </p>
       {
         tagObjects.length > 0 && (
-          <div class="flex flex-wrap gap-3 mt-8">
+          <div class="flex flex-wrap gap-2 md:gap-3 mt-6 md:mt-8">
             {tagObjects.map((tag) => (
               <Tag label={tag.label} variant="large" />
             ))}
@@ -50,19 +50,19 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     </div>
   </section>
 
-  <section class="px-32 mb-48">
+  <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
     <div class="max-w-screen-2xl mx-auto">
       <div
         class="aspect-video bg-gray-100 border-2 border-black flex items-center justify-center"
       >
-        <p class="text-black/30 text-xl font-bold uppercase tracking-widest">
+        <p class="text-black/30 text-lg md:text-xl font-bold uppercase tracking-[0.15em]">
           Project Visualization
         </p>
       </div>
     </div>
   </section>
 
-  <section class="px-32 mb-48">
+  <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
     <div class="max-w-screen-2xl mx-auto">
       <div class="prose prose-lg max-w-4xl">
         <Content />
@@ -70,11 +70,11 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     </div>
   </section>
 
-  <section class="px-32 mb-48">
+  <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
     <div class="max-w-screen-2xl mx-auto">
       <a
         href="/portfolio"
-        class="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity"
+        class="inline-flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
       >
         All Projects
       </a>

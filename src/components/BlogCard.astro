@@ -37,7 +37,7 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
         class="block p-8 md:p-12 lg:p-16 h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
         aria-label={`Read article: ${title}`}
       >
-        <div class="flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-wide mb-6 md:mb-8">
+        <div class="flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-[0.15em] mb-6 md:mb-8">
           <time datetime={date} itemprop="datePublished">
             {date}
           </time>
@@ -67,10 +67,10 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
           </div>
         )}
 
-        <span class="inline-flex items-center gap-3 font-bold uppercase text-xs md:text-sm tracking-wide">
+        <span class="inline-flex items-center gap-3 font-bold uppercase text-xs md:text-sm tracking-[0.15em]">
           Read Article
           <svg
-            class="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:translate-x-1"
+            class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-200 group-hover:translate-x-1"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

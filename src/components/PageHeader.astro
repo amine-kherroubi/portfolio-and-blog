@@ -7,16 +7,16 @@ interface Props {
 const { title, description } = Astro.props;
 ---
 
-<section class="py-32 lg:py-40 px-8 md:px-16 lg:px-20 xl:px-32">
-  <div class="max-w-[1400px] mx-auto">
+<section class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32">
+  <div class="max-w-screen-2xl mx-auto">
     <h1
-      class="text-[clamp(4rem,12vw,10rem)] font-bold leading-[0.9] tracking-[-0.03em] mb-16 lg:mb-20"
+      class="text-[clamp(4rem,12vw,10rem)] font-bold leading-[0.9] tracking-[-0.02em] mb-12 md:mb-16 lg:mb-24"
     >
       {title}
     </h1>
     {
       description && (
-        <p class="text-[1.5rem] lg:text-[1.75rem] leading-normal font-light tracking-[-0.01em] max-w-3xl text-black/80">
+        <p class="text-lg md:text-xl lg:text-2xl leading-relaxed font-light tracking-tight max-w-3xl text-black/70 mb-6 md:mb-8">
           {description}
         </p>
       )
