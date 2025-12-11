@@ -1,14 +1,14 @@
 ---
 interface Props {
-  currentPage?: "home" | "portfolio" | "blog" | "about";
+  currentPage?: "home" | "work" | "writing" | "profile";
 }
 
 const { currentPage } = Astro.props;
 
 const links = [
-  { href: "/about", label: "About", page: "about" },
-  { href: "/portfolio", label: "Portfolio", page: "portfolio" },
-  { href: "/blog", label: "Blog", page: "blog" },
+  { href: "/profile", label: "Profile", page: "profile" },
+  { href: "/work", label: "Work", page: "work" },
+  { href: "/writing", label: "Writing", page: "writing" },
 ] as const;
 ---
 

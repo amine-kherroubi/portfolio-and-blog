@@ -2,7 +2,7 @@ export const SITE = {
   name: "Mohamed El Amine Kherroubi",
   title: "Mohamed El Amine Kherrobi — Designer & Developer",
   description:
-    "Minimal portfolio focused on clarity, function, and timeless design",
+    "Minimal work focused on clarity, function, and timeless design",
   email: "elaminekherroubi@gmail.com",
 } as const;
 

@@ -10,9 +10,9 @@ import CapabilitiesSection from "../../components/CapabilitiesSection.astro";
 import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
-const allPortfolioProjects = await getCollection("portfolio");
+const allWorkProjects = await getCollection("work");
 
-const projects = allPortfolioProjects
+const projects = allWorkProjects
   .map((project) => {
     // project.id is the filename without extension
     const slug = project.id;
@@ -21,7 +21,7 @@ const projects = allPortfolioProjects
       description: project.data.description,
       year: project.data.year,
       tags: project.data.tags as TagId[],
-      link: `/portfolio/${slug}`,
+      link: `/work/${slug}`,
     };
   })
   .sort((a, b) => parseInt(b.year) - parseInt(a.year));
@@ -59,22 +59,22 @@ const capabilities = [
 ];
 ---
 
-<BaseLayout title="Portfolio">
-  <Navigation currentPage="portfolio" />
+<BaseLayout title="Work">
+  <Navigation currentPage="work" />
 
   <PageHeader
-    title="Portfolio"
+    title="Work"
     description="Selected projects demonstrating technical expertise and design thinking"
   />
 
-  <FilterBar tags={allTags} type="portfolio" />
+  <FilterBar tags={allTags} type="work" />
 
   <ContentList>
     {
       projects.map((project, i) => (
         <div
-          data-portfolio-item
-          data-portfolio-tags={project.tags.join(",")}
+          data-work-item
+          data-work-tags={project.tags.join(",")}
           class:list={[i === projects.length - 1 && "border-b-0"]}
         >
           <ProjectCard

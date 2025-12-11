@@ -4,7 +4,7 @@
 
 This modular tagging system allows you to:
 - Define tags in a centralized configuration
-- Add tags to blog posts and portfolio projects using Content Collections
+- Add tags to writing posts and work projects using Content Collections
 - Display tags on cards
 - Filter content by tags with URL persistence
 - Easily extend with new tags and categories
@@ -16,11 +16,11 @@ Content is organized using Astro's Content Collections in `src/content/`:
 ```
 src/content/
 ├── config.ts          # Collection schemas
-├── blog/             # Blog posts (MDX)
+├── writing/          # Writing posts (MDX)
 │   ├── beauty-of-constraint.mdx
 │   ├── swiss-design-digital.mdx
 │   └── ...
-└── portfolio/        # Portfolio projects (Markdown)
+└── work/             # Work projects (Markdown)
     ├── neural-networks.md
     ├── grid-system.md
     └── ...
@@ -50,9 +50,9 @@ export const TAGS: Record<string, Tag> = {
 - `domain` - Subject areas, fields of work
 - `skill` - Capabilities, competencies
 
-### 2. Add Tags to Blog Posts
+### 2. Add Tags to Writing Posts
 
-Create or edit an MDX file in `src/content/blog/`:
+Create or edit an MDX file in `src/content/writing/`:
 
 ```yaml
 ---
@@ -66,9 +66,9 @@ tags: ["design", "minimalism", "swiss-design"]
 Your post content here...
 ```
 
-### 3. Add Tags to Portfolio Projects
+### 3. Add Tags to Work Projects
 
-Create or edit a Markdown file in `src/content/portfolio/`:
+Create or edit a Markdown file in `src/content/work/`:
 
 ```yaml
 ---
@@ -86,7 +86,7 @@ Your project content here...
 ### Content Collections
 
 **`src/content/config.ts`**
-- Defines schemas for blog and portfolio collections
+- Defines schemas for writing and work collections
 - Uses Zod for type validation
 - Configures the glob loader for file-based content
 
@@ -122,25 +122,25 @@ Items must have these attributes for filtering:
 
 ```html
 <article 
-  data-blog-item
-  data-blog-tags="design,minimalism,swiss-design"
+  data-writing-item
+  data-writing-tags="design,minimalism,swiss-design"
 >
 ```
 
-Or for portfolio:
+Or for work:
 
 ```html
 <article 
-  data-portfolio-item
-  data-portfolio-tags="ai,python,machine-learning"
+  data-work-item
+  data-work-tags="ai,python,machine-learning"
 >
 ```
 
 ## Adding New Content
 
-### Add a New Blog Post
+### Add a New Writing Post
 
-1. Create a new `.mdx` file in `src/content/blog/`:
+1. Create a new `.mdx` file in `src/content/writing/`:
 
 ```markdown
 ---
@@ -154,12 +154,12 @@ tags: ["svelte", "web-development", "frontend"]
 Your content here...
 ```
 
-2. The blog index page will automatically include it
-3. A dynamic route at `/blog/[slug]` will render it
+2. The writing index page will automatically include it
+3. A dynamic route at `/writing/[slug]` will render it
 
-### Add a New Portfolio Project
+### Add a New Work Project
 
-1. Create a new `.md` file in `src/content/portfolio/`:
+1. Create a new `.md` file in `src/content/work/`:
 
 ```markdown
 ---
@@ -172,8 +172,8 @@ tags: ["svelte", "typescript", "web-development"]
 Your project content here...
 ```
 
-2. The portfolio index will automatically include it
-3. A dynamic route at `/portfolio/[slug]` will render it
+2. The work index will automatically include it
+3. A dynamic route at `/work/[slug]` will render it
 
 ## Extending the System
 
@@ -216,7 +216,7 @@ categorySelect?.addEventListener('change', (e) => {
 1. **Tag Naming**: Use kebab-case for IDs, proper case for labels
 2. **Tag Count**: 3-5 tags per item is ideal
 3. **Categories**: Group related tags for easier navigation
-4. **Consistency**: Use same tag IDs across blog and portfolio
+4. **Consistency**: Use same tag IDs across writing and work
 5. **URL Friendly**: Avoid special characters in tag IDs
 6. **Type Safety**: Always define tags in `src/config/tags.ts` first
 

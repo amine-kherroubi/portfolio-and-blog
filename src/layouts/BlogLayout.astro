@@ -16,7 +16,7 @@ const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout title={frontmatter.title} description={frontmatter.excerpt}>
-  <Navigation currentPage="blog" />
+  <Navigation currentPage="writing" />
 
   <article class="py-48 px-32">
     <div class="max-w-5xl mx-auto">
@@ -45,7 +45,7 @@ const { frontmatter } = Astro.props;
 
       <footer class="mt-48 pt-24 border-t-2 border-black">
         <a
-          href="/blog"
+          href="/writing"
           class="inline-flex items-center gap-4 text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity"
         >
           All Posts

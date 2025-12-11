@@ -5,8 +5,8 @@ import Footer from "../../components/Footer.astro";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
-  const blogPosts = await getCollection("blog");
-  return blogPosts.map((post) => ({
+  const writingPosts = await getCollection("writing");
+  return writingPosts.map((post) => ({
     params: { slug: post.id },
     props: { post },
   }));
@@ -17,7 +17,7 @@ const { Content } = await render(post);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.excerpt}>
-  <Navigation currentPage="blog" />
+  <Navigation currentPage="writing" />
 
   <article class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32">
     <div class="max-w-screen-2xl mx-auto">
@@ -47,7 +47,7 @@ const { Content } = await render(post);
 
       <footer class="mt-24 md:mt-32 lg:mt-48 pt-12 md:pt-16 lg:pt-24 border-t-2 border-black">
         <a
-          href="/blog"
+          href="/writing"
           class="inline-flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
         >
           All Posts

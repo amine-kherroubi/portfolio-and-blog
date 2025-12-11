@@ -4,7 +4,7 @@ import type { Tag as TagType } from "../config/tags";
 
 interface Props {
   tags: TagType[];
-  type: "blog" | "portfolio";
+  type: "writing" | "work";
 }
 
 const { tags, type } = Astro.props;
@@ -75,7 +75,7 @@ const sortedTags = [...tags].sort((a, b) =>
 </div>
 
 <script>
-  function initializeFilters(type: "blog" | "portfolio") {
+  function initializeFilters(type: "writing" | "work") {
     const filterTags = document.getElementById(`${type}-filter-tags`);
     const clearBtn = document.getElementById(`${type}-clear-filters`);
     const resultsCount = document.getElementById(`${type}-results-count`);
@@ -183,7 +183,7 @@ const sortedTags = [...tags].sort((a, b) =>
 
     function updateResultsCount(count: number) {
       const total = items.length;
-      const typeLabel = type === "blog" ? "posts" : "projects";
+      const typeLabel = type === "writing" ? "posts" : "projects";
       resultsCount.textContent =
         activeFilters.size > 0
           ? `Showing ${count} of ${total} ${typeLabel}`
@@ -210,8 +210,8 @@ const sortedTags = [...tags].sort((a, b) =>
 
   function init() {
     const path = window.location.pathname;
-    if (path.includes("/blog")) initializeFilters("blog");
-    else if (path.includes("/portfolio")) initializeFilters("portfolio");
+    if (path.includes("/writing")) initializeFilters("writing");
+    else if (path.includes("/work")) initializeFilters("work");
   }
 
   // Reinitialize on page navigation (for View Transitions)
@@ -227,15 +227,15 @@ const sortedTags = [...tags].sort((a, b) =>
         color 0.2s ease;
     }
 
-    [data-blog-item],
-    [data-portfolio-item] {
+    [data-writing-item],
+    [data-work-item] {
       transition: opacity 0.2s ease;
     }
   }
 
   /* Loading state */
-  [data-blog-item][style*="display: none"],
-  [data-portfolio-item][style*="display: none"] {
+  [data-writing-item][style*="display: none"],
+  [data-work-item][style*="display: none"] {
     opacity: 0;
   }
 </style>

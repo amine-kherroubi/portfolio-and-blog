@@ -9,10 +9,10 @@ import ContentList from "../../components/ContentList.astro";
 import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
-// Fetch and process blog posts
-const allBlogPosts = await getCollection("blog");
+// Fetch and process writing posts
+const allWritingPosts = await getCollection("writing");
 
-const posts = allBlogPosts
+const posts = allWritingPosts
   .map((post) => {
     // post.id is the filename without extension in Astro v5
     const slug = post.id;
@@ -29,45 +29,45 @@ const posts = allBlogPosts
   })
   .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
 
-// Get all unique tags used in blog posts
+// Get all unique tags used in writing posts
 const allTags = getTagsByIds([...new Set(posts.flatMap((p) => p.tags))]);
 
-// Generate structured data for blog
+// Generate structured data for writing
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Blog",
-  name: "Blog",
+  name: "Writing",
   description: "Thoughts on design, technology, and the creative process",
-  url: new URL("/blog", Astro.site).toString(),
+  url: new URL("/writing", Astro.site).toString(),
   blogPost: posts.slice(0, 10).map((post) => ({
     "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
-    url: new URL(`/blog/${post.slug}`, Astro.site).toString(),
+    url: new URL(`/writing/${post.slug}`, Astro.site).toString(),
   })),
 };
 ---
 
 <BaseLayout
-  title="Blog — Design, Technology & Creative Process"
+  title="Writing — Design, Technology & Creative Process"
   description="Thoughts on design, technology, and the creative process"
 >
-  <Navigation currentPage="blog" />
+  <Navigation currentPage="writing" />
 
   <PageHeader
-    title="Blog"
+    title="Writing"
     description="Thoughts on design, technology, and the creative process"
   />
 
-  <FilterBar tags={allTags} type="blog" />
+  <FilterBar tags={allTags} type="writing" />
 
   <ContentList>
     {
       posts.map((post, i) => (
         <div
-          data-blog-item
-          data-blog-tags={post.tags.join(",")}
+          data-writing-item
+          data-writing-tags={post.tags.join(",")}
           class:list={[i === posts.length - 1 && "border-b-0"]}
         >
           <BlogCard
@@ -96,7 +96,7 @@ const structuredData = {
 <style>
   /* Ensure smooth filtering animations */
   @media (prefers-reduced-motion: no-preference) {
-    [data-blog-item] {
+    [data-writing-item] {
       transition: opacity 0.2s ease;
     }
   }
