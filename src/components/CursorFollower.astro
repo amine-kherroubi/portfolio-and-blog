@@ -1,0 +1,231 @@
+---
+// Modern cursor follower with smooth animations
+---
+
+<div id="cursor-follower" class="cursor-follower" aria-hidden="true">
+  <div class="cursor-dot"></div>
+  <div class="cursor-outline"></div>
+</div>
+
+<script>
+  class CursorFollower {
+    private follower: HTMLElement | null;
+    private dot: HTMLElement | null;
+    private outline: HTMLElement | null;
+    private mouseX = 0;
+    private mouseY = 0;
+    private currentX = 0;
+    private currentY = 0;
+    private outlineX = 0;
+    private outlineY = 0;
+    private isVisible = false;
+    private animationId: number | null = null;
+
+    constructor() {
+      this.follower = document.getElementById("cursor-follower");
+      this.dot = this.follower?.querySelector(".cursor-dot") || null;
+      this.outline = this.follower?.querySelector(".cursor-outline") || null;
+
+      this.init();
+    }
+
+    init() {
+      // Only on devices with pointer (not touch)
+      if (!window.matchMedia("(pointer: fine)").matches) {
+        return;
+      }
+
+      // Check for reduced motion preference
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      this.addEventListeners();
+      this.animate();
+    }
+
+    addEventListeners() {
+      document.addEventListener("mousemove", (e) => {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+
+        if (!this.isVisible) {
+          this.isVisible = true;
+          this.follower?.classList.add("is-visible");
+        }
+      });
+
+      document.addEventListener("mouseleave", () => {
+        this.isVisible = false;
+        this.follower?.classList.remove("is-visible");
+      });
+
+      // Grow cursor on interactive elements
+      const interactiveElements = document.querySelectorAll(
+        'a, button, [role="button"], input, textarea, select, [data-cursor-grow]'
+      );
+
+      interactiveElements.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          this.follower?.classList.add("is-hovering");
+        });
+
+        el.addEventListener("mouseleave", () => {
+          this.follower?.classList.remove("is-hovering");
+        });
+      });
+
+      // Special effect for portfolio/blog cards
+      const cards = document.querySelectorAll(
+        "[data-blog-item], [data-portfolio-item], .philosophy-card"
+      );
+
+      cards.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          this.follower?.classList.add("is-hovering-card");
+        });
+
+        card.addEventListener("mouseleave", () => {
+          this.follower?.classList.remove("is-hovering-card");
+        });
+      });
+    }
+
+    animate() {
+      // Smooth follow with easing
+      const ease = 0.15;
+      const outlineEase = 0.08;
+
+      this.currentX += (this.mouseX - this.currentX) * ease;
+      this.currentY += (this.mouseY - this.currentY) * ease;
+
+      this.outlineX += (this.mouseX - this.outlineX) * outlineEase;
+      this.outlineY += (this.mouseY - this.outlineY) * outlineEase;
+
+      if (this.dot) {
+        this.dot.style.transform = `translate(${this.currentX}px, ${this.currentY}px)`;
+      }
+
+      if (this.outline) {
+        this.outline.style.transform = `translate(${this.outlineX}px, ${this.outlineY}px)`;
+      }
+
+      this.animationId = requestAnimationFrame(() => this.animate());
+    }
+
+    destroy() {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+    }
+  }
+
+  // Initialize
+  let cursorFollower: CursorFollower | null = null;
+
+  function initCursor() {
+    if (cursorFollower) {
+      cursorFollower.destroy();
+    }
+    cursorFollower = new CursorFollower();
+  }
+
+  // Initialize on load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCursor);
+  } else {
+    initCursor();
+  }
+
+  // Reinitialize on page navigation
+  document.addEventListener("astro:page-load", initCursor);
+</script>
+
+<style>
+  .cursor-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cursor-follower.is-visible {
+    opacity: 1;
+  }
+
+  .cursor-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.3s ease,
+      height 0.3s ease;
+    will-change: transform;
+  }
+
+  .cursor-outline {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.3s ease,
+      height 0.3s ease,
+      border-width 0.3s ease;
+    will-change: transform;
+  }
+
+  /* Hover states */
+  .cursor-follower.is-hovering .cursor-dot {
+    width: 0;
+    height: 0;
+  }
+
+  .cursor-follower.is-hovering .cursor-outline {
+    width: 48px;
+    height: 48px;
+    border-width: 3px;
+  }
+
+  .cursor-follower.is-hovering-card .cursor-outline {
+    width: 80px;
+    height: 80px;
+    border-width: 4px;
+  }
+
+  /* Hide default cursor on interactive elements when custom cursor is active */
+  @media (pointer: fine) {
+    .cursor-follower.is-visible ~ * {
+      cursor: none !important;
+    }
+
+    .cursor-follower.is-visible ~ * a,
+    .cursor-follower.is-visible ~ * button,
+    .cursor-follower.is-visible ~ * [role="button"] {
+      cursor: none !important;
+    }
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-follower {
+      display: none;
+    }
+  }
+
+  /* Hide on touch devices */
+  @media (pointer: coarse) {
+    .cursor-follower {
+      display: none;
+    }
+  }
+</style>

@@ -9,6 +9,7 @@ import ContentList from "../../components/ContentList.astro";
 import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
+// Fetch and process blog posts
 const allBlogPosts = await getCollection("blog");
 
 const posts = allBlogPosts
@@ -22,14 +23,36 @@ const posts = allBlogPosts
       readTime: post.data.readTime,
       slug: slug,
       tags: post.data.tags as TagId[],
+      // Parse date for sorting
+      dateObj: new Date(post.data.date),
     };
   })
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
 
+// Get all unique tags used in blog posts
 const allTags = getTagsByIds([...new Set(posts.flatMap((p) => p.tags))]);
+
+// Generate structured data for blog
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  name: "Blog",
+  description: "Thoughts on design, technology, and the creative process",
+  url: new URL("/blog", Astro.site).toString(),
+  blogPost: posts.slice(0, 10).map((post) => ({
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    url: new URL(`/blog/${post.slug}`, Astro.site).toString(),
+  })),
+};
 ---
 
-<BaseLayout title="Blog">
+<BaseLayout
+  title="Blog — Design, Technology & Creative Process"
+  description="Thoughts on design, technology, and the creative process"
+>
   <Navigation currentPage="blog" />
 
   <PageHeader
@@ -62,4 +85,19 @@ const allTags = getTagsByIds([...new Set(posts.flatMap((p) => p.tags))]);
   </ContentList>
 
   <Footer />
+
+  <!-- Structured Data -->
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(structuredData)}
+  />
 </BaseLayout>
+
+<style>
+  /* Ensure smooth filtering animations */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-blog-item] {
+      transition: opacity 0.2s ease-in-out;
+    }
+  }
+</style>

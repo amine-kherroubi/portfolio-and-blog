@@ -1,0 +1,170 @@
+---
+title: "Interactive Canvas Art"
+description: "Real-time generative art with WebGL and shaders"
+year: "2024"
+tags: ["creative", "canvas", "frontend", "web-development"]
+---
+
+# Interactive Canvas Art
+
+A high-performance generative art platform built with WebGL, creating real-time visual experiences that respond to user interaction and audio input.
+
+## Project Overview
+
+This project explores the intersection of code and visual art, using modern web technologies to create immersive, performant generative artworks that run entirely in the browser.
+
+## Key Features
+
+### Real-time Generation
+
+- **60 FPS performance** using WebGL and GPU acceleration
+- Dynamic particle systems with thousands of elements
+- Smooth transitions and morphing effects
+- Audio-reactive visualizations
+
+### Interactive Controls
+
+- Mouse and touch interaction
+- Real-time parameter adjustment
+- Multiple algorithm modes (flow fields, attractors, cellular automata)
+- Export high-resolution still images and animated GIFs
+
+### Technical Implementation
+
+```javascript
+// Fragment shader for generative patterns
+const fragmentShader = `
+  precision highp float;
+  uniform float time;
+  uniform vec2 resolution;
+  uniform vec2 mouse;
+  
+  void main() {
+    vec2 uv = gl_FragCoord.xy / resolution;
+    vec2 center = mouse / resolution;
+    
+    float dist = length(uv - center);
+    float wave = sin(dist * 20.0 - time * 2.0);
+    
+    vec3 color = vec3(
+      0.5 + 0.5 * sin(wave),
+      0.5 + 0.5 * cos(wave),
+      0.5
+    );
+    
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
+```
+
+## Creative Approach
+
+### Inspiration
+
+Drawing from Swiss design principles and contemporary generative art, the project balances:
+
+- **Structure** - Grid-based layouts and mathematical precision
+- **Chaos** - Organic movement and unpredictable patterns
+- **Interaction** - User input as creative collaboration
+
+### Visual Language
+
+- Monochromatic color schemes
+- Bold geometric forms
+- Fluid, continuous motion
+- Emergence from simple rules
+
+## Technical Stack
+
+- **WebGL 2.0** - Hardware-accelerated graphics
+- **GLSL** - Custom fragment and vertex shaders
+- **Web Audio API** - Audio analysis for reactive visuals
+- **Canvas API** - Fallback rendering and export
+- **TypeScript** - Type-safe development
+
+## Performance Optimizations
+
+### GPU Acceleration
+
+All heavy computation happens on the GPU through shaders:
+
+- Particle physics calculations
+- Color transformations
+- Texture sampling and blending
+
+### Efficient Updates
+
+```typescript
+class ParticleSystem {
+  private buffer: WebGLBuffer;
+  private texture: WebGLTexture;
+
+  update(deltaTime: number): void {
+    // Update particle positions on GPU
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+    this.gl.bufferSubData(this.gl.ARRAY_BUFFER, 0, this.particles);
+  }
+
+  render(): void {
+    // Single draw call for all particles
+    this.gl.drawArrays(this.gl.POINTS, 0, this.particleCount);
+  }
+}
+```
+
+## User Experience
+
+### Intuitive Controls
+
+- **Click/Touch** - Create attraction points
+- **Drag** - Paint with particles
+- **Scroll** - Adjust zoom and detail
+- **Keyboard** - Switch between modes
+
+### Accessibility
+
+- Reduced motion support
+- Keyboard-only navigation
+- Screen reader descriptions
+- Contrast controls
+
+## Results & Impact
+
+### Metrics
+
+- **100,000+** monthly interactions
+- **4.8/5** user rating
+- Featured in digital art communities
+- Used in live VJ performances
+
+### Use Cases
+
+- Digital installations
+- Live performances
+- Educational tool for creative coding
+- Album artwork generation
+
+## Future Enhancements
+
+- [ ] VR/AR support with WebXR
+- [ ] Multi-user collaborative canvas
+- [ ] AI-assisted pattern generation
+- [ ] 3D visualization modes
+- [ ] NFT minting integration
+
+## Lessons Learned
+
+Working on this project taught me:
+
+1. **Performance is creative freedom** - 60 FPS enables complex interactions
+2. **Constraints breed creativity** - Shader limitations forced elegant solutions
+3. **User input is composition** - The best interactions feel like creative tools
+4. **Math is beautiful** - Simple equations create stunning complexity
+
+## Open Source
+
+The core engine is available on GitHub under MIT license, with extensive documentation for aspiring creative coders.
+
+---
+
+_View the live demo at [canvas-art-demo.com](https://canvas-art-demo.com)_

@@ -16,31 +16,59 @@ const sortedTags = [...tags].sort((a, b) =>
 );
 ---
 
-<div class="filter-bar border-b-2 border-black bg-white sticky top-0 z-10">
-  <div class="max-w-screen-2xl mx-auto px-32 py-12">
-    <div class="flex items-center gap-8 mb-8">
-      <span class="text-sm font-bold uppercase tracking-widest text-black/50">
+<div
+  class="filter-bar border-b-2 border-black bg-white/95 backdrop-blur-sm sticky top-20 md:top-24 z-40"
+  role="search"
+  aria-label="Filter content"
+>
+  <div
+    class="max-w-screen-2xl mx-auto px-8 md:px-16 lg:px-20 xl:px-32 py-8 md:py-12"
+  >
+    <div
+      class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8 mb-6 md:mb-8"
+    >
+      <span
+        class="text-xs md:text-sm font-bold uppercase tracking-widest text-black/50"
+        id={`${type}-filter-label`}
+      >
         Filter by:
       </span>
       <button
         id={`${type}-clear-filters`}
-        class="text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity hidden"
+        class="text-xs md:text-sm font-bold uppercase tracking-widest hover:opacity-50 transition-opacity focus-visible:opacity-50 hidden"
+        aria-label="Clear all filters"
       >
         Clear All
       </button>
     </div>
-    <div class="flex flex-wrap gap-4" id={`${type}-filter-tags`}>
+
+    <div
+      class="flex flex-wrap gap-3 md:gap-4"
+      id={`${type}-filter-tags`}
+      role="group"
+      aria-labelledby={`${type}-filter-label`}
+    >
       {
         sortedTags.map((tag) => (
-          <button class="filter-tag-btn" data-tag-id={tag.id} data-type={type}>
+          <button
+            class="filter-tag-btn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+            data-tag-id={tag.id}
+            data-type={type}
+            aria-pressed="false"
+            aria-label={`Filter by ${tag.label}`}
+          >
             <Tag label={tag.label} variant="filter" clickable={true} />
           </button>
         ))
       }
     </div>
+
     <div
       id={`${type}-results-count`}
-      class="mt-8 text-sm text-black/60 font-bold uppercase tracking-widest"
+      class="mt-6 md:mt-8 text-xs md:text-sm text-black/60 font-bold uppercase tracking-widest"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
     >
     </div>
   </div>
@@ -68,14 +96,34 @@ const sortedTags = [...tags].sort((a, b) =>
       updateResultsCount(items.length);
     }
 
-    // Event listeners
-    filterTags.addEventListener("click", (e) => {
+    // Event listeners with keyboard support
+    filterTags.addEventListener("click", handleFilterClick);
+    filterTags.addEventListener("keydown", handleKeyDown);
+    clearBtn.addEventListener("click", clearAllFilters);
+
+    function handleFilterClick(e: Event) {
       const btn = (e.target as HTMLElement).closest(
         ".filter-tag-btn"
       ) as HTMLButtonElement;
       if (!btn?.dataset.tagId) return;
 
-      const tagId = btn.dataset.tagId;
+      toggleFilter(btn.dataset.tagId);
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      const btn = (e.target as HTMLElement).closest(
+        ".filter-tag-btn"
+      ) as HTMLButtonElement;
+      if (!btn?.dataset.tagId) return;
+
+      // Handle Enter and Space keys
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleFilter(btn.dataset.tagId);
+      }
+    }
+
+    function toggleFilter(tagId: string) {
       activeFilters.has(tagId)
         ? activeFilters.delete(tagId)
         : activeFilters.add(tagId);
@@ -83,14 +131,14 @@ const sortedTags = [...tags].sort((a, b) =>
       updateUI();
       filterItems();
       updateURL();
-    });
+    }
 
-    clearBtn.addEventListener("click", () => {
+    function clearAllFilters() {
       activeFilters.clear();
       updateUI();
       filterItems();
       updateURL();
-    });
+    }
 
     function updateUI() {
       filterTags.querySelectorAll(".filter-tag-btn").forEach((btn) => {
@@ -98,6 +146,10 @@ const sortedTags = [...tags].sort((a, b) =>
         const tag = btn.querySelector("[data-tag]");
         const isActive = tagId && activeFilters.has(tagId);
 
+        // Update ARIA state
+        btn.setAttribute("aria-pressed", String(isActive));
+
+        // Update visual state
         tag?.classList.toggle("bg-black", isActive);
         tag?.classList.toggle("text-white", isActive);
         tag?.classList.toggle("bg-white", !isActive);
@@ -111,19 +163,22 @@ const sortedTags = [...tags].sort((a, b) =>
       let visibleCount = 0;
       const hasFilters = activeFilters.size > 0;
 
-      items.forEach((item) => {
-        const itemTags =
-          (item as HTMLElement).dataset[`${type}Tags`]
-            ?.split(",")
-            .map((t) => t.trim()) || [];
-        const isVisible =
-          !hasFilters || itemTags.some((tag) => activeFilters.has(tag));
+      // Use requestAnimationFrame for smooth updates
+      requestAnimationFrame(() => {
+        items.forEach((item) => {
+          const itemTags =
+            (item as HTMLElement).dataset[`${type}Tags`]
+              ?.split(",")
+              .map((t) => t.trim()) || [];
+          const isVisible =
+            !hasFilters || itemTags.some((tag) => activeFilters.has(tag));
 
-        (item as HTMLElement).style.display = isVisible ? "" : "none";
-        if (isVisible) visibleCount++;
+          (item as HTMLElement).style.display = isVisible ? "" : "none";
+          if (isVisible) visibleCount++;
+        });
+
+        updateResultsCount(visibleCount);
       });
-
-      updateResultsCount(visibleCount);
     }
 
     function updateResultsCount(count: number) {
@@ -140,13 +195,47 @@ const sortedTags = [...tags].sort((a, b) =>
       activeFilters.size > 0
         ? url.searchParams.set("tags", Array.from(activeFilters).join(","))
         : url.searchParams.delete("tags");
+
+      // Use replaceState to avoid adding history entries
       window.history.replaceState({}, "", url);
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  // Initialize on DOM ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  function init() {
     const path = window.location.pathname;
     if (path.includes("/blog")) initializeFilters("blog");
     else if (path.includes("/portfolio")) initializeFilters("portfolio");
-  });
+  }
+
+  // Reinitialize on page navigation (for View Transitions)
+  document.addEventListener("astro:page-load", init);
 </script>
+
+<style>
+  /* Smooth animations */
+  @media (prefers-reduced-motion: no-preference) {
+    .filter-tag-btn [data-tag] {
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+    }
+
+    [data-blog-item],
+    [data-portfolio-item] {
+      transition: opacity 0.2s ease;
+    }
+  }
+
+  /* Loading state */
+  [data-blog-item][style*="display: none"],
+  [data-portfolio-item][style*="display: none"] {
+    opacity: 0;
+  }
+</style>

@@ -1,31 +1,285 @@
 ---
 import { SITE } from "../config/site";
+import { ViewTransitions } from "astro:transitions";
 import "../styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  noindex?: boolean;
 }
 
-const { title = SITE.title, description = SITE.description } = Astro.props;
+const {
+  title = SITE.title,
+  description = SITE.description,
+  image = "/og-image.jpg",
+  noindex = false,
+} = Astro.props;
+
 const canonicalURL = new URL(
   Astro.url.pathname,
   Astro.site || Astro.url.origin
 );
+const imageURL = new URL(image, Astro.site || Astro.url.origin);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scrollbar-modern">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
     <title>{title}</title>
+    <meta name="title" content={title} />
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageURL} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={imageURL} />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Fonts Preload (if using custom fonts) -->
+    <!-- <link rel="preload" href="/fonts/custom-font.woff2" as="font" type="font/woff2" crossorigin /> -->
+
+    <!-- View Transitions -->
+    <ViewTransitions />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#000000" />
+
+    <!-- Prefetch DNS for external resources -->
+    <!-- <link rel="dns-prefetch" href="https://fonts.googleapis.com" /> -->
   </head>
-  <body class="bg-white text-black">
+  <body class="bg-white text-black antialiased">
     <slot />
+
+    <!-- Custom Cursor Follower -->
+    <div id="cursor-follower" class="cursor-follower" aria-hidden="true">
+      <div class="cursor-dot"></div>
+      <div class="cursor-outline"></div>
+    </div>
+
+    <!-- Analytics Script (add your analytics here) -->
+    <!-- <script is:inline>
+      // Your analytics code
+    </script> -->
   </body>
 </html>
+
+<style>
+  /* Smooth page transitions */
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.3s;
+    }
+  }
+
+  /* Custom Cursor Follower Styles */
+  .cursor-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cursor-follower.is-visible {
+    opacity: 1;
+  }
+
+  .cursor-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.3s ease,
+      height 0.3s ease;
+    will-change: transform;
+  }
+
+  .cursor-outline {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition:
+      width 0.3s ease,
+      height 0.3s ease,
+      border-width 0.3s ease;
+    will-change: transform;
+  }
+
+  .cursor-follower.is-hovering .cursor-dot {
+    width: 0;
+    height: 0;
+  }
+
+  .cursor-follower.is-hovering .cursor-outline {
+    width: 48px;
+    height: 48px;
+    border-width: 3px;
+  }
+
+  .cursor-follower.is-hovering-card .cursor-outline {
+    width: 80px;
+    height: 80px;
+    border-width: 4px;
+  }
+
+  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    body.has-custom-cursor,
+    body.has-custom-cursor * {
+      cursor: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce), (pointer: coarse) {
+    .cursor-follower {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  class CursorFollower {
+    private follower: HTMLElement | null;
+    private dot: HTMLElement | null;
+    private outline: HTMLElement | null;
+    private mouseX = 0;
+    private mouseY = 0;
+    private currentX = 0;
+    private currentY = 0;
+    private outlineX = 0;
+    private outlineY = 0;
+    private isVisible = false;
+    private animationId: number | null = null;
+
+    constructor() {
+      this.follower = document.getElementById("cursor-follower");
+      this.dot = this.follower?.querySelector(".cursor-dot") || null;
+      this.outline = this.follower?.querySelector(".cursor-outline") || null;
+      this.init();
+    }
+
+    init() {
+      if (!window.matchMedia("(pointer: fine)").matches) return;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      document.body.classList.add("has-custom-cursor");
+      this.addEventListeners();
+      this.animate();
+    }
+
+    addEventListeners() {
+      document.addEventListener("mousemove", (e) => {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+        if (!this.isVisible) {
+          this.isVisible = true;
+          this.follower?.classList.add("is-visible");
+        }
+      });
+
+      document.addEventListener("mouseleave", () => {
+        this.isVisible = false;
+        this.follower?.classList.remove("is-visible");
+      });
+
+      const interactiveElements = document.querySelectorAll(
+        'a, button, [role="button"], input, textarea, select'
+      );
+
+      interactiveElements.forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          this.follower?.classList.add("is-hovering");
+        });
+        el.addEventListener("mouseleave", () => {
+          this.follower?.classList.remove("is-hovering");
+        });
+      });
+
+      const cards = document.querySelectorAll(
+        "[data-blog-item], [data-portfolio-item], .philosophy-card"
+      );
+
+      cards.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          this.follower?.classList.add("is-hovering-card");
+        });
+        card.addEventListener("mouseleave", () => {
+          this.follower?.classList.remove("is-hovering-card");
+        });
+      });
+    }
+
+    animate() {
+      const ease = 0.15;
+      const outlineEase = 0.08;
+
+      this.currentX += (this.mouseX - this.currentX) * ease;
+      this.currentY += (this.mouseY - this.currentY) * ease;
+      this.outlineX += (this.mouseX - this.outlineX) * outlineEase;
+      this.outlineY += (this.mouseY - this.outlineY) * outlineEase;
+
+      if (this.dot) {
+        this.dot.style.transform = `translate(${this.currentX}px, ${this.currentY}px)`;
+      }
+      if (this.outline) {
+        this.outline.style.transform = `translate(${this.outlineX}px, ${this.outlineY}px)`;
+      }
+
+      this.animationId = requestAnimationFrame(() => this.animate());
+    }
+
+    destroy() {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+      document.body.classList.remove("has-custom-cursor");
+    }
+  }
+
+  let cursorFollower: CursorFollower | null = null;
+
+  function initCursor() {
+    if (cursorFollower) cursorFollower.destroy();
+    cursorFollower = new CursorFollower();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initCursor);
+  } else {
+    initCursor();
+  }
+
+  document.addEventListener("astro:page-load", initCursor);
+</script>

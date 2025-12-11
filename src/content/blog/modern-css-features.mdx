@@ -1,0 +1,492 @@
+---
+title: "Modern CSS Features You Should Be Using"
+date: "2024-12-10"
+excerpt: "Container queries, cascade layers, and OKLCH colors—the CSS features that are changing how we build interfaces."
+readTime: "10 min read"
+tags: ["design", "web-development", "frontend"]
+---
+
+CSS has evolved dramatically in recent years. Features that once required JavaScript or complex workarounds are now native browser capabilities. Here are the modern CSS features transforming how we build interfaces.
+
+## Container Queries
+
+The most significant addition to CSS in a decade. Instead of responding to viewport size, components now respond to their **container** size.
+
+### The Old Way: Media Queries
+
+```css
+/* Global, viewport-based */
+@media (min-width: 768px) {
+  .card {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+  }
+}
+```
+
+**Problem**: The card layout depends on viewport width, not the actual space available. A card in a sidebar breaks the layout.
+
+### The New Way: Container Queries
+
+```css
+/* Component-based, container-aware */
+.card-container {
+  container-type: inline-size;
+  container-name: card;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@container card (min-width: 400px) {
+  .card {
+    grid-template-columns: 200px 1fr;
+  }
+}
+```
+
+**Solution**: Cards respond to their own width. Drop them anywhere—sidebars, modals, full-width—and they adapt automatically.
+
+### Real-World Example
+
+```css
+/* Responsive pricing cards */
+.pricing-grid {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.pricing-card {
+  /* Base mobile layout */
+  padding: 1.5rem;
+}
+
+@container (min-width: 300px) {
+  .pricing-card {
+    padding: 2rem;
+    font-size: 1.125rem;
+  }
+}
+
+@container (min-width: 400px) {
+  .pricing-card {
+    padding: 3rem;
+  }
+
+  .pricing-card__feature-list {
+    columns: 2;
+  }
+}
+```
+
+**Browser Support**: Chrome 105+, Safari 16+, Firefox 110+ (95%+ global support)
+
+## Cascade Layers
+
+Control CSS specificity and manage style conflicts without `!important` or excessive specificity.
+
+### The Problem
+
+```css
+/* Framework styles */
+.button {
+  background: blue;
+}
+
+/* Your override - requires higher specificity */
+.my-component .button {
+  background: red;
+}
+
+/* Component variant - even more specific */
+.my-component .button.button--primary {
+  background: green;
+}
+```
+
+This specificity arms race is unsustainable.
+
+### The Solution: @layer
+
+```css
+/* Define layer order */
+@layer reset, base, components, utilities;
+
+/* Reset layer (lowest priority) */
+@layer reset {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Base styles */
+@layer base {
+  button {
+    background: blue;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Component styles */
+@layer components {
+  .button-primary {
+    background: green; /* Overrides base */
+  }
+}
+
+/* Utility styles (highest priority) */
+@layer utilities {
+  .bg-red {
+    background: red !important;
+  }
+}
+```
+
+Layers have **order-based priority**, not specificity-based. A simple selector in a higher layer beats complex selectors in lower layers.
+
+### Practical Application
+
+```css
+/* Design system layers */
+@layer reset, tokens, base, components, utilities, overrides;
+
+@layer tokens {
+  :root {
+    --color-primary: oklch(0.5 0.2 250);
+    --spacing-unit: 0.5rem;
+  }
+}
+
+@layer base {
+  body {
+    font-family: system-ui, sans-serif;
+    line-height: 1.5;
+  }
+}
+
+@layer components {
+  .card {
+    border: 2px solid var(--color-primary);
+    padding: calc(var(--spacing-unit) * 4);
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+  }
+}
+```
+
+**Browser Support**: Chrome 99+, Safari 15.4+, Firefox 97+ (94%+ global support)
+
+## OKLCH Colors
+
+A perceptually uniform color space that makes color manipulation intuitive and accessible.
+
+### Why OKLCH?
+
+Traditional RGB and HSL don't align with human color perception. Two colors with different RGB values might have the same perceived brightness, breaking contrast ratios.
+
+OKLCH solves this:
+
+- **L** (Lightness): 0-100%, perceptually uniform
+- **C** (Chroma): Color intensity, 0 = grayscale
+- **H** (Hue): 0-360°, same as HSL
+
+### Practical Examples
+
+```css
+:root {
+  /* Define colors with consistent lightness */
+  --color-primary: oklch(0.5 0.2 250); /* Blue */
+  --color-success: oklch(0.5 0.2 145); /* Green */
+  --color-warning: oklch(0.5 0.2 85); /* Yellow */
+  --color-error: oklch(0.5 0.2 25); /* Red */
+}
+```
+
+All four colors have **identical lightness** (0.5), ensuring consistent text contrast regardless of hue.
+
+### Color Manipulation
+
+```css
+.button {
+  background: oklch(0.5 0.2 250);
+}
+
+.button:hover {
+  /* Lighten by increasing L */
+  background: oklch(0.6 0.2 250);
+}
+
+.button:active {
+  /* Darken by decreasing L */
+  background: oklch(0.4 0.2 250);
+}
+
+.button--muted {
+  /* Reduce saturation by decreasing C */
+  background: oklch(0.5 0.1 250);
+}
+```
+
+### Creating Palettes
+
+```css
+/* Generate consistent color scales */
+:root {
+  --primary-50: oklch(0.95 0.05 250);
+  --primary-100: oklch(0.9 0.08 250);
+  --primary-200: oklch(0.8 0.12 250);
+  --primary-300: oklch(0.7 0.15 250);
+  --primary-400: oklch(0.6 0.18 250);
+  --primary-500: oklch(0.5 0.2 250);
+  --primary-600: oklch(0.4 0.18 250);
+  --primary-700: oklch(0.3 0.15 250);
+  --primary-800: oklch(0.2 0.12 250);
+  --primary-900: oklch(0.1 0.08 250);
+}
+```
+
+**Browser Support**: Chrome 111+, Safari 15.4+, Firefox 113+ (85%+ support with fallbacks)
+
+### Fallbacks for Wider Support
+
+```css
+.element {
+  /* Fallback for older browsers */
+  background: #4169e1;
+
+  /* Modern browsers */
+  background: oklch(0.5 0.2 250);
+}
+```
+
+## CSS Nesting
+
+Write Sass-like nested selectors in vanilla CSS.
+
+### Before: Flat Selectors
+
+```css
+.card {
+}
+.card__header {
+}
+.card__header--large {
+}
+.card__body {
+}
+.card:hover {
+}
+```
+
+### After: Nested Selectors
+
+```css
+.card {
+  border: 2px solid black;
+
+  &__header {
+    padding: 1rem;
+
+    &--large {
+      padding: 2rem;
+      font-size: 1.5rem;
+    }
+  }
+
+  &__body {
+    padding: 1rem;
+  }
+
+  &:hover {
+    border-color: blue;
+  }
+}
+```
+
+### Context-Aware Nesting
+
+```css
+.button {
+  padding: 0.5rem 1rem;
+  background: white;
+
+  /* Dark mode */
+  @media (prefers-color-scheme: dark) {
+    & {
+      background: black;
+      color: white;
+    }
+  }
+
+  /* Loading state */
+  &[aria-busy="true"] {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  /* Within form */
+  form & {
+    width: 100%;
+  }
+}
+```
+
+**Browser Support**: Chrome 120+, Safari 17.2+ (Limited, but progressive enhancement)
+
+## :has() - The Parent Selector
+
+Select elements based on their **descendants**. Unlock layout patterns previously impossible with CSS alone.
+
+### Form Validation Styling
+
+```css
+/* Style label when input is invalid */
+form:has(input:invalid) label {
+  color: red;
+}
+
+/* Style form when all inputs are valid */
+form:has(input:not(:invalid)) {
+  border-color: green;
+}
+
+/* Show submit button only when form is complete */
+form:not(:has(input:invalid)) .submit-button {
+  display: block;
+}
+```
+
+### Quantity Queries
+
+```css
+/* Style list differently based on item count */
+ul:has(li:nth-child(4)) {
+  /* 4+ items: use grid */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+ul:not(:has(li:nth-child(4))) {
+  /* < 4 items: stack */
+  display: flex;
+  flex-direction: column;
+}
+```
+
+### Card Grid Optimization
+
+```css
+/* Adjust last card when odd count */
+.card-grid:has(.card:last-child:nth-child(odd)) .card:last-child {
+  grid-column: 1 / -1;
+}
+```
+
+**Browser Support**: Chrome 105+, Safari 15.4+, Firefox 121+ (93%+ global support)
+
+## color-mix()
+
+Blend colors directly in CSS without preprocessors.
+
+```css
+:root {
+  --primary: oklch(0.5 0.2 250);
+  --surface: oklch(0.98 0 0);
+}
+
+.button {
+  /* Mix 90% primary with 10% white for hover */
+  background: color-mix(in oklch, var(--primary) 90%, white);
+}
+
+.subtle-background {
+  /* 5% primary on surface */
+  background: color-mix(in oklch, var(--surface), var(--primary) 5%);
+}
+
+.disabled {
+  /* Mix with 50% gray */
+  color: color-mix(in oklch, var(--primary), gray 50%);
+}
+```
+
+**Browser Support**: Chrome 111+, Safari 16.2+, Firefox 113+ (88%+ global support)
+
+## Putting It All Together
+
+A modern component using all these features:
+
+```css
+@layer components {
+  .pricing-card-container {
+    container-type: inline-size;
+  }
+
+  .pricing-card {
+    background: oklch(1 0 0);
+    border: 2px solid color-mix(in oklch, oklch(0 0 0) 20%, transparent);
+
+    @container (min-width: 400px) {
+      & {
+        padding: 2rem;
+      }
+    }
+
+    &__price {
+      color: oklch(0.4 0.15 250);
+
+      .pricing-card:has(&:hover) {
+        background: color-mix(in oklch, oklch(0.5 0.2 250) 5%, white);
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      & {
+        background: oklch(0.15 0 0);
+        border-color: color-mix(in oklch, oklch(1 0 0) 20%, transparent);
+      }
+    }
+  }
+}
+```
+
+## Browser Support Strategy
+
+1. **Use with fallbacks** for 85%+ support
+2. **Progressive enhancement** for newer features
+3. **Feature detection** with `@supports`
+
+```css
+/* Fallback */
+.element {
+  display: block;
+}
+
+/* Enhancement */
+@supports (container-type: inline-size) {
+  .element {
+    container-type: inline-size;
+  }
+}
+```
+
+## Conclusion
+
+Modern CSS eliminates the need for many JavaScript solutions and CSS preprocessors. Container queries, cascade layers, OKLCH colors, and the `:has()` selector give us unprecedented control with less code.
+
+The future of CSS is already here—and it's spectacular.
+
+---
+
+_Which modern CSS feature are you most excited about?_

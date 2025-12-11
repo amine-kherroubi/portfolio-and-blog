@@ -1,0 +1,369 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import SkillsGrid from "../components/SkillsGrid.astro";
+import Timeline from "../components/Timeline.astro";
+import { SITE } from "../config/site";
+
+const experience = [
+  {
+    year: "2024",
+    title: "Senior Developer & Designer",
+    company: "Independent",
+    description:
+      "Building modern web experiences with focus on performance, accessibility, and user experience.",
+  },
+  {
+    year: "2023",
+    title: "Full Stack Developer",
+    company: "Tech Company",
+    description:
+      "Led development of scalable applications using React, TypeScript, and Node.js.",
+  },
+  {
+    year: "2022",
+    title: "Frontend Developer",
+    company: "Design Studio",
+    description:
+      "Specialized in creating pixel-perfect, responsive interfaces with modern frameworks.",
+  },
+];
+
+const skills = [
+  {
+    category: "Frontend",
+    items: ["React", "TypeScript", "Astro", "Tailwind CSS", "Next.js", "Vue"],
+  },
+  {
+    category: "Backend",
+    items: [
+      "Node.js",
+      "Python",
+      "PostgreSQL",
+      "MongoDB",
+      "GraphQL",
+      "REST APIs",
+    ],
+  },
+  {
+    category: "Design",
+    items: [
+      "Figma",
+      "UI/UX",
+      "Design Systems",
+      "Typography",
+      "Prototyping",
+      "User Research",
+    ],
+  },
+  {
+    category: "Tools",
+    items: ["Git", "Docker", "AWS", "Vercel", "CI/CD", "Testing"],
+  },
+];
+---
+
+<BaseLayout
+  title="About — Mohamed El Amine Kherroubi"
+  description="Designer and developer focused on creating thoughtful digital experiences"
+>
+  <Navigation currentPage="about" />
+
+  <!-- Hero Section with Parallax Effect -->
+  <section
+    class="relative overflow-hidden py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32"
+  >
+    <div class="max-w-screen-2xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <div class="lg:col-span-8">
+          <h1
+            class="text-[clamp(3rem,10vw,7rem)] font-bold leading-[0.95] tracking-tighter mb-12 lg:mb-16 fade-in-up"
+          >
+            About Me
+          </h1>
+
+          <div
+            class="space-y-8 text-xl md:text-2xl leading-relaxed font-light fade-in-up stagger-1"
+          >
+            <p class="text-black">
+              I'm a designer and developer who believes that the best digital
+              experiences emerge from the intersection of thoughtful design and
+              solid engineering.
+            </p>
+
+            <p class="text-black/80">
+              My approach is rooted in simplicity and clarity—removing the
+              unnecessary to reveal what truly matters. Every project is an
+              opportunity to solve real problems through elegant, functional
+              design.
+            </p>
+
+            <p class="text-black/80">
+              When I'm not crafting digital experiences, you'll find me
+              exploring new technologies, contributing to open source, or
+              writing about design and development on my blog.
+            </p>
+          </div>
+        </div>
+
+        <!-- Stats Card -->
+        <div class="lg:col-span-4 fade-in-up stagger-2">
+          <div class="sticky top-32 bg-white border-4 border-black p-8 lg:p-12">
+            <div class="space-y-8">
+              <div class="stat-item">
+                <div class="text-5xl font-bold mb-2 counter" data-target="50">
+                  0
+                </div>
+                <div
+                  class="text-sm uppercase tracking-widest font-bold text-black/60"
+                >
+                  Projects Completed
+                </div>
+              </div>
+
+              <div class="h-px bg-black"></div>
+
+              <div class="stat-item">
+                <div class="text-5xl font-bold mb-2 counter" data-target="5">
+                  0
+                </div>
+                <div
+                  class="text-sm uppercase tracking-widest font-bold text-black/60"
+                >
+                  Years Experience
+                </div>
+              </div>
+
+              <div class="h-px bg-black"></div>
+
+              <div class="stat-item">
+                <div class="text-5xl font-bold mb-2 counter" data-target="100">
+                  0
+                </div>
+                <div
+                  class="text-sm uppercase tracking-widest font-bold text-black/60"
+                >
+                  Client Satisfaction
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy Section with Hover Cards -->
+  <section
+    class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black bg-gray-50"
+  >
+    <div class="max-w-screen-2xl mx-auto">
+      <h2 class="text-4xl md:text-5xl font-bold mb-16 lg:mb-24 fade-in-up">
+        Design Philosophy
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div
+          class="philosophy-card group bg-white border-2 border-black p-8 lg:p-12 hover:bg-black hover:text-white transition-all duration-300 cursor-default fade-in-up stagger-1"
+        >
+          <div
+            class="text-6xl font-bold mb-6 group-hover:scale-110 transition-transform duration-300"
+          >
+            01
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Clarity First</h3>
+          <p class="text-lg leading-relaxed opacity-80">
+            Every design decision should enhance understanding, not obscure it.
+            Clear hierarchy, purposeful typography, and intentional whitespace.
+          </p>
+        </div>
+
+        <div
+          class="philosophy-card group bg-white border-2 border-black p-8 lg:p-12 hover:bg-black hover:text-white transition-all duration-300 cursor-default fade-in-up stagger-2"
+        >
+          <div
+            class="text-6xl font-bold mb-6 group-hover:scale-110 transition-transform duration-300"
+          >
+            02
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Function Over Form</h3>
+          <p class="text-lg leading-relaxed opacity-80">
+            Beauty emerges from purpose. Design should serve the user's needs
+            first, with aesthetics flowing naturally from functional
+            requirements.
+          </p>
+        </div>
+
+        <div
+          class="philosophy-card group bg-white border-2 border-black p-8 lg:p-12 hover:bg-black hover:text-white transition-all duration-300 cursor-default fade-in-up stagger-3"
+        >
+          <div
+            class="text-6xl font-bold mb-6 group-hover:scale-110 transition-transform duration-300"
+          >
+            03
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Timeless Quality</h3>
+          <p class="text-lg leading-relaxed opacity-80">
+            Trends fade, but good design endures. Focus on fundamental
+            principles that remain relevant regardless of changing fashions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Grid -->
+  <SkillsGrid skills={skills} />
+
+  <!-- Experience Timeline -->
+  <Timeline items={experience} />
+
+  <!-- CTA Section -->
+  <section
+    class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black"
+  >
+    <div class="max-w-screen-2xl mx-auto text-center fade-in-up">
+      <h2 class="text-4xl md:text-6xl font-bold mb-8 md:mb-12">
+        Let's Work Together
+      </h2>
+      <p
+        class="text-xl md:text-2xl text-black/70 mb-12 md:mb-16 max-w-2xl mx-auto"
+      >
+        I'm always interested in hearing about new projects and opportunities.
+      </p>
+      <a
+        href={`mailto:${SITE.email}`}
+        class="inline-block bg-black text-white px-12 py-6 text-lg font-bold uppercase tracking-widest hover:bg-black/90 transition-colors border-2 border-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
+      >
+        Get In Touch
+      </a>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px",
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Observe all elements with fade-in classes
+  document.querySelectorAll(".fade-in-up").forEach((el) => {
+    observer.observe(el);
+  });
+
+  // Counter animation
+  function animateCounter(el: HTMLElement) {
+    const target = parseInt(el.dataset.target || "0");
+    const duration = 2000;
+    const increment = target / (duration / 16);
+    let current = 0;
+
+    const updateCounter = () => {
+      current += increment;
+      if (current < target) {
+        el.textContent = Math.floor(current).toString();
+        requestAnimationFrame(updateCounter);
+      } else {
+        el.textContent = target.toString();
+      }
+    };
+
+    updateCounter();
+  }
+
+  // Observe counters
+  const counterObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target as HTMLElement);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  document.querySelectorAll(".counter").forEach((el) => {
+    counterObserver.observe(el);
+  });
+
+  // Reinitialize on page navigation (View Transitions)
+  document.addEventListener("astro:page-load", () => {
+    document.querySelectorAll(".fade-in-up").forEach((el) => {
+      observer.observe(el);
+    });
+
+    document.querySelectorAll(".counter").forEach((el) => {
+      counterObserver.observe(el);
+    });
+  });
+</script>
+
+<style>
+  /* Fade in animations */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+
+  .fade-in-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger animations */
+  .stagger-1 {
+    transition-delay: 0.1s;
+  }
+
+  .stagger-2 {
+    transition-delay: 0.2s;
+  }
+
+  .stagger-3 {
+    transition-delay: 0.3s;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-up {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .philosophy-card * {
+      transition: none !important;
+    }
+  }
+
+  /* Philosophy cards animation */
+  @media (prefers-reduced-motion: no-preference) {
+    .philosophy-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .philosophy-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 8px 8px 0 rgba(0, 0, 0, 1);
+    }
+  }
+</style>

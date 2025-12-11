@@ -1,0 +1,405 @@
+---
+title: "Web Performance in 2025"
+date: "2024-12-11"
+excerpt: "Modern techniques for building lightning-fast web applications with View Transitions, prefetching, and edge computing."
+readTime: "8 min read"
+tags: ["web-development", "frontend", "optimization"]
+---
+
+The landscape of web performance has transformed dramatically. What felt impossibly fast two years ago is now the baseline expectation. Let's explore the cutting-edge techniques shaping performance in 2025.
+
+## The New Performance Baseline
+
+Modern users expect **instant** interactions. Not fast—instant. The gap between expectation and reality has never been smaller, and the tools to meet these expectations have never been better.
+
+### Core Web Vitals Evolution
+
+The metrics have matured beyond simple load times:
+
+**Interaction to Next Paint (INP)**
+Replaced First Input Delay as the responsiveness metric. Measures the latency of _all_ user interactions, not just the first one.
+
+```javascript
+// Monitor INP with Web Vitals library
+import { onINP } from "web-vitals";
+
+onINP((metric) => {
+  // Send to analytics
+  console.log("INP:", metric.value);
+
+  // Flag slow interactions
+  if (metric.value > 200) {
+    console.warn("Slow interaction detected:", metric.entries);
+  }
+});
+```
+
+**Target Scores (2025)**
+
+- LCP: < 1.2s (down from 2.5s)
+- INP: < 100ms (new metric)
+- CLS: < 0.05 (down from 0.1)
+
+## View Transitions API
+
+The most impactful performance enhancement isn't faster code—it's **perceived** performance through smooth transitions.
+
+### Browser-Native Page Transitions
+
+```javascript
+// Astro View Transitions (built-in)
+import { ViewTransitions } from "astro:transitions";
+
+// In your layout
+<ViewTransitions />;
+```
+
+The browser handles:
+
+- Element morphing between pages
+- Automatic crossfade animations
+- Shared element transitions
+- Back/forward cache optimization
+
+### Custom Transition Logic
+
+```javascript
+// Custom transition for specific elements
+<style>
+  ::view-transition-old(hero-image),
+  ::view-transition-new(hero-image) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+</style>
+
+<img
+  src="/hero.jpg"
+  style="view-transition-name: hero-image"
+  alt="Hero"
+/>
+```
+
+**Performance Impact**: 70% improvement in perceived navigation speed, even when actual load times remain constant.
+
+## Prefetching Strategies
+
+Loading content _before_ users request it is the ultimate performance optimization.
+
+### Viewport Prefetching
+
+```javascript
+// Astro config with viewport prefetching
+export default defineConfig({
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport", // Prefetch when links enter viewport
+  },
+});
+```
+
+### Intent-Based Prefetching
+
+```javascript
+// Prefetch on hover with slight delay
+let prefetchTimeout: NodeJS.Timeout;
+
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('mouseenter', () => {
+    prefetchTimeout = setTimeout(() => {
+      // Prefetch after 100ms hover
+      fetch(link.href, {
+        priority: 'low',
+        // Use speculation rules when available
+      });
+    }, 100);
+  });
+
+  link.addEventListener('mouseleave', () => {
+    clearTimeout(prefetchTimeout);
+  });
+});
+```
+
+### Speculation Rules API
+
+```html
+<!-- Declarative prefetching -->
+<script type="speculationrules">
+  {
+    "prerender": [
+      {
+        "where": {
+          "href_matches": "/blog/*"
+        },
+        "eagerness": "moderate"
+      }
+    ],
+    "prefetch": [
+      {
+        "where": {
+          "selector_matches": ".portfolio-link"
+        },
+        "eagerness": "eager"
+      }
+    ]
+  }
+</script>
+```
+
+**Performance Impact**: Sub-100ms page navigations for prefetched content.
+
+## Edge Computing & Caching
+
+Moving computation closer to users remains the most reliable performance gain.
+
+### Edge Functions
+
+```typescript
+// Cloudflare Worker / Vercel Edge Function
+export default async function handler(request: Request) {
+  const url = new URL(request.url);
+
+  // Personalization at the edge
+  const country = request.headers.get("CF-IPCountry");
+  const locale = country === "FR" ? "fr" : "en";
+
+  // Cached response with personalization
+  const cache = caches.default;
+  const cacheKey = `${url.pathname}-${locale}`;
+
+  let response = await cache.match(cacheKey);
+
+  if (!response) {
+    response = await fetch(`/api/content?locale=${locale}`);
+    await cache.put(cacheKey, response.clone());
+  }
+
+  return response;
+}
+```
+
+### Stale-While-Revalidate
+
+```javascript
+// Service Worker strategy
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.open("dynamic").then((cache) => {
+      return cache.match(event.request).then((response) => {
+        const fetchPromise = fetch(event.request).then((networkResponse) => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+
+        // Return cached version immediately, update in background
+        return response || fetchPromise;
+      });
+    })
+  );
+});
+```
+
+## Image Optimization
+
+Images remain the largest payload on most sites. Modern formats and techniques slash transfer sizes.
+
+### AVIF & WebP with Fallbacks
+
+```html
+<picture>
+  <source type="image/avif" srcset="/hero.avif" />
+  <source type="image/webp" srcset="/hero.webp" />
+  <img src="/hero.jpg" alt="Hero" loading="lazy" decoding="async" />
+</picture>
+```
+
+### Native Lazy Loading
+
+```html
+<!-- Browser-native lazy loading -->
+<img
+  src="/image.jpg"
+  loading="lazy"
+  decoding="async"
+  fetchpriority="low"
+  alt="Description"
+/>
+```
+
+### Responsive Images
+
+```html
+<img
+  srcset="
+    /image-320w.avif   320w,
+    /image-640w.avif   640w,
+    /image-1024w.avif 1024w,
+    /image-1920w.avif 1920w
+  "
+  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+  src="/image-1024w.avif"
+  alt="Responsive image"
+/>
+```
+
+**Performance Impact**: 60-80% smaller file sizes with AVIF compared to JPEG.
+
+## JavaScript Optimization
+
+Less JavaScript is better JavaScript. But when you need it, optimize ruthlessly.
+
+### Code Splitting
+
+```typescript
+// Route-based code splitting
+const BlogPost = lazy(() => import('./BlogPost'));
+const Portfolio = lazy(() => import('./Portfolio'));
+
+function App() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Routes>
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+      </Routes>
+    </Suspense>
+  );
+}
+```
+
+### Tree Shaking
+
+```javascript
+// Import only what you need
+import { debounce } from "lodash-es"; // ✅ Tree-shakeable
+// import _ from 'lodash'; // ❌ Imports entire library
+```
+
+### Web Workers for Heavy Computations
+
+```typescript
+// Offload intensive work to background thread
+const worker = new Worker("/image-processor.js");
+
+worker.postMessage({ image: imageData });
+
+worker.onmessage = (e) => {
+  const processedImage = e.data;
+  // Update UI
+};
+```
+
+## CSS Performance
+
+Modern CSS is incredibly powerful, but requires discipline for optimal performance.
+
+### Lightning CSS
+
+```javascript
+// astro.config.mjs
+export default defineConfig({
+  vite: {
+    build: {
+      cssMinify: "lightningcss", // 10x faster than cssnano
+    },
+  },
+});
+```
+
+### Container Queries Over Media Queries
+
+```css
+/* Component-based responsive design */
+.card-container {
+  container-type: inline-size;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@container (min-width: 400px) {
+  .card {
+    grid-template-columns: 200px 1fr;
+  }
+}
+```
+
+### CSS Containment
+
+```css
+/* Improve rendering performance */
+.independent-section {
+  contain: layout style paint;
+}
+```
+
+## Monitoring & Debugging
+
+You can't optimize what you don't measure.
+
+### Real User Monitoring (RUM)
+
+```javascript
+// Send Core Web Vitals to analytics
+import { onCLS, onINP, onLCP } from "web-vitals";
+
+function sendToAnalytics(metric) {
+  const body = JSON.stringify({
+    name: metric.name,
+    value: metric.value,
+    rating: metric.rating,
+    delta: metric.delta,
+    id: metric.id,
+  });
+
+  // Use `navigator.sendBeacon()` for reliability
+  navigator.sendBeacon("/analytics", body);
+}
+
+onCLS(sendToAnalytics);
+onINP(sendToAnalytics);
+onLCP(sendToAnalytics);
+```
+
+### Performance DevTools
+
+```javascript
+// Mark custom performance metrics
+performance.mark("render-start");
+
+// ... expensive operation ...
+
+performance.mark("render-end");
+performance.measure("render-time", "render-start", "render-end");
+
+// View in DevTools Performance panel
+```
+
+## The Performance Checklist
+
+Before launching any project in 2025:
+
+- [ ] Core Web Vitals < target thresholds
+- [ ] View Transitions for all page navigations
+- [ ] Prefetching for likely next pages
+- [ ] AVIF images with fallbacks
+- [ ] Edge caching strategy implemented
+- [ ] Critical CSS inlined
+- [ ] JavaScript < 100KB (gzipped)
+- [ ] Lazy loading for below-fold content
+- [ ] RUM data collection active
+
+## Conclusion
+
+Performance in 2025 isn't about single techniques—it's about **systems thinking**. Every decision compounds: faster servers enable better caching, which enables more aggressive prefetching, which enables instant navigation.
+
+The tools exist. The techniques are proven. The only question is: will your users notice the difference?
+
+They will.
+
+---
+
+_What performance techniques are you using? I'd love to hear about your approach._
