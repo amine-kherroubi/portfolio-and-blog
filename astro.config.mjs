@@ -33,7 +33,6 @@ export default defineConfig({
 
     // Build optimizations
     build: {
-      cssMinify: "lightningcss", // Fast CSS minification
       rollupOptions: {
         output: {
           manualChunks: {
@@ -56,10 +55,10 @@ export default defineConfig({
       rehypePlugins: [],
     }),
     // Sitemap generation for SEO
+    // lastmod is automatically calculated from file modification dates
     sitemap({
       changefreq: "weekly",
       priority: 0.7,
-      lastmod: new Date(),
     }),
   ],
 
@@ -88,6 +87,7 @@ export default defineConfig({
   /**
    * Prefetch Configuration
    * Prefetch links for faster navigation
+   * ClientRouter automatically enables prefetching by default
    */
   prefetch: {
     prefetchAll: true,
@@ -116,11 +116,4 @@ export default defineConfig({
     format: "directory", // Use directory format for clean URLs
   },
 
-  /**
-   * View Transitions
-   * Enable smooth page transitions
-   */
-  viewTransitions: {
-    fallback: "none",
-  },
 });

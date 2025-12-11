@@ -9,7 +9,7 @@
  */
 
 import { SITE } from "../config/site";
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 
 interface Props {
@@ -100,8 +100,8 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
     <meta name="theme-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#000000" />
 
-    <!-- View Transitions -->
-    <ViewTransitions />
+    <!-- Client Router for smooth page transitions -->
+    <ClientRouter fallback="animate" />
   </head>
   <body class="bg-white text-black antialiased">
     <slot />
