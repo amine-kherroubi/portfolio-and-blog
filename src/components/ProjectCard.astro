@@ -1,14 +1,28 @@
 ---
+/**
+ * ProjectCard Component
+ * 
+ * Displays a project card with title, description, year, and tags.
+ * Supports grid and list variants for different layouts.
+ */
+
 import Tag from "./Tag.astro";
 import { getTagsByIds, type TagId } from "../config/tags";
 
 interface Props {
+  /** Project title */
   title: string;
+  /** Project description */
   description: string;
+  /** Project year */
   year: string;
+  /** Associated tags */
   tags?: TagId[];
+  /** Project link URL */
   link: string;
+  /** Visual variant */
   variant?: "grid" | "list";
+  /** Grid column span classes (for grid variant) */
   gridSpan?: string;
 }
 
@@ -22,6 +36,7 @@ const {
   gridSpan = "",
 } = Astro.props;
 
+// Convert tag IDs to tag objects
 const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
 ---
 

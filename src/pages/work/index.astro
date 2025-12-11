@@ -1,4 +1,14 @@
 ---
+/**
+ * Work Index Page
+ * 
+ * Lists all work projects with filtering capabilities.
+ * Features:
+ * - Tag-based filtering
+ * - Capabilities section
+ * - Responsive grid layout
+ */
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
@@ -9,13 +19,19 @@ import ContentList from "../../components/ContentList.astro";
 import CapabilitiesSection from "../../components/CapabilitiesSection.astro";
 import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
+import { PAGE_IDS } from "../../utils/constants";
 
+/**
+ * Fetch all work projects
+ */
 const allWorkProjects = await getCollection("work");
 
+/**
+ * Transform and sort projects by year (newest first)
+ */
 const projects = allWorkProjects
   .map((project) => {
-    // project.id is the filename without extension
-    const slug = project.id;
+    const slug = project.id; // In Astro 5, project.id is the filename without extension
     return {
       title: project.data.title,
       description: project.data.description,
@@ -26,8 +42,14 @@ const projects = allWorkProjects
   })
   .sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
+/**
+ * Get all unique tags used across all projects
+ */
 const allTags = getTagsByIds([...new Set(projects.flatMap((p) => p.tags))]);
 
+/**
+ * Capabilities configuration
+ */
 const capabilities = [
   {
     title: "Design",
@@ -60,7 +82,7 @@ const capabilities = [
 ---
 
 <BaseLayout title="Work">
-  <Navigation currentPage="work" />
+  <Navigation currentPage={PAGE_IDS.WORK} />
 
   <PageHeader
     title="Work"

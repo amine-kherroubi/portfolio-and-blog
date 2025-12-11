@@ -1,12 +1,28 @@
+/**
+ * Astro Configuration
+ * 
+ * Modern Astro 5 configuration with optimizations for performance,
+ * SEO, and developer experience.
+ * 
+ * @see https://docs.astro.build/en/reference/configuration-reference/
+ */
+
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 
-// https://astro.build/config
 export default defineConfig({
-  site: "http://localhost:4321", // Update with your domain
+  /**
+   * Site URL
+   * Update this with your production domain
+   */
+  site: "http://localhost:4321",
 
+  /**
+   * Vite Configuration
+   * Custom Vite settings for build optimizations
+   */
   vite: {
     plugins: [tailwindcss()],
 
@@ -17,7 +33,7 @@ export default defineConfig({
 
     // Build optimizations
     build: {
-      cssMinify: "lightningcss",
+      cssMinify: "lightningcss", // Fast CSS minification
       rollupOptions: {
         output: {
           manualChunks: {
@@ -28,47 +44,60 @@ export default defineConfig({
     },
   },
 
+  /**
+   * Integrations
+   * Astro integrations for extended functionality
+   */
   integrations: [
+    // MDX support for markdown with JSX
     mdx({
-      // Optimize MDX processing
       optimize: true,
       remarkPlugins: [],
       rehypePlugins: [],
     }),
+    // Sitemap generation for SEO
     sitemap({
-      // Customize sitemap generation
       changefreq: "weekly",
       priority: 0.7,
       lastmod: new Date(),
     }),
   ],
 
-  // Image optimization (Astro 5+)
+  /**
+   * Image Optimization
+   * Configure allowed image domains for optimization
+   */
   image: {
-    domains: ["yourdomain.com"],
+    domains: ["yourdomain.com"], // Add your production domain
   },
 
-  // Experimental features (Astro 5+)
-  experimental: {
-    // Enable SVG optimization if needed
-    // svg: true,
-  },
-
-  // Security headers
+  /**
+   * Security Configuration
+   * Enable origin checking for security
+   */
   security: {
     checkOrigin: true,
   },
 
-  // Output configuration (Astro 5 simplified)
-  output: "static", // Default, allows prerender: false on individual pages
+  /**
+   * Output Configuration
+   * Static site generation (SSG) by default
+   */
+  output: "static",
 
-  // Prefetch configuration for faster navigation
+  /**
+   * Prefetch Configuration
+   * Prefetch links for faster navigation
+   */
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "viewport",
   },
 
-  // Markdown configuration
+  /**
+   * Markdown Configuration
+   * Syntax highlighting and markdown processing
+   */
   markdown: {
     shikiConfig: {
       theme: "github-dark",
@@ -78,13 +107,19 @@ export default defineConfig({
     rehypePlugins: [],
   },
 
-  // Build configuration
+  /**
+   * Build Configuration
+   * Optimize build output
+   */
   build: {
-    inlineStylesheets: "auto",
-    format: "directory",
+    inlineStylesheets: "auto", // Inline small stylesheets
+    format: "directory", // Use directory format for clean URLs
   },
 
-  // View Transitions configuration
+  /**
+   * View Transitions
+   * Enable smooth page transitions
+   */
   viewTransitions: {
     fallback: "none",
   },

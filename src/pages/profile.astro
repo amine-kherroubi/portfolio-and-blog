@@ -1,8 +1,16 @@
 ---
+/**
+ * Profile Page
+ * 
+ * Personal profile page with experience, principles, and capabilities.
+ * Features semantic HTML structure and accessible content.
+ */
+
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../config/site";
+import { PAGE_IDS } from "../utils/constants";
 
 const experience = [
   {
@@ -50,7 +58,7 @@ const principles = [
   title="Profile — Mohamed El Amine Kherroubi"
   description="Designer and developer focused on creating thoughtful digital experiences"
 >
-  <Navigation currentPage="profile" />
+  <Navigation currentPage={PAGE_IDS.PROFILE} />
 
   <main class="px-8 md:px-16 lg:px-20 xl:px-32 py-24 md:py-32 lg:py-48">
     <div class="max-w-screen-2xl mx-auto space-y-24 md:space-y-32 lg:space-y-48">

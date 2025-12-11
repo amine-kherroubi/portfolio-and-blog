@@ -1,10 +1,21 @@
 ---
+/**
+ * Navigation Component
+ * 
+ * Main site navigation with mobile menu support.
+ * Includes proper ARIA attributes and keyboard navigation.
+ */
+
 interface Props {
+  /** Current active page for highlighting */
   currentPage?: "home" | "work" | "writing" | "profile";
 }
 
 const { currentPage } = Astro.props;
 
+/**
+ * Navigation links configuration
+ */
 const links = [
   { href: "/profile", label: "Profile", page: "profile" },
   { href: "/work", label: "Work", page: "work" },
@@ -23,6 +34,7 @@ const links = [
         href="/"
         class="text-xs md:text-sm font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
         aria-label={currentPage !== "home" ? "Go to home page" : "Home"}
+        aria-current={currentPage === "home" ? "page" : undefined}
       >
         {currentPage !== "home" ? "Home" : "Your Name"}
       </a>
@@ -108,37 +120,14 @@ const links = [
 </nav>
 
 <script>
-  // Mobile menu toggle with proper ARIA handling
-  const button = document.getElementById("mobile-menu-button");
-  const menu = document.getElementById("mobile-menu");
-
-  if (button && menu) {
-    button.addEventListener("click", () => {
-      const expanded = button.getAttribute("aria-expanded") === "true";
-      button.setAttribute("aria-expanded", String(!expanded));
-      menu.classList.toggle("hidden");
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener("click", (e) => {
-      if (
-        !button.contains(e.target as Node) &&
-        !menu.contains(e.target as Node)
-      ) {
-        button.setAttribute("aria-expanded", "false");
-        menu.classList.add("hidden");
-      }
-    });
-
-    // Close menu on escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !menu.classList.contains("hidden")) {
-        button.setAttribute("aria-expanded", "false");
-        menu.classList.add("hidden");
-        button.focus();
-      }
-    });
-  }
+  /**
+   * Mobile Menu Initialization
+   * Uses the extracted mobile-menu module for better code organization
+   */
+  import { initMobileMenu } from "../scripts/mobile-menu";
+  
+  // Initialize mobile menu functionality
+  initMobileMenu("mobile-menu-button", "mobile-menu");
 </script>
 
 <style>

@@ -1,10 +1,20 @@
 ---
+/**
+ * CapabilitiesSection Component
+ * 
+ * Displays a list of capabilities grouped by category.
+ * Used on the work page to showcase skills and expertise.
+ */
+
 interface Capability {
+  /** Category title */
   title: string;
+  /** List of items in this category */
   items: string[];
 }
 
 interface Props {
+  /** Array of capability categories */
   capabilities: Capability[];
 }
 

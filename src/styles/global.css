@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
-/* Theme customization using Tailwind 4 @theme */
+/**
+ * Global Styles
+ * 
+ * Modern CSS architecture using Tailwind 4 @theme directive and cascade layers.
+ * Follows best practices for maintainability, performance, and accessibility.
+ */
+
+/* ==========================================================================
+   Theme Layer - Design Tokens
+   ========================================================================== */
+
 @theme {
-  /* Modern wide-gamut colors using oklch */
+  /* Color System - Using OKLCH for perceptual uniformity and wide gamut */
   --color-black: oklch(0% 0 0);
   --color-white: oklch(100% 0 0);
+  
+  /* Neutral grays */
   --color-gray-50: oklch(98% 0 0);
   --color-gray-100: oklch(96% 0 0);
   --color-gray-200: oklch(91% 0 0);
+  --color-gray-300: oklch(85% 0 0);
+  --color-gray-400: oklch(65% 0 0);
+  --color-gray-500: oklch(50% 0 0);
+  --color-gray-600: oklch(40% 0 0);
+  --color-gray-700: oklch(35% 0 0);
+  --color-gray-800: oklch(30% 0 0);
   --color-gray-900: oklch(25% 0 0);
 
-  /* Typography scale */
+  /* Typography System */
   --font-sans: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
   --font-mono: "Courier New", Courier, ui-monospace, monospace;
-
-  /* Spacing refinements */
+  
+  /* Font sizes using fluid typography */
+  --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --font-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --font-size-lg: clamp(1.125rem, 1rem + 0.625vw, 1.5rem);
+  --font-size-xl: clamp(1.25rem, 1.1rem + 0.75vw, 2rem);
+  --font-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 2.5rem);
+  --font-size-3xl: clamp(2rem, 1.6rem + 2vw, 3.5rem);
+  --font-size-4xl: clamp(2.5rem, 2rem + 2.5vw, 5rem);
+  
+  /* Spacing System */
   --spacing-header: 6rem;
   --spacing-section: 12rem;
+  --spacing-container: 1536px;
+  
+  /* Border System */
+  --border-width-thin: 1px;
+  --border-width-medium: 2px;
+  --border-width-thick: 4px;
+  
+  /* Transition System */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  
+  /* Z-index Scale */
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
 }
 
-/* Base layer for resets and defaults */
+/* ==========================================================================
+   Base Layer - Resets and Element Defaults
+   ========================================================================== */
+
 @layer base {
+  /**
+   * Universal Box Sizing
+   * Ensures consistent box model across all elements
+   */
   *,
   *::before,
   *::after {
@@ -29,21 +85,44 @@
     box-sizing: border-box;
   }
 
+  /**
+   * Root Element
+   * Sets up smooth scrolling and prevents horizontal overflow
+   */
   html {
     scroll-behavior: smooth;
     overscroll-behavior: none;
     overflow-x: hidden;
     font-size: 16px;
+    /* Improve text rendering */
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
   }
 
+  /**
+   * Respect Reduced Motion Preferences
+   */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+    
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
+  /**
+   * Body Element
+   * Sets up typography, colors, and base styles
+   */
   body {
     font-family: var(--font-sans);
+    font-size: var(--font-size-base);
     line-height: 1.65;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -52,8 +131,13 @@
     color: var(--color-black);
     overscroll-behavior: none;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
+  /**
+   * Typography Hierarchy
+   * Consistent heading styles with proper line-height and letter-spacing
+   */
   h1,
   h2,
   h3,
@@ -63,22 +147,109 @@
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.05;
+    text-wrap: balance; /* Modern CSS for better text wrapping */
   }
 
+  /**
+   * Links
+   * Base link styles (can be overridden in components)
+   */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /**
+   * Images
+   * Responsive and accessible by default
+   */
+  img,
+  picture,
+  video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /**
+   * Form Elements
+   * Consistent styling for form controls
+   */
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  /**
+   * Selection Styles
+   * High contrast for better visibility
+   */
   ::selection {
     background: var(--color-black);
     color: var(--color-white);
   }
 
+  /**
+   * Focus Styles
+   * Visible focus indicators for keyboard navigation
+   */
   *:focus-visible {
-    outline: 2px solid var(--color-black);
+    outline: var(--border-width-medium) solid var(--color-black);
     outline-offset: 6px;
+    border-radius: 2px;
+  }
+  
+  /**
+   * Remove focus outline for mouse users
+   */
+  *:focus:not(:focus-visible) {
+    outline: none;
   }
 }
 
-/* Utilities layer for custom utilities */
+/* ==========================================================================
+   Components Layer - Reusable Component Styles
+   ========================================================================== */
+
+@layer components {
+  /**
+   * Container Component
+   * Consistent max-width container with responsive padding
+   */
+  .container-custom {
+    width: 100%;
+    max-width: var(--spacing-container);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(1rem, 4vw, 2rem);
+    padding-right: clamp(1rem, 4vw, 2rem);
+  }
+
+  /**
+   * Section Spacing
+   * Consistent vertical spacing for sections
+   */
+  .section-spacing {
+    padding-top: clamp(3rem, 8vw, 6rem);
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+}
+
+/* ==========================================================================
+   Utilities Layer - Custom Utility Classes
+   ========================================================================== */
+
 @layer utilities {
-  /* Modern scrollbar styling */
+  /**
+   * Modern Scrollbar Styling
+   * Custom scrollbar that matches the design system
+   */
   .scrollbar-modern {
     scrollbar-width: thin;
     scrollbar-color: var(--color-black) var(--color-white);
@@ -86,80 +257,138 @@
 
   .scrollbar-modern::-webkit-scrollbar {
     width: 12px;
+    height: 12px;
   }
 
   .scrollbar-modern::-webkit-scrollbar-track {
     background: var(--color-white);
-    border-left: 1px solid var(--color-black);
+    border-left: var(--border-width-thin) solid var(--color-black);
   }
 
   .scrollbar-modern::-webkit-scrollbar-thumb {
     background: var(--color-black);
-    border: 2px solid var(--color-white);
+    border: var(--border-width-medium) solid var(--color-white);
   }
 
   .scrollbar-modern::-webkit-scrollbar-thumb:hover {
-    border-width: 1px;
+    border-width: var(--border-width-thin);
+  }
+
+  /**
+   * Text Balance
+   * Modern CSS for better text wrapping (with fallback)
+   */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /**
+   * Visually Hidden (for accessibility)
+   * Hide content visually but keep it accessible to screen readers
+   */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /**
+   * Focus Visible Only
+   * Show focus styles only for keyboard navigation
+   */
+  .focus-visible-only:focus:not(:focus-visible) {
+    outline: none;
   }
 }
 
-/* Prose styles for writing content */
+/* ==========================================================================
+   Prose Styles - Typography for Long-Form Content
+   ========================================================================== */
+
+/**
+ * Prose Component
+ * Optimized typography for blog posts and articles
+ * Uses modern CSS features like color-mix and container queries where appropriate
+ */
 .prose {
   max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
 
+  /* Headings */
   & h2 {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 4vw, 2.5rem);
     font-weight: 700;
     margin: 96px 0 48px;
     line-height: 1.15;
     letter-spacing: -0.02em;
+    text-wrap: balance;
   }
 
   & h3 {
-    font-size: 1.75rem;
+    font-size: clamp(1.5rem, 3vw, 1.75rem);
     font-weight: 700;
     margin: 64px 0 32px;
     line-height: 1.25;
     letter-spacing: -0.01em;
+    text-wrap: balance;
   }
 
+  /* Paragraphs */
   & p {
     margin-bottom: 48px;
     line-height: 1.85;
     color: color-mix(in oklch, var(--color-black) 85%, transparent);
-    font-size: 1.125rem;
+    font-size: var(--font-size-lg);
+    text-wrap: pretty; /* Modern CSS for better paragraph wrapping */
   }
 
+  /* Links */
   & a {
     color: var(--color-black);
     text-decoration: none;
-    border-bottom: 2px solid var(--color-black);
-    transition: opacity 0.15s ease;
+    border-bottom: var(--border-width-medium) solid var(--color-black);
+    transition: opacity var(--transition-fast);
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       opacity: 0.5;
     }
   }
 
+  /* Emphasis */
   & strong {
     font-weight: 700;
   }
 
+  & em {
+    font-style: italic;
+  }
+
+  /* Code */
   & code {
     background: var(--color-gray-100);
-    border: 1px solid var(--color-gray-200);
+    border: var(--border-width-thin) solid var(--color-gray-200);
     padding: 3px 10px;
     font-size: 0.9em;
     font-family: var(--font-mono);
+    border-radius: 2px;
   }
 
   & pre {
     background: var(--color-black);
     color: var(--color-white);
-    padding: 48px;
+    padding: clamp(2rem, 5vw, 3rem);
     overflow-x: auto;
     margin: 64px 0;
-    border: 2px solid var(--color-black);
+    border: var(--border-width-medium) solid var(--color-black);
+    border-radius: 2px;
 
     & code {
       background: transparent;
@@ -171,14 +400,17 @@
     }
   }
 
+  /* Blockquotes */
   & blockquote {
-    border-left: 4px solid var(--color-black);
+    border-left: var(--border-width-thick) solid var(--color-black);
     padding: 16px 0 16px 48px;
     margin: 64px 0;
-    font-size: 1.25rem;
+    font-size: var(--font-size-xl);
     line-height: 1.7;
+    font-style: italic;
   }
 
+  /* Lists */
   & ul,
   & ol {
     margin: 48px 0;
@@ -188,38 +420,65 @@
   & li {
     margin-bottom: 24px;
     line-height: 1.85;
+    
+    &::marker {
+      color: var(--color-black);
+    }
   }
 
+  /* Images */
   & img {
     width: 100%;
+    height: auto;
     margin: 96px 0;
-    border: 2px solid var(--color-black);
+    border: var(--border-width-medium) solid var(--color-black);
+    border-radius: 2px;
   }
 
+  /* Horizontal Rule */
   & hr {
     border: none;
-    height: 2px;
+    height: var(--border-width-medium);
     background: var(--color-black);
     margin: 96px 0;
   }
+
+  /* Tables */
+  & table {
+    width: 100%;
+    margin: 48px 0;
+    border-collapse: collapse;
+  }
+
+  & th,
+  & td {
+    padding: 12px;
+    border: var(--border-width-thin) solid var(--color-black);
+    text-align: left;
+  }
+
+  & th {
+    font-weight: 700;
+    background: var(--color-gray-100);
+  }
 }
 
-/* View Transitions API support */
+/* ==========================================================================
+   View Transitions - Smooth Page Transitions
+   ========================================================================== */
+
+/**
+ * View Transitions API
+ * Enables smooth transitions between pages
+ */
 @view-transition {
   navigation: auto;
 }
 
-/* Accessibility improvements */
+/**
+ * Respect Reduced Motion for View Transitions
+ */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
   ::view-transition-group(*),
   ::view-transition-old(*),
   ::view-transition-new(*) {
@@ -227,7 +486,14 @@
   }
 }
 
-/* Print styles */
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+/**
+ * Print Optimizations
+ * Ensures content prints cleanly and efficiently
+ */
 @media print {
   .no-print {
     display: none !important;
@@ -236,9 +502,22 @@
   body {
     background: white;
     color: black;
+    font-size: 12pt;
+    line-height: 1.5;
   }
 
   a {
     text-decoration: underline;
+    color: black;
+  }
+
+  /* Avoid breaking across pages */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
   }
 }

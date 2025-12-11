@@ -1,14 +1,28 @@
 ---
+/**
+ * BlogCard Component
+ * 
+ * Displays a blog post card with title, excerpt, date, and tags.
+ * Supports featured and list variants for different layouts.
+ */
+
 import Tag from "./Tag.astro";
 import { getTagsByIds, type TagId } from "../config/tags";
 
 interface Props {
+  /** Post title */
   title: string;
+  /** Post excerpt/description */
   excerpt: string;
+  /** Publication date (ISO format) */
   date: string;
+  /** Estimated reading time */
   readTime: string;
+  /** Post slug for URL */
   slug: string;
+  /** Associated tags */
   tags?: TagId[];
+  /** Visual variant */
   variant?: "featured" | "list";
 }
 
@@ -22,6 +36,7 @@ const {
   variant = "list",
 } = Astro.props;
 
+// Convert tag IDs to tag objects
 const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
 ---
 
@@ -41,7 +56,7 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
           <time datetime={date} itemprop="datePublished">
             {date}
           </time>
-          <span class="w-2 h-2 bg-black" aria-hidden="true" />
+          <span class="w-2 h-2 bg-black rounded-full" aria-hidden="true" />
           <span itemprop="timeRequired">{readTime}</span>
         </div>
 

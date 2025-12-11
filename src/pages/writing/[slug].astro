@@ -1,9 +1,19 @@
 ---
+/**
+ * Writing Post Page (Dynamic Route)
+ * 
+ * Renders individual blog post pages from MDX files.
+ * Uses Astro's content collections for type-safe content.
+ */
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
 import { getCollection, render } from "astro:content";
 
+/**
+ * Generate static paths for all writing posts
+ */
 export async function getStaticPaths() {
   const writingPosts = await getCollection("writing");
   return writingPosts.map((post) => ({

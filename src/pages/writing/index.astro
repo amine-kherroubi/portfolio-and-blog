@@ -1,4 +1,14 @@
 ---
+/**
+ * Writing Index Page
+ * 
+ * Lists all blog posts with filtering capabilities.
+ * Features:
+ * - Tag-based filtering
+ * - Structured data for SEO
+ * - Responsive grid layout
+ */
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
@@ -8,14 +18,19 @@ import PageHeader from "../../components/PageHeader.astro";
 import ContentList from "../../components/ContentList.astro";
 import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
+import { PAGE_IDS } from "../../utils/constants";
 
-// Fetch and process writing posts
+/**
+ * Fetch and process all writing posts
+ */
 const allWritingPosts = await getCollection("writing");
 
+/**
+ * Transform and sort posts by date (newest first)
+ */
 const posts = allWritingPosts
   .map((post) => {
-    // post.id is the filename without extension in Astro v5
-    const slug = post.id;
+    const slug = post.id; // In Astro 5, post.id is the filename without extension
     return {
       title: post.data.title,
       excerpt: post.data.excerpt,
@@ -23,16 +38,19 @@ const posts = allWritingPosts
       readTime: post.data.readTime,
       slug: slug,
       tags: post.data.tags as TagId[],
-      // Parse date for sorting
-      dateObj: new Date(post.data.date),
+      dateObj: new Date(post.data.date), // For sorting
     };
   })
   .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
 
-// Get all unique tags used in writing posts
+/**
+ * Get all unique tags used across all posts
+ */
 const allTags = getTagsByIds([...new Set(posts.flatMap((p) => p.tags))]);
 
-// Generate structured data for writing
+/**
+ * Generate structured data for SEO
+ */
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Blog",
@@ -53,7 +71,7 @@ const structuredData = {
   title="Writing — Design, Technology & Creative Process"
   description="Thoughts on design, technology, and the creative process"
 >
-  <Navigation currentPage="writing" />
+  <Navigation currentPage={PAGE_IDS.WRITING} />
 
   <PageHeader
     title="Writing"

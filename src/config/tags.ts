@@ -1,6 +1,19 @@
+/**
+ * Tags Configuration
+ * 
+ * Tag definitions for categorizing content.
+ * Tags are organized by category for better organization.
+ */
+
+/**
+ * Tag interface
+ */
 export interface Tag {
+  /** Unique tag identifier */
   id: string;
+  /** Display label */
   label: string;
+  /** Category for grouping */
   category: "technology" | "design" | "domain" | "skill";
 }
 
@@ -66,19 +79,33 @@ export const TAGS: Record<string, Tag> = {
   },
 } as const;
 
+/**
+ * Tag ID type (keys of TAGS object)
+ */
 export type TagId = keyof typeof TAGS;
 
-// Helper function to get tags by IDs
+/**
+ * Get tags by their IDs
+ * @param tagIds - Array of tag IDs
+ * @returns Array of Tag objects
+ */
 export function getTagsByIds(tagIds: TagId[]): Tag[] {
   return tagIds.map((id) => TAGS[id]).filter(Boolean);
 }
 
-// Helper function to get all tags by category
+/**
+ * Get all tags in a specific category
+ * @param category - Category to filter by
+ * @returns Array of Tag objects in the category
+ */
 export function getTagsByCategory(category: Tag["category"]): Tag[] {
   return Object.values(TAGS).filter((tag) => tag.category === category);
 }
 
-// Helper function to get all unique categories
+/**
+ * Get all unique tag categories
+ * @returns Array of unique category names
+ */
 export function getAllCategories(): Tag["category"][] {
   return Array.from(new Set(Object.values(TAGS).map((tag) => tag.category)));
 }

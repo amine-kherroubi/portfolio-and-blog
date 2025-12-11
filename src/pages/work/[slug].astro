@@ -1,4 +1,11 @@
 ---
+/**
+ * Work Project Page (Dynamic Route)
+ * 
+ * Renders individual project pages from MDX files.
+ * Uses Astro's content collections for type-safe content.
+ */
+
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
@@ -6,6 +13,9 @@ import { getCollection, render } from "astro:content";
 import Tag from "../../components/Tag.astro";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
+/**
+ * Generate static paths for all work projects
+ */
 export async function getStaticPaths() {
   const workProjects = await getCollection("work");
   return workProjects.map((project) => ({

@@ -1,13 +1,28 @@
 ---
+/**
+ * BaseLayout Component
+ * 
+ * The root layout component that wraps all pages.
+ * Handles SEO meta tags, Open Graph, Twitter Cards, and View Transitions.
+ * 
+ * @see https://docs.astro.build/en/core-concepts/layouts/
+ */
+
 import { SITE } from "../config/site";
 import { ViewTransitions } from "astro:transitions";
 import "../styles/global.css";
 
 interface Props {
+  /** Page title (defaults to site title) */
   title?: string;
+  /** Page description for SEO and social sharing */
   description?: string;
+  /** Open Graph image URL */
   image?: string;
+  /** Whether to prevent search engine indexing */
   noindex?: boolean;
+  /** Additional meta tags */
+  meta?: Record<string, string>;
 }
 
 const {
@@ -15,27 +30,42 @@ const {
   description = SITE.description,
   image = "/og-image.jpg",
   noindex = false,
+  meta = {},
 } = Astro.props;
 
+// Construct canonical URL
 const canonicalURL = new URL(
   Astro.url.pathname,
   Astro.site || Astro.url.origin
 );
+
+// Construct image URL for social sharing
 const imageURL = new URL(image, Astro.site || Astro.url.origin);
+
+// Full title with site name if not already included
+const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
 ---
 
 <!doctype html>
 <html lang="en" class="scrollbar-modern">
   <head>
+    <!-- Character Encoding -->
     <meta charset="UTF-8" />
+    
+    <!-- Viewport Configuration -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Generator -->
     <meta name="generator" content={Astro.generator} />
 
     <!-- Primary Meta Tags -->
-    <title>{title}</title>
-    <meta name="title" content={title} />
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
     <meta name="description" content={description} />
+    
+    <!-- Robots Meta -->
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow" />}
 
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL} />
@@ -43,49 +73,51 @@ const imageURL = new URL(image, Astro.site || Astro.url.origin);
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={imageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content={SITE.name} />
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={imageURL} />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageURL} />
+
+    <!-- Additional Meta Tags -->
+    {Object.entries(meta).map(([key, value]) => (
+      <meta name={key} content={value} />
+    ))}
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Fonts Preload (if using custom fonts) -->
-    <!-- <link rel="preload" href="/fonts/custom-font.woff2" as="font" type="font/woff2" crossorigin /> -->
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="msapplication-TileColor" content="#000000" />
 
     <!-- View Transitions -->
     <ViewTransitions />
-
-    <!-- Theme Color -->
-    <meta name="theme-color" content="#000000" />
-
-    <!-- Prefetch DNS for external resources -->
-    <!-- <link rel="dns-prefetch" href="https://fonts.googleapis.com" /> -->
   </head>
   <body class="bg-white text-black antialiased">
     <slot />
-
-    <!-- Analytics Script (add your analytics here) -->
-    <!-- <script is:inline>
-      // Your analytics code
-    </script> -->
   </body>
 </html>
 
 <style>
-  /* Smooth page transitions */
+  /**
+   * View Transition Animations
+   * Smooth transitions between pages with respect for reduced motion preferences
+   */
   @media (prefers-reduced-motion: no-preference) {
     ::view-transition-old(root),
     ::view-transition-new(root) {
-      animation-duration: 0.3s;
+      animation-duration: 300ms;
+      animation-timing-function: ease-in-out;
     }
   }
 </style>

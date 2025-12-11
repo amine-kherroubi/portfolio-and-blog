@@ -1,14 +1,26 @@
 ---
+/**
+ * FilterBar Component
+ * 
+ * Filter bar for content filtering by tags.
+ * Supports keyboard navigation and URL state management.
+ */
+
 import Tag from "./Tag.astro";
 import type { Tag as TagType } from "../config/tags";
 
 interface Props {
+  /** Available tags for filtering */
   tags: TagType[];
+  /** Type of content being filtered */
   type: "writing" | "work";
 }
 
 const { tags, type } = Astro.props;
 
+/**
+ * Sort tags by category, then by label
+ */
 const sortedTags = [...tags].sort((a, b) =>
   a.category === b.category
     ? a.label.localeCompare(b.label)
@@ -74,148 +86,15 @@ const sortedTags = [...tags].sort((a, b) =>
   </div>
 </div>
 
-<script>
-  function initializeFilters(type: "writing" | "work") {
-    const filterTags = document.getElementById(`${type}-filter-tags`);
-    const clearBtn = document.getElementById(`${type}-clear-filters`);
-    const resultsCount = document.getElementById(`${type}-results-count`);
-    const items = document.querySelectorAll(`[data-${type}-item]`);
-
-    if (!filterTags || !clearBtn || !resultsCount || !items.length) return;
-
-    const activeFilters = new Set<string>();
-
-    // Initialize from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const tagsParam = urlParams.get("tags");
-    if (tagsParam) {
-      tagsParam.split(",").forEach((tag) => activeFilters.add(tag));
-      updateUI();
-      filterItems();
-    } else {
-      updateResultsCount(items.length);
-    }
-
-    // Event listeners with keyboard support
-    filterTags.addEventListener("click", handleFilterClick);
-    filterTags.addEventListener("keydown", handleKeyDown);
-    clearBtn.addEventListener("click", clearAllFilters);
-
-    function handleFilterClick(e: Event) {
-      const btn = (e.target as HTMLElement).closest(
-        ".filter-tag-btn"
-      ) as HTMLButtonElement;
-      if (!btn?.dataset.tagId) return;
-
-      toggleFilter(btn.dataset.tagId);
-    }
-
-    function handleKeyDown(e: KeyboardEvent) {
-      const btn = (e.target as HTMLElement).closest(
-        ".filter-tag-btn"
-      ) as HTMLButtonElement;
-      if (!btn?.dataset.tagId) return;
-
-      // Handle Enter and Space keys
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        toggleFilter(btn.dataset.tagId);
-      }
-    }
-
-    function toggleFilter(tagId: string) {
-      activeFilters.has(tagId)
-        ? activeFilters.delete(tagId)
-        : activeFilters.add(tagId);
-
-      updateUI();
-      filterItems();
-      updateURL();
-    }
-
-    function clearAllFilters() {
-      activeFilters.clear();
-      updateUI();
-      filterItems();
-      updateURL();
-    }
-
-    function updateUI() {
-      filterTags.querySelectorAll(".filter-tag-btn").forEach((btn) => {
-        const tagId = (btn as HTMLButtonElement).dataset.tagId;
-        const tag = btn.querySelector("[data-tag]");
-        const isActive = tagId && activeFilters.has(tagId);
-
-        // Update ARIA state
-        btn.setAttribute("aria-pressed", String(isActive));
-
-        // Update visual state
-        tag?.classList.toggle("bg-black", isActive);
-        tag?.classList.toggle("text-white", isActive);
-        tag?.classList.toggle("bg-white", !isActive);
-        tag?.classList.toggle("text-black", !isActive);
-      });
-
-      clearBtn.classList.toggle("hidden", activeFilters.size === 0);
-    }
-
-    function filterItems() {
-      let visibleCount = 0;
-      const hasFilters = activeFilters.size > 0;
-
-      // Use requestAnimationFrame for smooth updates
-      requestAnimationFrame(() => {
-        items.forEach((item) => {
-          const itemTags =
-            (item as HTMLElement).dataset[`${type}Tags`]
-              ?.split(",")
-              .map((t) => t.trim()) || [];
-          const isVisible =
-            !hasFilters || itemTags.some((tag) => activeFilters.has(tag));
-
-          (item as HTMLElement).style.display = isVisible ? "" : "none";
-          if (isVisible) visibleCount++;
-        });
-
-        updateResultsCount(visibleCount);
-      });
-    }
-
-    function updateResultsCount(count: number) {
-      const total = items.length;
-      const typeLabel = type === "writing" ? "posts" : "projects";
-      resultsCount.textContent =
-        activeFilters.size > 0
-          ? `Showing ${count} of ${total} ${typeLabel}`
-          : `${total} ${typeLabel} total`;
-    }
-
-    function updateURL() {
-      const url = new URL(window.location.href);
-      activeFilters.size > 0
-        ? url.searchParams.set("tags", Array.from(activeFilters).join(","))
-        : url.searchParams.delete("tags");
-
-      // Use replaceState to avoid adding history entries
-      window.history.replaceState({}, "", url);
-    }
-  }
-
-  // Initialize on DOM ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
-
-  function init() {
-    const path = window.location.pathname;
-    if (path.includes("/writing")) initializeFilters("writing");
-    else if (path.includes("/work")) initializeFilters("work");
-  }
-
-  // Reinitialize on page navigation (for View Transitions)
-  document.addEventListener("astro:page-load", init);
+<script define:vars={{ type }}>
+  /**
+   * Filter Initialization
+   * Uses the extracted filter module for better code organization
+   */
+  import { initializeFilters } from "../scripts/filter";
+  
+  // Initialize filters for this content type
+  initializeFilters(type);
 </script>
 
 <style>
