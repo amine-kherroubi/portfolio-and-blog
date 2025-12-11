@@ -39,7 +39,7 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
 
   <!-- Project Header Section -->
   <section class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32">
-    <div class="max-w-screen-2xl mx-auto">
+    <div class="max-w-container mx-auto">
       <!-- Project Year -->
       <div
         class="mb-12 md:mb-16 flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/50"
@@ -78,7 +78,7 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
   <!-- Project Visualization Section -->
   <!-- Placeholder for project images, videos, or interactive demos -->
   <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
-    <div class="max-w-screen-2xl mx-auto">
+    <div class="max-w-container mx-auto">
       <div
         class="aspect-video bg-gray-100 border-2 border-black flex items-center justify-center"
       >
@@ -92,7 +92,7 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
   <!-- Project Content Section -->
   <!-- Renders the MDX content from the project file -->
   <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
-    <div class="max-w-screen-2xl mx-auto">
+    <div class="max-w-container mx-auto">
       <div class="prose prose-lg max-w-4xl">
         <Content />
       </div>
@@ -102,7 +102,7 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
   <!-- Navigation Section -->
   <!-- Link back to all projects -->
   <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
-    <div class="max-w-screen-2xl mx-auto">
+    <div class="max-w-container mx-auto">
       <a
         href="/work"
         class="inline-flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
