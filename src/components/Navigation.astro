@@ -6,21 +6,15 @@
  * Includes proper ARIA attributes and keyboard navigation.
  */
 
+import { NAVIGATION_LINKS, PAGE_IDS } from "../utils/constants";
+
 interface Props {
   /** Current active page for highlighting */
-  currentPage?: "home" | "work" | "writing" | "profile";
+  currentPage?: typeof PAGE_IDS[keyof typeof PAGE_IDS];
 }
 
 const { currentPage } = Astro.props;
-
-/**
- * Navigation links configuration
- */
-const links = [
-  { href: "/profile", label: "Profile", page: "profile" },
-  { href: "/work", label: "Work", page: "work" },
-  { href: "/writing", label: "Writing", page: "writing" },
-] as const;
+const links = NAVIGATION_LINKS;
 ---
 
 <nav
@@ -33,10 +27,10 @@ const links = [
       <a
         href="/"
         class="text-xs md:text-sm font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
-        aria-label={currentPage !== "home" ? "Go to home page" : "Home"}
-        aria-current={currentPage === "home" ? "page" : undefined}
+        aria-label={currentPage !== PAGE_IDS.HOME ? "Go to home page" : "Home"}
+        aria-current={currentPage === PAGE_IDS.HOME ? "page" : undefined}
       >
-        {currentPage !== "home" ? "Home" : "Your Name"}
+        {currentPage !== PAGE_IDS.HOME ? "Home" : "Your Name"}
       </a>
 
       <!-- Desktop Navigation -->

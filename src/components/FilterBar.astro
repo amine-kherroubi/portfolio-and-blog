@@ -8,6 +8,7 @@
 
 import Tag from "./Tag.astro";
 import type { Tag as TagType } from "../config/tags";
+import { sortTagsByCategory } from "../config/tags";
 
 interface Props {
   /** Available tags for filtering */
@@ -17,15 +18,7 @@ interface Props {
 }
 
 const { tags, type } = Astro.props;
-
-/**
- * Sort tags by category, then by label
- */
-const sortedTags = [...tags].sort((a, b) =>
-  a.category === b.category
-    ? a.label.localeCompare(b.label)
-    : a.category.localeCompare(b.category)
-);
+const sortedTags = sortTagsByCategory(tags);
 ---
 
 <div

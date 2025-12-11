@@ -92,3 +92,16 @@ export type TagId = keyof typeof TAGS;
 export function getTagsByIds(tagIds: TagId[]): Tag[] {
   return tagIds.map((id) => TAGS[id]).filter(Boolean);
 }
+
+/**
+ * Sort tags by category, then by label
+ * @param tags - Array of Tag objects
+ * @returns Sorted array of Tag objects
+ */
+export function sortTagsByCategory(tags: Tag[]): Tag[] {
+  return [...tags].sort((a, b) =>
+    a.category === b.category
+      ? a.label.localeCompare(b.label)
+      : a.category.localeCompare(b.category)
+  );
+}

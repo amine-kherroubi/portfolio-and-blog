@@ -8,15 +8,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
-import { SITE, SOCIAL } from "../config/site";
+import { SITE } from "../config/site";
+import { getSocialLinks } from "../utils/social";
 
-/**
- * Social media links configuration
- */
-const socialLinks = [
-  { href: SOCIAL.github, label: "GitHub", icon: "github" },
-  { href: SOCIAL.linkedin, label: "LinkedIn", icon: "linkedin" },
-].filter((link) => link.href);
+const socialLinks = getSocialLinks();
 ---
 
 <BaseLayout>
