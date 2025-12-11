@@ -92,20 +92,3 @@ export type TagId = keyof typeof TAGS;
 export function getTagsByIds(tagIds: TagId[]): Tag[] {
   return tagIds.map((id) => TAGS[id]).filter(Boolean);
 }
-
-/**
- * Get all tags in a specific category
- * @param category - Category to filter by
- * @returns Array of Tag objects in the category
- */
-export function getTagsByCategory(category: Tag["category"]): Tag[] {
-  return Object.values(TAGS).filter((tag) => tag.category === category);
-}
-
-/**
- * Get all unique tag categories
- * @returns Array of unique category names
- */
-export function getAllCategories(): Tag["category"][] {
-  return Array.from(new Set(Object.values(TAGS).map((tag) => tag.category)));
-}
