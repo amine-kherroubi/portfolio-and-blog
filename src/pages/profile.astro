@@ -9,6 +9,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
+import CapabilitiesSection from "../components/CapabilitiesSection.astro";
 import { SITE } from "../config/site";
 import { PAGE_IDS } from "../utils/constants";
 
@@ -50,6 +51,36 @@ const principles = [
     title: "Systems thinking",
     description:
       "Consistent grids, measured typography, accessible color, and durable patterns.",
+  },
+];
+
+const capabilities = [
+  {
+    title: "Design",
+    items: [
+      "Interface Design",
+      "Design Systems",
+      "Typography",
+      "Visual Identity",
+    ],
+  },
+  {
+    title: "Development",
+    items: [
+      "Frontend Engineering",
+      "Python / TypeScript",
+      "Machine Learning",
+      "Algorithm Design",
+    ],
+  },
+  {
+    title: "Strategy",
+    items: [
+      "Technical Architecture",
+      "Problem Solving",
+      "Research & Analysis",
+      "Process Optimization",
+    ],
   },
 ];
 ---
@@ -138,44 +169,6 @@ const principles = [
       </section>
 
       <section class="space-y-6 md:space-y-8 border-t-2 border-black pt-12 md:pt-16 lg:pt-24">
-        <p class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/60">
-          Capabilities
-        </p>
-        <div class="grid gap-y-8 md:gap-y-12 gap-x-6 md:gap-x-12 lg:gap-x-16 md:grid-cols-3">
-          <div class="space-y-3 md:space-y-4">
-            <h3 class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/80">
-              Design
-            </h3>
-            <ul class="space-y-2 md:space-y-3 text-base md:text-lg text-black/70">
-              <li>Interface & interaction</li>
-              <li>Design systems & grids</li>
-              <li>Prototyping & usability</li>
-            </ul>
-          </div>
-          <div class="space-y-3 md:space-y-4">
-            <h3 class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/80">
-              Frontend
-            </h3>
-            <ul class="space-y-2 md:space-y-3 text-base md:text-lg text-black/70">
-              <li>Astro, React, TypeScript</li>
-              <li>Accessible, performant UI</li>
-              <li>Content-first architectures</li>
-            </ul>
-          </div>
-          <div class="space-y-3 md:space-y-4">
-            <h3 class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/80">
-              Delivery
-            </h3>
-            <ul class="space-y-2 md:space-y-3 text-base md:text-lg text-black/70">
-              <li>Documentation and systems</li>
-              <li>CI/CD and observability</li>
-              <li>Remote collaboration</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="space-y-6 md:space-y-8 border-t-2 border-black pt-12 md:pt-16 lg:pt-24">
         <p class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/60">Contact</p>
         <div class="flex flex-col gap-4 md:gap-6 md:flex-row md:items-center md:justify-between">
           <p class="text-lg md:text-xl text-black/70">
@@ -191,6 +184,8 @@ const principles = [
       </section>
     </div>
   </main>
+
+  <CapabilitiesSection capabilities={capabilities} />
 
   <Footer />
 </BaseLayout>

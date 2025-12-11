@@ -5,8 +5,7 @@
  * Lists all work projects with filtering capabilities.
  * Features:
  * - Tag-based filtering
- * - Capabilities section
- * - Responsive grid layout
+ * - Responsive list layout
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -16,7 +15,6 @@ import FilterBar from "../../components/FilterBar.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import PageHeader from "../../components/PageHeader.astro";
 import ContentList from "../../components/ContentList.astro";
-import CapabilitiesSection from "../../components/CapabilitiesSection.astro";
 import { getCollection } from "astro:content";
 import { getTagsByIds, type TagId } from "../../config/tags";
 import { PAGE_IDS } from "../../utils/constants";
@@ -46,39 +44,6 @@ const projects = allWorkProjects
  * Get all unique tags used across all projects
  */
 const allTags = getTagsByIds([...new Set(projects.flatMap((p) => p.tags))]);
-
-/**
- * Capabilities configuration
- */
-const capabilities = [
-  {
-    title: "Design",
-    items: [
-      "Interface Design",
-      "Design Systems",
-      "Typography",
-      "Visual Identity",
-    ],
-  },
-  {
-    title: "Development",
-    items: [
-      "Frontend Engineering",
-      "Python / TypeScript",
-      "Machine Learning",
-      "Algorithm Design",
-    ],
-  },
-  {
-    title: "Strategy",
-    items: [
-      "Technical Architecture",
-      "Problem Solving",
-      "Research & Analysis",
-      "Process Optimization",
-    ],
-  },
-];
 ---
 
 <BaseLayout title="Work">
@@ -111,8 +76,6 @@ const capabilities = [
       ))
     }
   </ContentList>
-
-  <CapabilitiesSection capabilities={capabilities} />
 
   <Footer />
 </BaseLayout>
