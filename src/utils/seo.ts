@@ -24,12 +24,21 @@ export interface BlogStructuredData {
 
 /**
  * Generate structured data for a blog/writing index page
+ * 
+ * Creates JSON-LD structured data following Schema.org Blog schema
+ * for improved SEO and search engine understanding.
+ * 
+ * @param posts - Array of processed writing posts
+ * @param baseUrl - Base URL of the site (URL object or string)
+ * @param path - Path to the writing/blog section (default: "/writing")
+ * @returns Structured data object ready for JSON-LD embedding
  */
 export function generateBlogStructuredData(
   posts: ProcessedWritingPost[],
   baseUrl: URL | string,
   path: string = "/writing"
 ): BlogStructuredData {
+  // Normalize baseUrl to URL object
   const siteUrl = typeof baseUrl === "string" ? new URL(baseUrl) : baseUrl;
   
   return {
@@ -38,6 +47,7 @@ export function generateBlogStructuredData(
     name: "Writing",
     description: "Thoughts on design, technology, and the creative process",
     url: new URL(path, siteUrl).toString(),
+    // Limit to first 10 posts for performance and relevance
     blogPost: posts.slice(0, 10).map((post) => ({
       "@type": "BlogPosting",
       headline: post.title,

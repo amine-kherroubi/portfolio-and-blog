@@ -1,5 +1,26 @@
+/**
+ * TypeScript Configuration
+ * 
+ * Extends Astro's base TypeScript configuration with project-specific settings.
+ * This ensures type safety across the entire codebase.
+ * 
+ * @see https://docs.astro.build/en/reference/configuration-reference/#typescript
+ */
 {
-    "extends": "astro/tsconfigs/base",
-    "include": [".astro/types.d.ts", "**/*"],
-    "exclude": ["dist"]
+  /**
+   * Extend Astro's base TypeScript configuration
+   * Provides sensible defaults for Astro projects
+   */
+  "extends": "astro/tsconfigs/base",
+  
+  /**
+   * Include all TypeScript files and Astro-generated types
+   * .astro/types.d.ts contains Astro's type definitions
+   */
+  "include": [".astro/types.d.ts", "**/*"],
+  
+  /**
+   * Exclude build output directory from type checking
+   */
+  "exclude": ["dist"]
 }

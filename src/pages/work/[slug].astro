@@ -24,30 +24,45 @@ export async function getStaticPaths() {
   }));
 }
 
+// Extract project data from props (provided by getStaticPaths)
 const { project } = Astro.props;
+
+// Render the MDX content to HTML
 const { Content } = await render(project);
+
+// Convert tag IDs to tag objects for display
 const tagObjects = getTagsByIds(project.data.tags as TagId[]);
 ---
 
 <BaseLayout title={`${project.data.title} — Project`}>
   <Navigation currentPage="work" />
 
+  <!-- Project Header Section -->
   <section class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32">
     <div class="max-w-screen-2xl mx-auto">
+      <!-- Project Year -->
       <div
         class="mb-12 md:mb-16 flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/50"
       >
         <span>{project.data.year}</span>
       </div>
+      
+      <!-- Visual Separator -->
       <div class="w-16 h-0.5 bg-black mb-12 md:mb-16"></div>
+      
+      <!-- Project Title -->
       <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] tracking-[-0.02em] mb-8 md:mb-12">
         {project.data.title}
       </h1>
+      
+      <!-- Project Description -->
       <p
         class="text-xl md:text-2xl lg:text-3xl xl:text-4xl text-black/70 leading-relaxed font-light tracking-tight max-w-5xl mb-8 md:mb-12"
       >
         {project.data.description}
       </p>
+      
+      <!-- Project Tags -->
       {
         tagObjects.length > 0 && (
           <div class="flex flex-wrap gap-2 md:gap-3 mt-6 md:mt-8">
@@ -60,6 +75,8 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     </div>
   </section>
 
+  <!-- Project Visualization Section -->
+  <!-- Placeholder for project images, videos, or interactive demos -->
   <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
     <div class="max-w-screen-2xl mx-auto">
       <div
@@ -72,6 +89,8 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     </div>
   </section>
 
+  <!-- Project Content Section -->
+  <!-- Renders the MDX content from the project file -->
   <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
     <div class="max-w-screen-2xl mx-auto">
       <div class="prose prose-lg max-w-4xl">
@@ -80,6 +99,8 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     </div>
   </section>
 
+  <!-- Navigation Section -->
+  <!-- Link back to all projects -->
   <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
     <div class="max-w-screen-2xl mx-auto">
       <a

@@ -28,13 +28,20 @@ export interface ProcessedWorkProject {
 
 /**
  * Transform and sort writing posts by date (newest first)
+ * 
+ * Processes raw content collection entries into a structured format
+ * suitable for display, including slug generation and date-based sorting.
+ * 
+ * @param posts - Array of writing post entries from Astro content collections
+ * @returns Array of processed posts sorted by date (newest first)
  */
 export function processWritingPosts(
   posts: CollectionEntry<"writing">[]
 ): ProcessedWritingPost[] {
   return posts
     .map((post) => {
-      const slug = post.id; // In Astro 5, post.id is the filename without extension
+      // In Astro 5, post.id is the filename without extension
+      const slug = post.id;
       return {
         title: post.data.title,
         excerpt: post.data.excerpt,
@@ -42,7 +49,8 @@ export function processWritingPosts(
         readTime: post.data.readTime,
         slug: slug,
         tags: post.data.tags as TagId[],
-        dateObj: new Date(post.data.date), // For sorting
+        // Create Date object for sorting purposes
+        dateObj: new Date(post.data.date),
       };
     })
     .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
@@ -50,18 +58,26 @@ export function processWritingPosts(
 
 /**
  * Transform and sort work projects by year (newest first)
+ * 
+ * Processes raw content collection entries into a structured format
+ * suitable for display, including slug generation and year-based sorting.
+ * 
+ * @param projects - Array of work project entries from Astro content collections
+ * @returns Array of processed projects sorted by year (newest first)
  */
 export function processWorkProjects(
   projects: CollectionEntry<"work">[]
 ): ProcessedWorkProject[] {
   return projects
     .map((project) => {
-      const slug = project.id; // In Astro 5, project.id is the filename without extension
+      // In Astro 5, project.id is the filename without extension
+      const slug = project.id;
       return {
         title: project.data.title,
         description: project.data.description,
         year: project.data.year,
         tags: project.data.tags as TagId[],
+        // Generate link to project detail page
         link: `/work/${slug}`,
       };
     })
@@ -69,21 +85,35 @@ export function processWorkProjects(
 }
 
 /**
- * Get all unique tags from processed content items
+ * Get all unique tags from processed writing posts
+ * 
+ * Extracts all unique tag IDs from posts and converts them to tag objects
+ * for use in filtering and display.
+ * 
+ * @param posts - Array of processed writing posts
+ * @returns Array of unique tag objects
  */
 export function getUniqueTagsFromPosts(
   posts: ProcessedWritingPost[]
 ): ReturnType<typeof getTagsByIds> {
+  // Extract all tag IDs, flatten the array, and remove duplicates
   const tagIds = [...new Set(posts.flatMap((p) => p.tags))];
   return getTagsByIds(tagIds);
 }
 
 /**
  * Get all unique tags from processed work projects
+ * 
+ * Extracts all unique tag IDs from projects and converts them to tag objects
+ * for use in filtering and display.
+ * 
+ * @param projects - Array of processed work projects
+ * @returns Array of unique tag objects
  */
 export function getUniqueTagsFromProjects(
   projects: ProcessedWorkProject[]
 ): ReturnType<typeof getTagsByIds> {
+  // Extract all tag IDs, flatten the array, and remove duplicates
   const tagIds = [...new Set(projects.flatMap((p) => p.tags))];
   return getTagsByIds(tagIds);
 }

@@ -21,6 +21,9 @@ interface FilterConfig {
  * @param type - Type of content being filtered ("writing" or "work")
  */
 export function initializeFilters(type: FilterType): void {
+  // ========================================================================
+  // Configuration Setup
+  // ========================================================================
   const config: FilterConfig = {
     type,
     filterTagsId: `${type}-filter-tags`,
@@ -30,15 +33,20 @@ export function initializeFilters(type: FilterType): void {
     tagAttribute: `${type}Tags`,
   };
 
+  // Get DOM elements
   const filterTags = document.getElementById(config.filterTagsId);
   const clearBtn = document.getElementById(config.clearBtnId);
   const resultsCount = document.getElementById(config.resultsCountId);
   const items = document.querySelectorAll<HTMLElement>(config.itemSelector);
 
+  // Early return if required elements are missing
   if (!filterTags || !clearBtn || !resultsCount || items.length === 0) {
     return;
   }
 
+  // ========================================================================
+  // State Management
+  // ========================================================================
   const activeFilters = new Set<string>();
 
   /**
@@ -86,8 +94,13 @@ export function initializeFilters(type: FilterType): void {
     updateURL();
   }
 
+  // ========================================================================
+  // UI Update Functions
+  // ========================================================================
+  
   /**
    * Update UI state
+   * Updates button states, ARIA attributes, and visibility of clear button
    */
   function updateUI(): void {
     filterTags.querySelectorAll<HTMLButtonElement>(".filter-tag-btn").forEach((btn) => {
@@ -95,10 +108,10 @@ export function initializeFilters(type: FilterType): void {
       const tagElement = btn.querySelector<HTMLElement>("[data-tag]");
       const isActive = tagId ? activeFilters.has(tagId) : false;
 
-      // Update ARIA state
+      // Update ARIA state for accessibility
       btn.setAttribute("aria-pressed", String(isActive));
 
-      // Update visual state
+      // Update visual state (active/inactive styles)
       if (tagElement) {
         tagElement.classList.toggle("bg-black", isActive);
         tagElement.classList.toggle("text-white", isActive);
@@ -107,7 +120,7 @@ export function initializeFilters(type: FilterType): void {
       }
     });
 
-    // Show/hide clear button
+    // Show/hide clear button based on active filter count
     clearBtn.classList.toggle("hidden", activeFilters.size === 0);
   }
 
@@ -168,6 +181,10 @@ export function initializeFilters(type: FilterType): void {
     window.history.replaceState({}, "", url);
   }
 
+  // ========================================================================
+  // Event Handlers
+  // ========================================================================
+  
   /**
    * Handle filter button clicks
    */
@@ -182,6 +199,7 @@ export function initializeFilters(type: FilterType): void {
 
   /**
    * Handle keyboard navigation
+   * Supports Enter and Space keys for accessibility
    */
   function handleKeyDown(e: KeyboardEvent): void {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>(
@@ -190,24 +208,33 @@ export function initializeFilters(type: FilterType): void {
     
     if (!btn?.dataset.tagId) return;
 
-    // Handle Enter and Space keys
+    // Handle Enter and Space keys for keyboard accessibility
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       toggleFilter(btn.dataset.tagId);
     }
   }
 
-  // Initialize from URL
+  // ========================================================================
+  // Initialization
+  // ========================================================================
+  
+  // Initialize filter state from URL parameters
   initFromURL();
 
-  // Event listeners
+  // Attach event listeners
   filterTags.addEventListener("click", handleFilterClick);
   filterTags.addEventListener("keydown", handleKeyDown);
   clearBtn.addEventListener("click", clearAllFilters);
 }
 
+// ============================================================================
+// Auto-Initialization
+// ============================================================================
+
 /**
  * Auto-initialize filters based on current path
+ * Determines which filter type to initialize based on the current route
  */
 function init(): void {
   const path = window.location.pathname;
@@ -227,5 +254,6 @@ if (typeof document !== "undefined") {
   }
 
   // Reinitialize on Astro page navigation (View Transitions)
+  // This ensures filters work correctly after client-side navigation
   document.addEventListener("astro:page-load", init);
 }

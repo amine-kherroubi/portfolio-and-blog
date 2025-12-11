@@ -22,16 +22,22 @@ export async function getStaticPaths() {
   }));
 }
 
+// Extract post data from props (provided by getStaticPaths)
 const { post } = Astro.props;
+
+// Render the MDX content to HTML
 const { Content } = await render(post);
 ---
 
 <BaseLayout title={post.data.title} description={post.data.excerpt}>
   <Navigation currentPage="writing" />
 
+  <!-- Article Content -->
   <article class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32">
     <div class="max-w-screen-2xl mx-auto">
+      <!-- Article Header -->
       <header class="mb-24 md:mb-32 lg:mb-48">
+        <!-- Publication Date and Read Time -->
         <div
           class="flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-[0.15em] mb-12 md:mb-16 lg:mb-24 text-black/50"
         >
@@ -40,10 +46,12 @@ const { Content } = await render(post);
           <span>{post.data.readTime}</span>
         </div>
 
+        <!-- Article Title -->
         <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] tracking-[-0.02em] mb-12 md:mb-16 lg:mb-24">
           {post.data.title}
         </h1>
 
+        <!-- Article Excerpt -->
         <p
           class="text-xl md:text-2xl lg:text-3xl leading-relaxed font-light text-black/70 max-w-3xl mb-12 md:mb-16 lg:mb-24"
         >
@@ -51,10 +59,14 @@ const { Content } = await render(post);
         </p>
       </header>
 
+      <!-- Article Body -->
+      <!-- Renders the MDX content from the post file -->
       <div class="prose prose-lg max-w-none">
         <Content />
       </div>
 
+      <!-- Article Footer -->
+      <!-- Navigation link back to all posts -->
       <footer class="mt-24 md:mt-32 lg:mt-48 pt-12 md:pt-16 lg:pt-24 border-t-2 border-black">
         <a
           href="/writing"
