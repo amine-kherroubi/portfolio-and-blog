@@ -23,7 +23,7 @@ const { Content } = await render(post);
 <BaseLayout title={post.data.title} description={post.data.excerpt}>
   <Navigation currentPage="writing" />
 
-  <article class="py-24 px-8">
+  <article id="main-content" class="py-24 px-8">
     <div class="max-w-container mx-auto">
       <header class="mb-32">
         <div

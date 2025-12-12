@@ -25,33 +25,35 @@ const allTags = getUniqueTagsFromProjects(projects);
 <BaseLayout title="Work">
   <Navigation currentPage={PAGE_IDS.WORK} />
 
-  <PageHeader
-    title="Work"
-    description="Selected projects demonstrating technical expertise and design thinking"
-  />
+  <main id="main-content">
+    <PageHeader
+      title="Work"
+      description="Selected projects demonstrating technical expertise and design thinking"
+    />
 
-  <FilterBar tags={allTags} type="work" />
+    <FilterBar tags={allTags} type="work" />
 
-  <ContentList>
-    {
-      projects.map((project, i) => (
-        <div
-          data-work-item
-          data-work-tags={project.tags.join(",")}
-          class:list={[i === projects.length - 1 && "border-b-0"]}
-        >
-          <ProjectCard
-            title={project.title}
-            description={project.description}
-            year={project.year}
-            tags={project.tags}
-            link={project.link}
-            variant="list"
-          />
-        </div>
-      ))
-    }
-  </ContentList>
+    <ContentList>
+      {
+        projects.map((project, i) => (
+          <div
+            data-work-item
+            data-work-tags={project.tags.join(",")}
+            class:list={[i === projects.length - 1 && "border-b-0"]}
+          >
+            <ProjectCard
+              title={project.title}
+              description={project.description}
+              year={project.year}
+              tags={project.tags}
+              link={project.link}
+              variant="list"
+            />
+          </div>
+        ))
+      }
+    </ContentList>
+  </main>
 
   <Footer />
 </BaseLayout>

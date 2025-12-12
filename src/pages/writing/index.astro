@@ -30,34 +30,36 @@ const structuredData = generateBlogStructuredData(posts, Astro.site);
 >
   <Navigation currentPage={PAGE_IDS.WRITING} />
 
-  <PageHeader
-    title="Writing"
-    description="Thoughts on design, technology, and the creative process"
-  />
+  <main id="main-content">
+    <PageHeader
+      title="Writing"
+      description="Thoughts on design, technology, and the creative process"
+    />
 
-  <FilterBar tags={allTags} type="writing" />
+    <FilterBar tags={allTags} type="writing" />
 
-  <ContentList>
-    {
-      posts.map((post, i) => (
-        <div
-          data-writing-item
-          data-writing-tags={post.tags.join(",")}
-          class:list={[i === posts.length - 1 && "border-b-0"]}
-        >
-          <BlogCard
-            title={post.title}
-            excerpt={post.excerpt}
-            date={post.date}
-            readTime={post.readTime}
-            slug={post.slug}
-            tags={post.tags}
-            variant="list"
-          />
-        </div>
-      ))
-    }
-  </ContentList>
+    <ContentList>
+      {
+        posts.map((post, i) => (
+          <div
+            data-writing-item
+            data-writing-tags={post.tags.join(",")}
+            class:list={[i === posts.length - 1 && "border-b-0"]}
+          >
+            <BlogCard
+              title={post.title}
+              excerpt={post.excerpt}
+              date={post.date}
+              readTime={post.readTime}
+              slug={post.slug}
+              tags={post.tags}
+              variant="list"
+            />
+          </div>
+        ))
+      }
+    </ContentList>
+  </main>
 
   <Footer />
 

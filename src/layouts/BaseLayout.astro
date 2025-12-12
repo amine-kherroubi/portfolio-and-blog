@@ -5,6 +5,7 @@
 
 import { SITE } from "../config/site";
 import { ClientRouter } from "astro:transitions";
+import SkipLink from "../components/SkipLink.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -79,6 +80,7 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
     <ClientRouter fallback="animate" />
   </head>
   <body class="bg-white text-black antialiased">
+    <SkipLink targetId="main-content" />
     <slot />
   </body>
 </html>

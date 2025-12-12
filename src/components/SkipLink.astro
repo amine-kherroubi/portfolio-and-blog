@@ -1,0 +1,73 @@
+---
+/**
+ * SkipLink Component - Desktop Only
+ *
+ * Purpose: A "Skip to content" link allowing keyboard/screen-reader users to bypass
+ * repetitive navigation.
+ *
+ * Implementation: An anchor placed at top of each page that targets the main content area.
+ * Styled off-screen by default and visible on focus.
+ *
+ * Justification: Skip links let non-mouse users jump directly to primary content,
+ * satisfying WCAG 2.4.1. This prevents excessive tabbing through nav links and speeds
+ * access to core content.
+ */
+
+interface Props {
+  targetId?: string;
+}
+
+const { targetId = "main-content" } = Astro.props;
+---
+
+<a href={`#${targetId}`} class="skip-link" aria-label="Skip to main content">
+  Skip to main content
+</a>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    z-index: 9999;
+
+    /* Visible styles when focused */
+    background: var(--color-black);
+    color: var(--color-white);
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-decoration: none;
+    border: var(--border-width-medium) solid var(--color-black);
+  }
+
+  .skip-link:focus {
+    position: fixed;
+    left: 1rem;
+    top: 1rem;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    outline: var(--border-width-thick) solid var(--color-white);
+    outline-offset: 4px;
+  }
+
+  .skip-link:focus:not(:focus-visible) {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .skip-link:focus {
+      transition: all 0.2s ease;
+    }
+  }
+</style>

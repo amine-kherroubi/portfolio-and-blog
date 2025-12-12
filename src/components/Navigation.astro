@@ -1,6 +1,15 @@
 ---
 /**
  * Navigation Component - Desktop Only
+ *
+ * Purpose: Site header with logo/title and main navigation.
+ *
+ * Implementation: A semantic <header> containing a <nav> list of internal links.
+ * Initial HTML is static for crawlability.
+ *
+ * Justification: Semantic <header> and <nav> tags give built-in accessibility
+ * (landmarks and keyboard focus) and help SEO. A consistent header provides clear
+ * site structure and always-visible navigation for users.
  */
 
 import { NAVIGATION_LINKS, PAGE_IDS } from "../utils/constants";
@@ -13,11 +22,11 @@ const { currentPage } = Astro.props;
 const links = NAVIGATION_LINKS;
 ---
 
-<nav
+<header
   class="bg-white border-b-2 border-black sticky top-0 z-50"
-  aria-label="Main navigation"
+  role="banner"
 >
-  <div class="max-w-container mx-auto px-8">
+  <nav class="max-w-container mx-auto px-8" aria-label="Main navigation">
     <div class="h-20 flex justify-between items-center">
       <a
         href="/"
@@ -52,5 +61,5 @@ const links = NAVIGATION_LINKS;
         }
       </ul>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>
