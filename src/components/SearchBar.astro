@@ -1,0 +1,129 @@
+---
+/**
+ * SearchBar Component - Desktop Only
+ *
+ * Purpose: Provide quick access to search functionality from any page.
+ *
+ * Implementation: A compact search button that opens a modal or redirects
+ * to the search page. Includes keyboard shortcut support (Cmd/Ctrl + K).
+ *
+ * Justification: Prominent search access improves content discoverability
+ * and provides a faster path to relevant content.
+ */
+
+interface Props {
+  variant?: "inline" | "button";
+  class?: string;
+}
+
+const { variant = "button", class: className = "" } = Astro.props;
+---
+
+{
+  variant === "inline" ? (
+    <form
+      action="/search"
+      method="get"
+      class:list={["relative", className]}
+      role="search"
+    >
+      <label for="header-search" class="sr-only">
+        Search
+      </label>
+      <input
+        type="search"
+        id="header-search"
+        name="q"
+        placeholder="Search..."
+        autocomplete="off"
+        class="w-full border-2 border-black px-4 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 transition-shadow duration-200"
+      />
+      <button
+        type="submit"
+        class="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:opacity-50 transition-opacity duration-200"
+        aria-label="Submit search"
+      >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </button>
+    </form>
+  ) : (
+    <a
+      href="/search"
+      class:list={[
+        "inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50",
+        className,
+      ]}
+      aria-label="Search site content"
+    >
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path
+          stroke-linecap="square"
+          stroke-linejoin="miter"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <span>Search</span>
+    </a>
+  )
+}
+
+<script>
+  /**
+   * Keyboard Shortcut Handler
+   *
+   * Implements Cmd/Ctrl + K keyboard shortcut to quickly access search.
+   * This is a common pattern in modern web applications.
+   */
+  function initSearchShortcut() {
+    document.addEventListener("keydown", (e) => {
+      // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
+      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+      const modifierKey = isMac ? e.metaKey : e.ctrlKey;
+
+      if (modifierKey && e.key === "k") {
+        e.preventDefault();
+
+        // Navigate to search page
+        window.location.href = "/search";
+
+        // Or, if on search page, focus the input
+        const searchInput = document.getElementById(
+          "search-input"
+        ) as HTMLInputElement | null;
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSearchShortcut);
+  } else {
+    initSearchShortcut();
+  }
+
+  // Reinitialize on Astro page navigation
+  document.addEventListener("astro:page-load", initSearchShortcut);
+</script>

@@ -5,7 +5,7 @@
  * Purpose: Site header with logo/title and main navigation.
  *
  * Implementation: A semantic <header> containing a <nav> list of internal links.
- * Initial HTML is static for crawlability.
+ * Initial HTML is static for crawlability. Includes search functionality.
  *
  * Justification: Semantic <header> and <nav> tags give built-in accessibility
  * (landmarks and keyboard focus) and help SEO. A consistent header provides clear
@@ -13,6 +13,7 @@
  */
 
 import { NAVIGATION_LINKS, PAGE_IDS } from "../utils/constants";
+import SearchBar from "./SearchBar.astro";
 
 interface Props {
   currentPage?: (typeof PAGE_IDS)[keyof typeof PAGE_IDS];
@@ -38,7 +39,7 @@ const links = NAVIGATION_LINKS;
       </a>
 
       <ul
-        class="flex gap-10 text-sm font-bold uppercase tracking-[0.15em]"
+        class="flex items-center gap-10 text-sm font-bold uppercase tracking-[0.15em]"
         role="list"
       >
         {
@@ -59,6 +60,9 @@ const links = NAVIGATION_LINKS;
             </li>
           ))
         }
+        <li>
+          <SearchBar variant="button" />
+        </li>
       </ul>
     </div>
   </nav>

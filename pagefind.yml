@@ -1,0 +1,67 @@
+# Pagefind Configuration
+#
+# Configures how Pagefind indexes your static site content.
+# Pagefind automatically indexes all HTML pages in the dist directory
+# after your Astro build completes.
+
+# Site configuration
+site: dist
+
+# Content selectors - tell Pagefind what to index
+# By default, it indexes all content, but we can be more specific
+source:
+  # Main content area to index
+  selector: "[data-pagefind-body], main"
+
+  # Elements to exclude from indexing
+  exclude_selectors:
+    - nav
+    - header
+    - footer
+    - .no-search
+    - "[data-pagefind-ignore]"
+
+# Metadata extraction
+# Tell Pagefind what metadata to extract from pages
+metadata:
+  # Extract page title
+  title: "meta[property='og:title'], title"
+
+  # Extract page description
+  description: "meta[name='description'], meta[property='og:description']"
+
+  # Extract publish date
+  date: "time[datetime], meta[property='article:published_time']"
+
+  # Extract tags/keywords
+  tags: "meta[name='keywords']"
+
+# Indexing options
+options:
+  # Bundle directory (where Pagefind assets will be placed)
+  bundle_dir: pagefind
+
+  # Force language (optional, auto-detected by default)
+  # force_language: en
+
+  # Exclude specific paths
+  exclude_paths:
+    - /404.html
+    - /404/
+
+  # Keep index JSON
+  keep_index_url: false
+
+  # Verbose output during build
+  verbose: false
+
+# Search UI customization (optional)
+ui:
+  # Placeholder text
+  placeholder: "Search..."
+
+  # Show clear button
+  show_empty_filters: false
+
+  # Reset button text
+  reset_filters_text: "Clear"

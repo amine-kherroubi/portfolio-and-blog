@@ -1,5 +1,8 @@
 /**
  * Astro Configuration - Desktop Only
+ *
+ * Enhanced with search support via Pagefind.
+ * Note: Pagefind runs as a post-build step (see package.json build script)
  */
 
 import { defineConfig } from "astro/config";
@@ -38,6 +41,8 @@ export default defineConfig({
       changefreq: "weekly",
       priority: 0.7,
     }),
+    // Note: Pagefind integration happens via post-build script
+    // See package.json: "build": "astro check && astro build && pagefind --site dist"
   ],
 
   image: {

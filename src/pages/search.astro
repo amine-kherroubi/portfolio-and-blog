@@ -1,0 +1,456 @@
+---
+/**
+ * Search Page - Desktop Only
+ *
+ * Purpose: Allow users to search all site content by keyword.
+ *
+ * Implementation: A dedicated search page powered by Pagefind, a client-side
+ * search index generated at build time. On the client, JS listens for input
+ * and displays results in real-time.
+ *
+ * Justification: On content-rich sites, search greatly improves content
+ * discoverability. It provides a quick path to relevant posts or projects
+ * without manual browsing. Pagefind provides fast, in-browser search with
+ * zero runtime dependencies and excellent privacy.
+ */
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<BaseLayout title="Search" description="Search all content across the site">
+  <Navigation />
+
+  <main id="main-content">
+    <!-- Search Header -->
+    <section class="py-24 px-8" aria-labelledby="search-title">
+      <div class="max-w-container mx-auto">
+        <h1
+          id="search-title"
+          class="text-[8rem] font-bold leading-[0.9] tracking-[-0.02em] mb-12"
+        >
+          Search
+        </h1>
+        <p
+          class="text-xl leading-relaxed font-light tracking-tight max-w-3xl text-black/70"
+        >
+          Find articles, projects, and content across the entire site
+        </p>
+      </div>
+    </section>
+
+    <!-- Search Interface -->
+    <section class="px-8 pb-24">
+      <div class="max-w-container mx-auto">
+        <!-- Search Input -->
+        <div class="mb-16">
+          <div class="relative">
+            <label for="search-input" class="sr-only">Search content</label>
+            <div class="relative">
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Search articles, projects..."
+                autocomplete="off"
+                aria-label="Search site content"
+                aria-controls="search-results"
+                class="w-full border-4 border-black px-8 py-6 text-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4 transition-shadow duration-200"
+              />
+              <div
+                class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none"
+                aria-hidden="true"
+              >
+                <svg
+                  class="w-8 h-8 text-black/30"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search Tips -->
+          <div
+            class="mt-4 text-sm text-black/60 flex items-center gap-4"
+            role="status"
+          >
+            <span>Tip: Try searching for topics, technologies, or keywords</span
+            >
+          </div>
+        </div>
+
+        <!-- Search Status -->
+        <div
+          id="search-status"
+          class="mb-8 text-sm font-bold uppercase tracking-[0.15em] text-black/50"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+        </div>
+
+        <!-- Search Results Container -->
+        <div
+          id="search-results"
+          class="space-y-0"
+          role="region"
+          aria-label="Search results"
+          aria-live="polite"
+        >
+          <!-- Results will be injected here by Pagefind -->
+        </div>
+
+        <!-- No Results Message -->
+        <div
+          id="no-results"
+          class="hidden text-center py-24"
+          role="status"
+          aria-live="polite"
+        >
+          <div class="text-6xl mb-6" aria-hidden="true">🔍</div>
+          <h2 class="text-2xl font-bold mb-4">No results found</h2>
+          <p class="text-lg text-black/70 max-w-2xl mx-auto mb-8">
+            Try adjusting your search terms or browse our content directly
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="/writing"
+              class="inline-flex items-center gap-2 bg-black text-white border-2 border-black px-6 py-3 text-sm font-bold uppercase tracking-[0.15em] hover:bg-white hover:text-black transition-colors duration-200"
+            >
+              Browse Writing
+            </a>
+            <a
+              href="/work"
+              class="inline-flex items-center gap-2 bg-white text-black border-2 border-black px-6 py-3 text-sm font-bold uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-colors duration-200"
+            >
+              Browse Work
+            </a>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div
+          id="search-loading"
+          class="hidden text-center py-24"
+          role="status"
+          aria-live="polite"
+        >
+          <div
+            class="inline-block w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mb-4"
+            aria-hidden="true"
+          >
+          </div>
+          <p class="text-lg text-black/70">Searching...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  /**
+   * Pagefind Search Implementation
+   *
+   * Loads Pagefind library and implements search functionality with
+   * real-time results, debouncing, and accessibility features.
+   */
+
+  // Type definitions for Pagefind
+  interface PagefindSearchResult {
+    id: string;
+    data: () => Promise<{
+      url: string;
+      content: string;
+      word_count: number;
+      filters: Record<string, string[]>;
+      meta: {
+        title: string;
+        description?: string;
+        date?: string;
+        tags?: string[];
+      };
+      excerpt: string;
+      sub_results: Array<{
+        title: string;
+        url: string;
+        excerpt: string;
+      }>;
+    }>;
+  }
+
+  interface PagefindResponse {
+    results: PagefindSearchResult[];
+  }
+
+  interface Pagefind {
+    search: (query: string) => Promise<PagefindResponse>;
+    debouncedSearch: (
+      query: string,
+      options?: { debounce?: number }
+    ) => Promise<PagefindResponse>;
+  }
+
+  declare global {
+    interface Window {
+      pagefind?: Pagefind;
+    }
+  }
+
+  /**
+   * Initialize Pagefind search
+   */
+  async function initializeSearch() {
+    const searchInput = document.getElementById(
+      "search-input"
+    ) as HTMLInputElement | null;
+    const searchResults = document.getElementById("search-results");
+    const searchStatus = document.getElementById("search-status");
+    const noResults = document.getElementById("no-results");
+    const searchLoading = document.getElementById("search-loading");
+
+    if (!searchInput || !searchResults || !searchStatus) {
+      console.warn("Search elements not found");
+      return;
+    }
+
+    // Load Pagefind
+    try {
+      // @ts-ignore - Pagefind is loaded dynamically
+      const pagefind = await import("/pagefind/pagefind.js");
+      window.pagefind = pagefind;
+    } catch (error) {
+      console.error("Failed to load Pagefind:", error);
+      if (searchStatus) {
+        searchStatus.textContent = "Search unavailable";
+      }
+      return;
+    }
+
+    // Get query from URL if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get("q");
+    if (initialQuery) {
+      searchInput.value = initialQuery;
+      performSearch(initialQuery);
+    }
+
+    /**
+     * Perform search and display results
+     */
+    async function performSearch(query: string) {
+      if (!window.pagefind || !searchResults || !searchStatus) return;
+
+      const trimmedQuery = query.trim();
+
+      // Clear results if query is empty
+      if (!trimmedQuery) {
+        searchResults.innerHTML = "";
+        searchStatus.textContent = "";
+        noResults?.classList.add("hidden");
+        return;
+      }
+
+      // Show loading state
+      searchLoading?.classList.remove("hidden");
+      noResults?.classList.add("hidden");
+      searchResults.innerHTML = "";
+
+      try {
+        // Perform debounced search
+        const results = await window.pagefind.debouncedSearch(trimmedQuery, {
+          debounce: 300,
+        });
+
+        // Hide loading state
+        searchLoading?.classList.add("hidden");
+
+        // Update status
+        const resultCount = results.results.length;
+        searchStatus.textContent =
+          resultCount > 0
+            ? `Found ${resultCount} result${resultCount !== 1 ? "s" : ""}`
+            : "";
+
+        // Show no results message
+        if (resultCount === 0) {
+          noResults?.classList.remove("hidden");
+          return;
+        }
+
+        // Display results
+        const resultsHTML = await Promise.all(
+          results.results.map(async (result) => {
+            const data = await result.data();
+            return createResultElement(data);
+          })
+        );
+
+        searchResults.innerHTML = resultsHTML.join("");
+
+        // Update URL
+        const url = new URL(window.location.href);
+        url.searchParams.set("q", trimmedQuery);
+        window.history.replaceState({}, "", url);
+      } catch (error) {
+        console.error("Search error:", error);
+        searchStatus.textContent = "Search error occurred";
+        searchLoading?.classList.add("hidden");
+      }
+    }
+
+    /**
+     * Create HTML for a search result
+     */
+    function createResultElement(
+      data: Awaited<ReturnType<PagefindSearchResult["data"]>>
+    ): string {
+      const title = data.meta?.title || "Untitled";
+      const excerpt = data.excerpt || data.meta?.description || "";
+      const url = data.url;
+      const date = data.meta?.date || "";
+      const tags = data.meta?.tags || [];
+
+      // Determine content type from URL
+      const isWriting = url.includes("/writing/");
+      const isWork = url.includes("/work/");
+      const contentType = isWriting ? "Article" : isWork ? "Project" : "Page";
+
+      return `
+        <article class="border-b-2 border-black last:border-b-0">
+          <a
+            href="${url}"
+            class="group block py-16 transition-colors duration-200 hover:bg-black hover:text-white focus-visible:bg-black focus-visible:text-white focus-visible:outline-none"
+          >
+            <div class="grid grid-cols-12 gap-12 items-start px-16">
+              ${
+                date
+                  ? `
+              <time
+                class="col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
+                datetime="${date}"
+              >
+                ${date}
+              </time>
+              `
+                  : `
+              <span class="col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity">
+                ${contentType}
+              </span>
+              `
+              }
+
+              <div class="col-span-10">
+                <h3 class="text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-5">
+                  ${title}
+                </h3>
+                <div class="text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100 transition-opacity search-excerpt">
+                  ${excerpt}
+                </div>
+                ${
+                  tags.length > 0
+                    ? `
+                <div class="flex flex-wrap gap-2 mt-6">
+                  ${tags
+                    .map(
+                      (tag) => `
+                    <span class="inline-block text-sm px-4 py-2 border-2 border-current font-bold uppercase tracking-[0.15em]">
+                      ${tag}
+                    </span>
+                  `
+                    )
+                    .join("")}
+                </div>
+                `
+                    : ""
+                }
+              </div>
+            </div>
+          </a>
+        </article>
+      `;
+    }
+
+    /**
+     * Handle search input
+     */
+    let searchTimeout: NodeJS.Timeout;
+    searchInput.addEventListener("input", (e) => {
+      const query = (e.target as HTMLInputElement).value;
+
+      // Clear previous timeout
+      clearTimeout(searchTimeout);
+
+      // Debounce search
+      searchTimeout = setTimeout(() => {
+        performSearch(query);
+      }, 300);
+    });
+
+    /**
+     * Handle form submission (if wrapped in form)
+     */
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const query = searchInput.value;
+        performSearch(query);
+      }
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeSearch);
+  } else {
+    initializeSearch();
+  }
+
+  // Reinitialize on Astro page navigation
+  document.addEventListener("astro:page-load", initializeSearch);
+</script>
+
+<style>
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+
+  /* Style search excerpt highlights from Pagefind */
+  :global(.search-excerpt mark) {
+    background: transparent;
+    font-weight: 700;
+    color: inherit;
+  }
+
+  :global(.group:hover .search-excerpt mark) {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    article a {
+      transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+    }
+  }
+</style>
