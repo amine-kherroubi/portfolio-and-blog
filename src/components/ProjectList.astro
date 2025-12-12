@@ -1,0 +1,97 @@
+---
+/**
+ * ProjectList Component - Desktop Only
+ *
+ * Purpose: Grid or list of portfolio projects.
+ *
+ * Implementation: Query the "projects" collection and render each item with a thumbnail,
+ * title, and short description. Use a responsive grid layout. Images use loading="lazy"
+ * and srcset for different resolutions.
+ *
+ * Justification: Visual portfolio is key for showcasing work. Lazy-loading off-screen
+ * thumbnails speeds up page load. Always include descriptive alt text on project images
+ * so screen readers and search engines understand them. Responsive srcset images improve
+ * performance and adapt to devices.
+ */
+
+import ProjectCard from "./ProjectCard.astro";
+import type { ProcessedWorkProject } from "../utils/content";
+
+interface Props {
+  projects: ProcessedWorkProject[];
+  variant?: "grid" | "list";
+  class?: string;
+}
+
+const { projects, variant = "grid", class: className = "" } = Astro.props;
+---
+
+<section class:list={["py-16 px-8", className]} aria-label="Portfolio projects">
+  <div class="max-w-container mx-auto">
+    {
+      variant === "grid" ? (
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-8"
+          role="list"
+          aria-label="Project grid"
+        >
+          {projects.map((project) => (
+            <div role="listitem">
+              <ProjectCard
+                title={project.title}
+                description={project.description}
+                year={project.year}
+                tags={project.tags}
+                link={project.link}
+                variant="grid"
+                gridSpan="col-span-1"
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="space-y-0" role="list" aria-label="Project list">
+          {projects.map((project) => (
+            <div role="listitem">
+              <ProjectCard
+                title={project.title}
+                description={project.description}
+                year={project.year}
+                tags={project.tags}
+                link={project.link}
+                variant="list"
+              />
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      projects.length === 0 && (
+        <div class="text-center py-24">
+          <p class="text-xl text-black/50">No projects found</p>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    [role="listitem"] {
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>

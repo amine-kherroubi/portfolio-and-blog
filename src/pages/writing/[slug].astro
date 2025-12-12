@@ -2,6 +2,16 @@
 /**
  * Writing Post Page - Desktop Only
  *
+ * Purpose: Template for individual blog posts.
+ *
+ * Implementation: Wrap post content in a semantic <article> with <h1> title, date,
+ * author, and markdown body. Include SiteMeta for SEO, and optionally social-share
+ * buttons. Images in posts use <img> with alt.
+ *
+ * Justification: Using <article> and proper headings makes content accessible to
+ * screen readers. Any images must have meaningful alt text (for SEO and accessibility).
+ * Metadata (via SiteMeta/schema) further ensures each post is indexed correctly.
+ *
  * Enhanced with structured data and article-specific metadata
  */
 
@@ -56,6 +66,14 @@ const publishDate = new Date(post.data.date).toISOString();
           >
           <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
           <span itemprop="timeRequired">{post.data.readTime}</span>
+          <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
+          <span
+            itemprop="author"
+            itemscope
+            itemtype="https://schema.org/Person"
+          >
+            <span itemprop="name">{SITE.name}</span>
+          </span>
         </div>
 
         <h1
@@ -72,22 +90,74 @@ const publishDate = new Date(post.data.date).toISOString();
           {post.data.excerpt}
         </p>
 
+        <!-- Optional: Social Share Buttons -->
+        <div
+          class="flex items-center gap-4"
+          role="group"
+          aria-label="Share this article"
+        >
+          <span
+            class="text-sm font-bold uppercase tracking-[0.15em] text-black/50"
+          >
+            Share:
+          </span>
+          <button
+            class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+            data-share="twitter"
+            aria-label="Share on Twitter"
+          >
+            Twitter
+          </button>
+          <button
+            class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+            data-share="linkedin"
+            aria-label="Share on LinkedIn"
+          >
+            LinkedIn
+          </button>
+          <button
+            class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+            data-share="copy"
+            aria-label="Copy link"
+          >
+            Copy Link
+          </button>
+        </div>
+
         <!-- Hidden metadata for schema -->
-        <meta itemprop="author" content={SITE.name} />
         <meta itemprop="url" content={postUrl.toString()} />
       </header>
 
+      <!-- Article Body with Semantic Markup -->
       <div class="prose prose-lg max-w-none" itemprop="articleBody">
         <Content />
       </div>
 
+      <!-- Article Footer with Navigation -->
       <footer class="mt-32 pt-16 border-t-2 border-black">
-        <a
-          href="/writing"
-          class="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
-        >
-          All Posts
-        </a>
+        <div class="flex items-center justify-between">
+          <a
+            href="/writing"
+            class="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="square"
+                stroke-linejoin="miter"
+                d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+            </svg>
+            All Posts
+          </a>
+
+          <!-- Optional: Related Posts could go here -->
+        </div>
       </footer>
     </div>
   </article>
@@ -105,3 +175,102 @@ const publishDate = new Date(post.data.date).toISOString();
     keywords={post.data.tags}
   />
 </BaseLayout>
+
+<script>
+  /**
+   * Social Share Functionality
+   *
+   * Implements client-side social sharing with proper error handling
+   * and user feedback.
+   */
+
+  function initSocialShare() {
+    const shareButtons = document.querySelectorAll(".share-button");
+    const currentUrl = window.location.href;
+    const title = document.querySelector(
+      'h1[itemprop="headline"]'
+    )?.textContent;
+
+    shareButtons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const shareType = button.getAttribute("data-share");
+
+        try {
+          switch (shareType) {
+            case "twitter":
+              window.open(
+                `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title || "")}`,
+                "_blank",
+                "width=550,height=420"
+              );
+              break;
+
+            case "linkedin":
+              window.open(
+                `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
+                "_blank",
+                "width=550,height=420"
+              );
+              break;
+
+            case "copy":
+              await navigator.clipboard.writeText(currentUrl);
+              // Provide visual feedback
+              const originalText = button.textContent;
+              button.textContent = "Copied!";
+              setTimeout(() => {
+                button.textContent = originalText;
+              }, 2000);
+              break;
+          }
+        } catch (error) {
+          console.error("Share error:", error);
+        }
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSocialShare);
+  } else {
+    initSocialShare();
+  }
+
+  // Reinitialize on Astro page navigation
+  document.addEventListener("astro:page-load", initSocialShare);
+</script>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    article {
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  /**
+   * Ensure images in prose have proper styling and alt text visibility
+   */
+  :global(.prose img) {
+    /* Images already have border and proper spacing from global.css */
+    /* Ensure they're never missing alt text by making it visible in dev */
+  }
+
+  :global(.prose img:not([alt])),
+  :global(.prose img[alt=""]) {
+    /* Dev warning: outline missing alt text */
+    outline: 3px dashed red;
+    outline-offset: 4px;
+  }
+</style>

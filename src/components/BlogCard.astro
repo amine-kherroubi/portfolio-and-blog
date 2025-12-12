@@ -1,6 +1,8 @@
 ---
 /**
  * BlogCard Component - Desktop Only
+ *
+ * Enhanced with proper image optimization, lazy loading, and accessibility features.
  */
 
 import Tag from "./Tag.astro";
@@ -14,6 +16,9 @@ interface Props {
   slug: string;
   tags?: TagId[];
   variant?: "featured" | "list";
+  image?: string;
+  imageAlt?: string;
+  author?: string;
 }
 
 const {
@@ -24,9 +29,15 @@ const {
   slug,
   tags = [],
   variant = "list",
+  image,
+  imageAlt,
+  author,
 } = Astro.props;
 
 const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
+
+// Generate alt text if not provided
+const finalImageAlt = imageAlt || `${title} article cover image`;
 ---
 
 {
@@ -38,56 +49,87 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
     >
       <a
         href={`/writing/${slug}`}
-        class="block p-12 h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
+        class="block h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
         aria-label={`Read article: ${title}`}
       >
-        <div class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-6">
-          <time datetime={date} itemprop="datePublished">
-            {date}
-          </time>
-          <span class="w-2 h-2 bg-black rounded-full" aria-hidden="true" />
-          <span itemprop="timeRequired">{readTime}</span>
-        </div>
-
-        <h3
-          class="text-4xl font-bold leading-tight mb-4 group-hover:underline decoration-2 underline-offset-8"
-          itemprop="headline"
-        >
-          {title}
-        </h3>
-
-        <p
-          class="text-xl text-black/70 leading-relaxed mb-6"
-          itemprop="description"
-        >
-          {excerpt}
-        </p>
-
-        {tagObjects.length > 0 && (
-          <div class="flex flex-wrap gap-2 mb-6" role="list">
-            {tagObjects.map((tag) => (
-              <Tag label={tag.label} variant="default" />
-            ))}
+        {image && (
+          <div class="aspect-video bg-gray-100 border-b-4 border-black overflow-hidden">
+            <picture>
+              <source
+                type="image/avif"
+                srcset={`${image}-640w.avif 640w, ${image}-1024w.avif 1024w, ${image}-1920w.avif 1920w`}
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <source
+                type="image/webp"
+                srcset={`${image}-640w.webp 640w, ${image}-1024w.webp 1024w, ${image}-1920w.webp 1920w`}
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+              <img
+                src={`${image}-1024w.jpg`}
+                alt={finalImageAlt}
+                loading="lazy"
+                decoding="async"
+                width="1024"
+                height="576"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                itemprop="image"
+              />
+            </picture>
           </div>
         )}
 
-        <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-[0.15em]">
-          Read Article
-          <svg
-            class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            stroke-width="3"
-            aria-hidden="true"
+        <div class="p-12">
+          <div class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-6">
+            <time datetime={date} itemprop="datePublished">
+              {date}
+            </time>
+            <span class="w-2 h-2 bg-black rounded-full" aria-hidden="true" />
+            <span itemprop="timeRequired">{readTime}</span>
+          </div>
+
+          <h3
+            class="text-4xl font-bold leading-tight mb-4 group-hover:underline decoration-2 underline-offset-8"
+            itemprop="headline"
           >
-            <path
-              stroke-linecap="square"
-              stroke-linejoin="miter"
-              d="M17 8l4 4m0 0l-4 4m4-4H3"
-            />
-          </svg>
-        </span>
+            {title}
+          </h3>
+
+          <p
+            class="text-xl text-black/70 leading-relaxed mb-6"
+            itemprop="description"
+          >
+            {excerpt}
+          </p>
+
+          {tagObjects.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-6" role="list">
+              {tagObjects.map((tag) => (
+                <Tag label={tag.label} variant="default" />
+              ))}
+            </div>
+          )}
+
+          <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-[0.15em]">
+            Read Article
+            <svg
+              class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="3"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="square"
+                stroke-linejoin="miter"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </span>
+
+          {author && <meta itemprop="author" content={author} />}
+        </div>
       </a>
     </article>
   ) : (
@@ -139,6 +181,9 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
             {readTime}
           </span>
         </div>
+
+        {author && <meta itemprop="author" content={author} />}
+        {image && <meta itemprop="image" content={image} />}
       </a>
     </article>
   )
@@ -154,6 +199,10 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
 
     article svg {
       transition: transform 0.2s ease;
+    }
+
+    article img {
+      transition: transform 0.3s ease;
     }
   }
 </style>

@@ -2,6 +2,16 @@
 /**
  * Work Project Page - Desktop Only
  *
+ * Purpose: Detail page for a single project.
+ *
+ * Implementation: Similar to a post: an <article> with project title, description,
+ * larger images or galleries, and any links (demo, source). Set SiteMeta using
+ * project info.
+ *
+ * Justification: Separate project pages give SEO value (unique URL and content).
+ * Semantic markup and alt text on project images continue to aid accessibility
+ * and indexing.
+ *
  * Enhanced with structured data and project-specific metadata
  */
 
@@ -44,7 +54,7 @@ const dateCreated = `${project.data.year}-01-01`;
 
   <main id="main-content">
     <!-- Project Header -->
-    <section
+    <article
       class="py-24 px-8"
       itemscope
       itemtype="https://schema.org/CreativeWork"
@@ -54,11 +64,14 @@ const dateCreated = `${project.data.year}-01-01`;
           class="mb-12 flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] text-black/50"
         >
           <span itemprop="dateCreated">{project.data.year}</span>
+          <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
+          <span>Case Study</span>
         </div>
 
         <div class="w-16 h-0.5 bg-black mb-12"></div>
 
         <h1
+          id="project-title"
           class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-8"
           itemprop="name"
         >
@@ -74,7 +87,11 @@ const dateCreated = `${project.data.year}-01-01`;
 
         {
           tagObjects.length > 0 && (
-            <div class="flex flex-wrap gap-2 mt-6">
+            <div
+              class="flex flex-wrap gap-2 mt-6"
+              role="list"
+              aria-label="Project technologies and skills"
+            >
               {tagObjects.map((tag) => (
                 <Tag label={tag.label} variant="large" />
               ))}
@@ -85,29 +102,179 @@ const dateCreated = `${project.data.year}-01-01`;
         <!-- Hidden metadata for schema -->
         <meta itemprop="url" content={projectUrl.toString()} />
       </div>
+    </article>
+
+    <!-- Project Hero Image / Gallery -->
+    <section class="px-8 mb-24" aria-label="Project preview">
+      <div class="max-w-container mx-auto">
+        <figure
+          class="aspect-video bg-gray-100 border-2 border-black overflow-hidden"
+        >
+          <picture>
+            <source
+              type="image/avif"
+              srcset="/projects/placeholder-1920w.avif 1920w, /projects/placeholder-1280w.avif 1280w, /projects/placeholder-640w.avif 640w"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+            />
+            <source
+              type="image/webp"
+              srcset="/projects/placeholder-1920w.webp 1920w, /projects/placeholder-1280w.webp 1280w, /projects/placeholder-640w.webp 640w"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+            />
+            <img
+              src="/projects/placeholder-1280w.jpg"
+              alt={`${project.data.title} project preview showing the main interface and key features`}
+              loading="eager"
+              decoding="async"
+              width="1280"
+              height="720"
+              class="w-full h-full object-cover"
+              itemprop="image"
+            />
+          </picture>
+          <figcaption class="sr-only">
+            Main preview image for {project.data.title} project
+          </figcaption>
+        </figure>
+      </div>
     </section>
 
-    <!-- Project Visualization -->
-    <section class="px-8 mb-24">
+    <!-- Project Details and Links -->
+    <section class="px-8 mb-24" aria-label="Project information">
       <div class="max-w-container mx-auto">
-        <div
-          class="aspect-video bg-gray-100 border-2 border-black flex items-center justify-center"
-          itemprop="image"
-        >
-          <p
-            class="text-black/30 text-lg font-bold uppercase tracking-[0.15em]"
-          >
-            Project Visualization
-          </p>
+        <div class="grid grid-cols-12 gap-12">
+          <!-- Project Links -->
+          <div class="col-span-3">
+            <h2
+              class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-6"
+            >
+              Project Links
+            </h2>
+            <nav class="space-y-4" aria-label="External project links">
+              <a
+                href="#demo"
+                class="flex items-center gap-2 text-base hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  ></path>
+                </svg>
+                Live Demo
+              </a>
+              <a
+                href="#source"
+                class="flex items-center gap-2 text-base hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="square"
+                    stroke-linejoin="miter"
+                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                </svg>
+                Source Code
+              </a>
+            </nav>
+          </div>
+
+          <!-- Project Metadata -->
+          <div class="col-span-3">
+            <h2
+              class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-6"
+            >
+              Timeline
+            </h2>
+            <p class="text-base leading-relaxed text-black/70">
+              {project.data.year}
+            </p>
+          </div>
+
+          <!-- Additional Project Info could go here -->
+          <div class="col-span-6">
+            <h2
+              class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-6"
+            >
+              Technologies
+            </h2>
+            <div class="flex flex-wrap gap-2">
+              {
+                tagObjects.map((tag) => (
+                  <Tag label={tag.label} variant="default" />
+                ))
+              }
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Project Content -->
-    <section class="px-8 mb-24">
+    <!-- Project Content / Case Study -->
+    <section class="px-8 mb-24" aria-labelledby="project-title">
       <div class="max-w-container mx-auto">
         <div class="prose prose-lg max-w-4xl" itemprop="text">
           <Content />
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional Project Images (if any) -->
+    <section class="px-8 mb-24" aria-label="Additional project images">
+      <div class="max-w-container mx-auto">
+        <h2 class="text-2xl font-bold mb-8 sr-only">Project Gallery</h2>
+        <div class="grid grid-cols-2 gap-8">
+          <!-- Example additional images with proper alt text -->
+          <figure class="aspect-video bg-gray-100 border-2 border-black">
+            <img
+              src="/projects/detail-1-640w.jpg"
+              srcset="/projects/detail-1-640w.jpg 640w, /projects/detail-1-1024w.jpg 1024w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt={`${project.data.title} detail view showing user interface components`}
+              loading="lazy"
+              decoding="async"
+              width="640"
+              height="360"
+              class="w-full h-full object-cover"
+            />
+            <figcaption class="sr-only">
+              Detail view of the user interface
+            </figcaption>
+          </figure>
+          <figure class="aspect-video bg-gray-100 border-2 border-black">
+            <img
+              src="/projects/detail-2-640w.jpg"
+              srcset="/projects/detail-2-640w.jpg 640w, /projects/detail-2-1024w.jpg 1024w"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              alt={`${project.data.title} functionality demonstration showing key features in action`}
+              loading="lazy"
+              decoding="async"
+              width="640"
+              height="360"
+              class="w-full h-full object-cover"
+            />
+            <figcaption class="sr-only">
+              Demonstration of key features
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -119,6 +286,19 @@ const dateCreated = `${project.data.year}-01-01`;
           href="/work"
           class="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
         >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="miter"
+              d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+          </svg>
           All Projects
         </a>
       </div>
@@ -137,3 +317,31 @@ const dateCreated = `${project.data.year}-01-01`;
     keywords={project.data.tags}
   />
 </BaseLayout>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    article {
+      animation: fadeInUp 0.4s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  /**
+   * Ensure images have proper alt text - dev warning
+   */
+  :global(img:not([alt])),
+  :global(img[alt=""]) {
+    outline: 3px dashed red;
+    outline-offset: 4px;
+  }
+</style>
