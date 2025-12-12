@@ -1,28 +1,18 @@
 ---
 /**
- * BlogCard Component
- * 
- * Displays a blog post card with title, excerpt, date, and tags.
- * Supports featured and list variants for different layouts.
+ * BlogCard Component - Desktop Only
  */
 
 import Tag from "./Tag.astro";
 import { getTagsByIds, type TagId } from "../config/tags";
 
 interface Props {
-  /** Post title */
   title: string;
-  /** Post excerpt/description */
   excerpt: string;
-  /** Publication date (ISO format) */
   date: string;
-  /** Estimated reading time */
   readTime: string;
-  /** Post slug for URL */
   slug: string;
-  /** Associated tags */
   tags?: TagId[];
-  /** Visual variant */
   variant?: "featured" | "list";
 }
 
@@ -36,7 +26,6 @@ const {
   variant = "list",
 } = Astro.props;
 
-// Convert tag IDs to tag objects
 const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
 ---
 
@@ -49,10 +38,10 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
     >
       <a
         href={`/writing/${slug}`}
-        class="block p-8 md:p-12 lg:p-16 h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
+        class="block p-12 h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
         aria-label={`Read article: ${title}`}
       >
-        <div class="flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-[0.15em] mb-6 md:mb-8">
+        <div class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-6">
           <time datetime={date} itemprop="datePublished">
             {date}
           </time>
@@ -61,31 +50,31 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
         </div>
 
         <h3
-          class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4 md:mb-6 group-hover:underline decoration-2 underline-offset-8"
+          class="text-4xl font-bold leading-tight mb-4 group-hover:underline decoration-2 underline-offset-8"
           itemprop="headline"
         >
           {title}
         </h3>
 
         <p
-          class="text-lg md:text-xl text-black/70 leading-relaxed mb-6 md:mb-8"
+          class="text-xl text-black/70 leading-relaxed mb-6"
           itemprop="description"
         >
           {excerpt}
         </p>
 
         {tagObjects.length > 0 && (
-          <div class="flex flex-wrap gap-2 mb-6 md:mb-8" role="list">
+          <div class="flex flex-wrap gap-2 mb-6" role="list">
             {tagObjects.map((tag) => (
               <Tag label={tag.label} variant="default" />
             ))}
           </div>
         )}
 
-        <span class="inline-flex items-center gap-3 font-bold uppercase text-xs md:text-sm tracking-[0.15em]">
+        <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-[0.15em]">
           Read Article
           <svg
-            class="w-5 h-5 md:w-6 md:h-6 transition-transform duration-200 group-hover:translate-x-1"
+            class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-1"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -109,27 +98,27 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
     >
       <a
         href={`/writing/${slug}`}
-        class="group block py-12 md:py-16 lg:py-20 transition-colors duration-200 hover:bg-black hover:text-white focus-visible:bg-black focus-visible:text-white focus-visible:outline-none"
+        class="group block py-16 transition-colors duration-200 hover:bg-black hover:text-white focus-visible:bg-black focus-visible:text-white focus-visible:outline-none"
         aria-label={`Read article: ${title}`}
       >
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-6 gap-x-6 md:gap-x-12 lg:gap-x-16 items-start px-8 md:px-16 lg:px-20 xl:px-32">
+        <div class="grid grid-cols-12 gap-12 items-start px-16">
           <time
-            class="lg:col-span-2 text-xs md:text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
+            class="col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
             datetime={date}
             itemprop="datePublished"
           >
             {date}
           </time>
 
-          <div class="lg:col-span-7">
+          <div class="col-span-7">
             <h3
-              class="text-3xl md:text-[2.25rem] lg:text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-4 md:mb-5"
+              class="text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-5"
               itemprop="headline"
             >
               {title}
             </h3>
             <p
-              class="text-lg md:text-[1.125rem] lg:text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100 transition-opacity mb-4 md:mb-6"
+              class="text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100 transition-opacity mb-6"
               itemprop="description"
             >
               {excerpt}
@@ -144,7 +133,7 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
           </div>
 
           <span
-            class="lg:col-span-3 flex items-center justify-start lg:justify-end text-xs md:text-[0.8125rem] uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
+            class="col-span-3 flex items-center justify-end text-[0.8125rem] uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
             itemprop="timeRequired"
           >
             {readTime}
@@ -156,7 +145,6 @@ const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
 }
 
 <style>
-  /* Smooth transitions */
   @media (prefers-reduced-motion: no-preference) {
     article a {
       transition:

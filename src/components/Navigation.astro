@@ -1,16 +1,12 @@
 ---
 /**
- * Navigation Component
- * 
- * Main site navigation with mobile menu support.
- * Includes proper ARIA attributes and keyboard navigation.
+ * Navigation Component - Desktop Only
  */
 
 import { NAVIGATION_LINKS, PAGE_IDS } from "../utils/constants";
 
 interface Props {
-  /** Current active page for highlighting */
-  currentPage?: typeof PAGE_IDS[keyof typeof PAGE_IDS];
+  currentPage?: (typeof PAGE_IDS)[keyof typeof PAGE_IDS];
 }
 
 const { currentPage } = Astro.props;
@@ -18,24 +14,22 @@ const links = NAVIGATION_LINKS;
 ---
 
 <nav
-  class="bg-white border-b-2 border-black sticky top-0 z-50 backdrop-blur-sm"
+  class="bg-white border-b-2 border-black sticky top-0 z-50"
   aria-label="Main navigation"
 >
-  <div class="max-w-container mx-auto px-8 md:px-16 lg:px-20 xl:px-32">
-    <div class="h-20 md:h-24 flex justify-between items-center">
-      <!-- Logo/Home Link -->
+  <div class="max-w-container mx-auto px-8">
+    <div class="h-20 flex justify-between items-center">
       <a
         href="/"
-        class="text-xs md:text-sm font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+        class="text-sm font-bold tracking-[0.15em] uppercase hover:opacity-50 transition-opacity duration-200"
         aria-label={currentPage !== PAGE_IDS.HOME ? "Go to home page" : "Home"}
         aria-current={currentPage === PAGE_IDS.HOME ? "page" : undefined}
       >
         {currentPage !== PAGE_IDS.HOME ? "Home" : "Your Name"}
       </a>
 
-      <!-- Desktop Navigation -->
       <ul
-        class="hidden md:flex gap-6 md:gap-8 lg:gap-12 text-xs md:text-sm font-bold uppercase tracking-[0.15em]"
+        class="flex gap-10 text-sm font-bold uppercase tracking-[0.15em]"
         role="list"
       >
         {
@@ -44,59 +38,7 @@ const links = NAVIGATION_LINKS;
               <a
                 href={href}
                 class:list={[
-                  "transition-opacity duration-200 focus-visible:opacity-100",
-                  currentPage === page
-                    ? "opacity-100"
-                    : "opacity-50 hover:opacity-100",
-                ]}
-                aria-current={currentPage === page ? "page" : undefined}
-              >
-                {label}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-
-      <!-- Mobile Menu Button -->
-      <button
-        id="mobile-menu-button"
-        class="md:hidden p-2 -mr-2 focus-visible:opacity-50"
-        aria-label="Toggle menu"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="square"
-            stroke-linejoin="miter"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
-      </button>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div
-      id="mobile-menu"
-      class="hidden md:hidden border-t-2 border-black"
-      role="dialog"
-      aria-modal="true"
-    >
-      <ul class="py-6 md:py-8 space-y-4 md:space-y-6 text-sm font-bold uppercase tracking-[0.15em]">
-        {
-          links.map(({ href, label, page }) => (
-            <li>
-              <a
-                href={href}
-                class:list={[
-                  "block py-2 transition-opacity duration-200",
+                  "transition-opacity duration-200",
                   currentPage === page
                     ? "opacity-100"
                     : "opacity-50 hover:opacity-100",
@@ -112,34 +54,3 @@ const links = NAVIGATION_LINKS;
     </div>
   </div>
 </nav>
-
-<script>
-  /**
-   * Mobile Menu Initialization
-   * Uses the extracted mobile-menu module for better code organization
-   */
-  import { initMobileMenu } from "../scripts/mobile-menu";
-  
-  // Initialize mobile menu functionality
-  initMobileMenu("mobile-menu-button", "mobile-menu");
-</script>
-
-<style>
-  /* Smooth mobile menu animation */
-  @media (prefers-reduced-motion: no-preference) {
-    #mobile-menu {
-      animation: slideDown 0.2s ease;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  }
-</style>

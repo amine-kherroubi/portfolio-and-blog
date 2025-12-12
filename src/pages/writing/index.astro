@@ -1,12 +1,6 @@
 ---
 /**
- * Writing Index Page
- * 
- * Lists all blog posts with filtering capabilities.
- * Features:
- * - Tag-based filtering
- * - Structured data for SEO
- * - Responsive grid layout
+ * Writing Index Page - Desktop Only
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -24,9 +18,6 @@ import {
 } from "../../utils/content";
 import { generateBlogStructuredData } from "../../utils/seo";
 
-/**
- * Fetch and process all writing posts
- */
 const allWritingPosts = await getCollection("writing");
 const posts = processWritingPosts(allWritingPosts);
 const allTags = getUniqueTagsFromPosts(posts);
@@ -70,7 +61,6 @@ const structuredData = generateBlogStructuredData(posts, Astro.site);
 
   <Footer />
 
-  <!-- Structured Data -->
   <script
     type="application/ld+json"
     set:html={JSON.stringify(structuredData)}
@@ -78,7 +68,6 @@ const structuredData = generateBlogStructuredData(posts, Astro.site);
 </BaseLayout>
 
 <style>
-  /* Ensure smooth filtering animations */
   @media (prefers-reduced-motion: no-preference) {
     [data-writing-item] {
       transition: opacity 0.2s ease;

@@ -1,9 +1,6 @@
 ---
 /**
- * Work Project Page (Dynamic Route)
- * 
- * Renders individual project pages from MDX files.
- * Uses Astro's content collections for type-safe content.
+ * Work Project Page - Desktop Only
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -13,9 +10,6 @@ import { getCollection, render } from "astro:content";
 import Tag from "../../components/Tag.astro";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
-/**
- * Generate static paths for all work projects
- */
 export async function getStaticPaths() {
   const workProjects = await getCollection("work");
   return workProjects.map((project) => ({
@@ -24,48 +18,38 @@ export async function getStaticPaths() {
   }));
 }
 
-// Extract project data from props (provided by getStaticPaths)
 const { project } = Astro.props;
-
-// Render the MDX content to HTML
 const { Content } = await render(project);
-
-// Convert tag IDs to tag objects for display
 const tagObjects = getTagsByIds(project.data.tags as TagId[]);
 ---
 
 <BaseLayout title={`${project.data.title} — Project`}>
   <Navigation currentPage="work" />
 
-  <!-- Project Header Section -->
-  <section class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32">
+  <!-- Project Header -->
+  <section class="py-24 px-8">
     <div class="max-w-container mx-auto">
-      <!-- Project Year -->
       <div
-        class="mb-12 md:mb-16 flex items-center gap-4 md:gap-6 text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/50"
+        class="mb-12 flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] text-black/50"
       >
         <span>{project.data.year}</span>
       </div>
-      
-      <!-- Visual Separator -->
-      <div class="w-16 h-0.5 bg-black mb-12 md:mb-16"></div>
-      
-      <!-- Project Title -->
-      <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-[1.1] tracking-[-0.02em] mb-8 md:mb-12">
+
+      <div class="w-16 h-0.5 bg-black mb-12"></div>
+
+      <h1 class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-8">
         {project.data.title}
       </h1>
-      
-      <!-- Project Description -->
+
       <p
-        class="text-xl md:text-2xl lg:text-3xl xl:text-4xl text-black/70 leading-relaxed font-light tracking-tight max-w-5xl mb-8 md:mb-12"
+        class="text-3xl text-black/70 leading-relaxed font-light tracking-tight max-w-5xl mb-8"
       >
         {project.data.description}
       </p>
-      
-      <!-- Project Tags -->
+
       {
         tagObjects.length > 0 && (
-          <div class="flex flex-wrap gap-2 md:gap-3 mt-6 md:mt-8">
+          <div class="flex flex-wrap gap-2 mt-6">
             {tagObjects.map((tag) => (
               <Tag label={tag.label} variant="large" />
             ))}
@@ -75,23 +59,21 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     </div>
   </section>
 
-  <!-- Project Visualization Section -->
-  <!-- Placeholder for project images, videos, or interactive demos -->
-  <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
+  <!-- Project Visualization -->
+  <section class="px-8 mb-24">
     <div class="max-w-container mx-auto">
       <div
         class="aspect-video bg-gray-100 border-2 border-black flex items-center justify-center"
       >
-        <p class="text-black/30 text-lg md:text-xl font-bold uppercase tracking-[0.15em]">
+        <p class="text-black/30 text-lg font-bold uppercase tracking-[0.15em]">
           Project Visualization
         </p>
       </div>
     </div>
   </section>
 
-  <!-- Project Content Section -->
-  <!-- Renders the MDX content from the project file -->
-  <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
+  <!-- Project Content -->
+  <section class="px-8 mb-24">
     <div class="max-w-container mx-auto">
       <div class="prose prose-lg max-w-4xl">
         <Content />
@@ -99,13 +81,12 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     </div>
   </section>
 
-  <!-- Navigation Section -->
-  <!-- Link back to all projects -->
-  <section class="px-8 md:px-16 lg:px-20 xl:px-32 mb-24 md:mb-32 lg:mb-48">
+  <!-- Navigation -->
+  <section class="px-8 mb-24">
     <div class="max-w-container mx-auto">
       <a
         href="/work"
-        class="inline-flex items-center gap-3 md:gap-4 text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+        class="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
       >
         All Projects
       </a>

@@ -1,47 +1,37 @@
 ---
 /**
- * CapabilitiesSection Component
- * 
- * Displays a list of capabilities grouped by category.
- * Used on the work page to showcase skills and expertise.
+ * CapabilitiesSection Component - Desktop Only
  */
 
 interface Capability {
-  /** Category title */
   title: string;
-  /** List of items in this category */
   items: string[];
 }
 
 interface Props {
-  /** Array of capability categories */
   capabilities: Capability[];
 }
 
 const { capabilities } = Astro.props;
 ---
 
-<section
-  class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black"
->
+<section class="py-24 px-8 border-t-2 border-black">
   <div class="max-w-container mx-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-12 md:gap-y-16 lg:gap-y-20 gap-x-6 md:gap-x-12 lg:gap-x-16">
+    <div class="grid grid-cols-12 gap-12">
       <h2
-        class="lg:col-span-3 text-3xl md:text-4xl lg:text-[2.25rem] font-bold leading-[1.1] tracking-[-0.02em]"
+        class="col-span-3 text-[2.25rem] font-bold leading-[1.1] tracking-[-0.02em]"
       >
         Capabilities
       </h2>
 
-      <div
-        class="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-x-6 md:gap-x-12 lg:gap-x-16 gap-y-12 md:gap-y-16 lg:gap-y-20"
-      >
+      <div class="col-span-9 grid grid-cols-3 gap-12">
         {
           capabilities.map(({ title, items }) => (
-            <div class="border-l-2 border-black pl-6 md:pl-8">
-              <h3 class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] mb-6 md:mb-8">
+            <div class="border-l-2 border-black pl-6">
+              <h3 class="text-sm font-bold uppercase tracking-[0.15em] mb-6">
                 {title}
               </h3>
-              <ul class="space-y-3 md:space-y-4 text-base md:text-lg leading-relaxed text-black/70">
+              <ul class="space-y-3 text-base leading-relaxed text-black/70">
                 {items.map((item) => (
                   <li>{item}</li>
                 ))}

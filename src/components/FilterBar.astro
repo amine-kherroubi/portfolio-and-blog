@@ -1,9 +1,6 @@
 ---
 /**
- * FilterBar Component
- * 
- * Filter bar for content filtering by tags.
- * Supports keyboard navigation and URL state management.
+ * FilterBar Component - Desktop Only
  */
 
 import Tag from "./Tag.astro";
@@ -11,9 +8,7 @@ import type { Tag as TagType } from "../config/tags";
 import { sortTagsByCategory } from "../config/tags";
 
 interface Props {
-  /** Available tags for filtering */
   tags: TagType[];
-  /** Type of content being filtered */
   type: "writing" | "work";
 }
 
@@ -22,25 +17,21 @@ const sortedTags = sortTagsByCategory(tags);
 ---
 
 <div
-  class="filter-bar border-b-2 border-black bg-white/95 backdrop-blur-sm sticky top-20 md:top-24 z-40"
+  class="filter-bar border-b-2 border-black bg-white sticky top-20 z-40"
   role="search"
   aria-label="Filter content"
 >
-  <div
-    class="max-w-container mx-auto px-8 md:px-16 lg:px-20 xl:px-32 py-6 md:py-8 lg:py-12"
-  >
-    <div
-      class="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6 mb-6 md:mb-8"
-    >
+  <div class="max-w-container mx-auto px-8 py-6">
+    <div class="flex items-center gap-6 mb-6">
       <span
-        class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] text-black/50"
+        class="text-sm font-bold uppercase tracking-[0.15em] text-black/50"
         id={`${type}-filter-label`}
       >
         Filter by:
       </span>
       <button
         id={`${type}-clear-filters`}
-        class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50 hidden"
+        class="text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 hidden"
         aria-label="Clear all filters"
       >
         Clear All
@@ -48,7 +39,7 @@ const sortedTags = sortTagsByCategory(tags);
     </div>
 
     <div
-      class="flex flex-wrap gap-2 md:gap-3"
+      class="flex flex-wrap gap-2"
       id={`${type}-filter-tags`}
       role="group"
       aria-labelledby={`${type}-filter-label`}
@@ -63,7 +54,7 @@ const sortedTags = sortTagsByCategory(tags);
             aria-label={`Filter by ${tag.label}`}
           >
             <span
-              class="inline-block font-bold uppercase tracking-[0.15em] border-black transition-colors duration-200 text-xs md:text-sm px-4 md:px-5 py-2 md:py-2.5 border-2 bg-white text-black cursor-pointer hover:bg-black hover:text-white"
+              class="inline-block font-bold uppercase tracking-[0.15em] border-black transition-colors duration-200 text-sm px-5 py-2.5 border-2 bg-white text-black cursor-pointer hover:bg-black hover:text-white"
               data-tag-label={tag.label}
             >
               {tag.label}
@@ -75,7 +66,7 @@ const sortedTags = sortTagsByCategory(tags);
 
     <div
       id={`${type}-results-count`}
-      class="mt-6 md:mt-8 text-xs md:text-sm text-black/60 font-bold uppercase tracking-[0.15em]"
+      class="mt-6 text-sm text-black/60 font-bold uppercase tracking-[0.15em]"
       role="status"
       aria-live="polite"
       aria-atomic="true"
@@ -85,14 +76,16 @@ const sortedTags = sortTagsByCategory(tags);
 </div>
 
 <script>
-  /**
-   * Filter Initialization
-   * This script runs once per page load and initializes filters
-   */
-  
-  // Wait for DOM to be fully loaded
-  function initFilters() {
-    // Import and initialize the filter module
+  import("../scripts/filter.js").then(({ initializeFilters }) => {
+    const path = window.location.pathname;
+    if (path.includes("/writing")) {
+      initializeFilters("writing");
+    } else if (path.includes("/work")) {
+      initializeFilters("work");
+    }
+  });
+
+  document.addEventListener("astro:page-load", () => {
     import("../scripts/filter.js").then(({ initializeFilters }) => {
       const path = window.location.pathname;
       if (path.includes("/writing")) {
@@ -101,21 +94,10 @@ const sortedTags = sortTagsByCategory(tags);
         initializeFilters("work");
       }
     });
-  }
-
-  // Run on initial load
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initFilters);
-  } else {
-    initFilters();
-  }
-
-  // Re-run on Astro page transitions
-  document.addEventListener("astro:page-load", initFilters);
+  });
 </script>
 
 <style>
-  /* Smooth animations */
   @media (prefers-reduced-motion: no-preference) {
     .filter-tag-btn span {
       transition:
@@ -129,7 +111,6 @@ const sortedTags = sortTagsByCategory(tags);
     }
   }
 
-  /* Loading state */
   [data-writing-item][style*="display: none"],
   [data-work-item][style*="display: none"] {
     opacity: 0;

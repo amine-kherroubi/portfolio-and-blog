@@ -1,11 +1,6 @@
 ---
 /**
- * Work Index Page
- * 
- * Lists all work projects with filtering capabilities.
- * Features:
- * - Tag-based filtering
- * - Responsive list layout
+ * Work Index Page - Desktop Only
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -22,9 +17,6 @@ import {
   getUniqueTagsFromProjects,
 } from "../../utils/content";
 
-/**
- * Fetch and process all work projects
- */
 const allWorkProjects = await getCollection("work");
 const projects = processWorkProjects(allWorkProjects);
 const allTags = getUniqueTagsFromProjects(projects);

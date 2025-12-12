@@ -1,19 +1,12 @@
 ---
 /**
- * Tag Component
- * 
- * Displays a tag with various size and style variants.
- * Used for content categorization and filtering.
+ * Tag Component - Desktop Only
  */
 
 interface Props {
-  /** Tag label text */
   label: string;
-  /** Visual variant */
   variant?: "default" | "filter" | "large";
-  /** Whether the tag is in an active/selected state */
   active?: boolean;
-  /** Whether the tag is clickable/interactive */
   clickable?: boolean;
 }
 
@@ -24,18 +17,12 @@ const {
   clickable = false,
 } = Astro.props;
 
-/**
- * Size classes for different variants
- */
 const sizeClasses: Record<Props["variant"], string> = {
-  default: "text-xs md:text-sm px-4 py-2 border-2",
-  filter: "text-xs md:text-sm px-4 md:px-5 py-2 md:py-2.5 border-2",
-  large: "text-sm md:text-base px-5 py-3 border-2",
+  default: "text-sm px-4 py-2 border-2",
+  filter: "text-sm px-5 py-2.5 border-2",
+  large: "text-base px-5 py-3 border-2",
 };
 
-/**
- * Color classes based on state
- */
 const colorClasses = active
   ? "bg-black text-white"
   : clickable

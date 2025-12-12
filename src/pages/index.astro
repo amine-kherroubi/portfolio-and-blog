@@ -1,8 +1,6 @@
 ---
 /**
- * Home Page
- * 
- * Main landing page with hero section, philosophy, and contact information.
+ * Home Page - Desktop Only
  */
 
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -17,28 +15,20 @@ const socialLinks = getSocialLinks();
 <BaseLayout>
   <Navigation currentPage="home" />
 
-  <!-- ======================================================================
-       Hero Section
-       ====================================================================== -->
-  <section
-    class="min-h-[calc(100vh-6rem)] flex items-center px-8 md:px-16 lg:px-20 xl:px-32 py-24 md:py-32 lg:py-48"
-  >
+  <!-- Hero Section -->
+  <section class="min-h-[calc(100vh-5rem)] flex items-center px-8 py-24">
     <div class="max-w-container w-full mx-auto">
-      <h1
-        class="text-[clamp(3rem,12vw,9rem)] font-bold leading-[0.95] tracking-[-0.02em] mb-24 md:mb-32 lg:mb-48"
-      >
+      <h1 class="text-[8rem] font-bold leading-[0.95] tracking-[-0.02em] mb-32">
         Amine<br />Kherroubi
       </h1>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-6 md:gap-y-8 gap-x-6 md:gap-x-12 lg:gap-x-16">
-        <div class="lg:col-span-6">
-          <p
-            class="text-xl md:text-2xl lg:text-3xl leading-relaxed font-light tracking-tight mb-4 md:mb-6"
-          >
+      <div class="grid grid-cols-12 gap-12">
+        <div class="col-span-6">
+          <p class="text-2xl leading-relaxed font-light tracking-tight mb-4">
             Designer & Developer
           </p>
           <p
-            class="text-xl md:text-2xl lg:text-3xl leading-relaxed font-light tracking-tight text-black/70"
+            class="text-2xl leading-relaxed font-light tracking-tight text-black/70"
           >
             Focused on clarity, function, and timeless solutions
           </p>
@@ -47,29 +37,23 @@ const socialLinks = getSocialLinks();
     </div>
   </section>
 
-  <!-- ======================================================================
-       Philosophy Section
-       ====================================================================== -->
-  <section
-    class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 border-t-2 border-black"
-  >
+  <!-- Philosophy Section -->
+  <section class="py-24 px-8 border-t-2 border-black">
     <div class="max-w-container mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-6 md:gap-y-8 gap-x-6 md:gap-x-12 lg:gap-x-16">
+      <div class="grid grid-cols-12 gap-12">
         <h2
-          class="lg:col-span-3 text-3xl md:text-4xl font-bold leading-[1.1] tracking-[-0.02em]"
+          class="col-span-3 text-3xl font-bold leading-[1.1] tracking-[-0.02em]"
         >
           Philosophy
         </h2>
 
-        <div class="lg:col-span-7 lg:col-start-6 space-y-6 md:space-y-8 lg:space-y-12">
-          <p
-            class="text-xl md:text-2xl lg:text-3xl leading-relaxed tracking-tight font-light"
-          >
+        <div class="col-span-7 col-start-6 space-y-8">
+          <p class="text-2xl leading-relaxed tracking-tight font-light">
             Every design decision stems from function. Form follows purpose.
             Systems over decoration. Clarity over complexity.
           </p>
           <p
-            class="text-xl md:text-2xl lg:text-3xl leading-relaxed tracking-tight font-light text-black/70"
+            class="text-2xl leading-relaxed tracking-tight font-light text-black/70"
           >
             Working at the intersection of design and technology, creating
             solutions that prioritize usability, accessibility, and longevity.
@@ -79,38 +63,33 @@ const socialLinks = getSocialLinks();
     </div>
   </section>
 
-  <!-- ======================================================================
-       Contact Section
-       ====================================================================== -->
-  <section
-    id="contact"
-    class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32 bg-white border-t-2 border-black"
-  >
+  <!-- Contact Section -->
+  <section id="contact" class="py-24 px-8 bg-white border-t-2 border-black">
     <div class="max-w-container mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-6 md:gap-y-8 gap-x-6 md:gap-x-12 lg:gap-x-16">
+      <div class="grid grid-cols-12 gap-12">
         <h2
-          class="lg:col-span-3 text-3xl md:text-4xl font-bold leading-[1.1] tracking-[-0.02em]"
+          class="col-span-3 text-3xl font-bold leading-[1.1] tracking-[-0.02em]"
         >
           Contact
         </h2>
 
-        <div class="lg:col-span-7 lg:col-start-6">
+        <div class="col-span-7 col-start-6">
           <a
             href={`mailto:${SITE.email}`}
-            class="inline-block text-xl md:text-2xl lg:text-3xl font-bold mb-12 md:mb-16 lg:mb-24 border-b-2 border-transparent hover:border-black transition-colors duration-200 focus-visible:border-black break-all"
+            class="inline-block text-2xl font-bold mb-16 border-b-2 border-transparent hover:border-black transition-colors duration-200 focus-visible:border-black break-all"
           >
             {SITE.email}
           </a>
 
           {
             socialLinks.length > 0 && (
-              <div class="flex flex-wrap gap-6 md:gap-8 lg:gap-12 pt-6 md:pt-8 lg:pt-12 border-t-2 border-black/20">
+              <div class="flex flex-wrap gap-8 pt-8 border-t-2 border-black/20">
                 {socialLinks.map(({ href, label }) => (
                   <a
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+                    class="text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
                   >
                     {label}
                   </a>
@@ -127,15 +106,11 @@ const socialLinks = getSocialLinks();
 </BaseLayout>
 
 <style>
-  /* Smooth scroll to contact section */
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
     }
-  }
 
-  /* Optional: Add subtle animation to hero on load */
-  @media (prefers-reduced-motion: no-preference) {
     h1 {
       animation: fadeInUp 0.2s ease;
     }

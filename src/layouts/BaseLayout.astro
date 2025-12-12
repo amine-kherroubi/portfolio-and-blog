@@ -1,11 +1,6 @@
 ---
 /**
- * BaseLayout Component
- * 
- * The root layout component that wraps all pages.
- * Handles SEO meta tags, Open Graph, Twitter Cards, and View Transitions.
- * 
- * @see https://docs.astro.build/en/core-concepts/layouts/
+ * BaseLayout Component - Desktop Only
  */
 
 import { SITE } from "../config/site";
@@ -13,15 +8,10 @@ import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 
 interface Props {
-  /** Page title (defaults to site title) */
   title?: string;
-  /** Page description for SEO and social sharing */
   description?: string;
-  /** Open Graph image URL */
   image?: string;
-  /** Whether to prevent search engine indexing */
   noindex?: boolean;
-  /** Additional meta tags */
   meta?: Record<string, string>;
 }
 
@@ -33,44 +23,32 @@ const {
   meta = {},
 } = Astro.props;
 
-// Construct canonical URL
 const canonicalURL = new URL(
   Astro.url.pathname,
   Astro.site || Astro.url.origin
 );
 
-// Construct image URL for social sharing
 const imageURL = new URL(image, Astro.site || Astro.url.origin);
 
-// Full title with site name if not already included
 const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
 ---
 
 <!doctype html>
 <html lang="en" class="scrollbar-modern">
   <head>
-    <!-- Character Encoding -->
     <meta charset="UTF-8" />
-    
-    <!-- Viewport Configuration -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Generator -->
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Primary Meta Tags -->
     <title>{fullTitle}</title>
     <meta name="title" content={fullTitle} />
     <meta name="description" content={description} />
-    
-    <!-- Robots Meta -->
+
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     {!noindex && <meta name="robots" content="index, follow" />}
 
-    <!-- Canonical URL -->
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={fullTitle} />
@@ -80,27 +58,24 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
     <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content={SITE.name} />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={canonicalURL} />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageURL} />
 
-    <!-- Additional Meta Tags -->
-    {Object.entries(meta).map(([key, value]) => (
-      <meta name={key} content={value} />
-    ))}
+    {
+      Object.entries(meta).map(([key, value]) => (
+        <meta name={key} content={value} />
+      ))
+    }
 
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Theme Color -->
     <meta name="theme-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#000000" />
 
-    <!-- Client Router for smooth page transitions -->
     <ClientRouter fallback="animate" />
   </head>
   <body class="bg-white text-black antialiased">
@@ -109,10 +84,6 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
 </html>
 
 <style>
-  /**
-   * View Transition Animations
-   * Smooth transitions between pages with respect for reduced motion preferences
-   */
   @media (prefers-reduced-motion: no-preference) {
     ::view-transition-old(root),
     ::view-transition-new(root) {
@@ -121,4 +92,3 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
     }
   }
 </style>
-

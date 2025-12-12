@@ -1,23 +1,16 @@
 ---
 /**
- * ContentList Component
- * 
- * Container component for lists of content (blog posts, projects, etc.).
- * Provides consistent spacing and layout.
+ * ContentList Component - Desktop Only
  */
 
 interface Props {
-  /** Additional CSS classes */
   class?: string;
 }
 
 const { class: className = "" } = Astro.props;
 ---
 
-<section
-  class="py-24 md:py-32 lg:py-48 px-8 md:px-16 lg:px-20 xl:px-32"
-  aria-label="Content list"
->
+<section class="py-16 px-8" aria-label="Content list">
   <div class:list={["max-w-container mx-auto space-y-0", className]}>
     <slot />
   </div>
