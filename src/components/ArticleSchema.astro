@@ -1,0 +1,73 @@
+---
+/**
+ * ArticleSchema Component - Desktop Only
+ *
+ * Purpose: Add JSON-LD structured data for blog posts.
+ *
+ * Implementation: On each post page, output a <script type="application/ld+json">
+ * with schema.org Article (or BlogPosting) including title, author, datePublished, etc.
+ *
+ * Justification: Structured data helps search engines "understand" content. Google
+ * notes that Article schema makes page context explicit and can improve search result
+ * appearance (better titles/snippets). Including recommended fields (author, dates)
+ * aids SEO by enabling rich snippets.
+ */
+
+import { SITE } from "../config/site";
+
+interface Props {
+  title: string;
+  description: string;
+  datePublished: string;
+  dateModified?: string;
+  author?: string;
+  image?: string;
+  url: URL | string;
+  keywords?: string[];
+}
+
+const {
+  title,
+  description,
+  datePublished,
+  dateModified = datePublished,
+  author = SITE.name,
+  image = "/og-image.jpg",
+  url,
+  keywords = [],
+} = Astro.props;
+
+// Ensure URLs are absolute
+const articleUrl = typeof url === "string" ? new URL(url, Astro.site) : url;
+const imageUrl = new URL(image, Astro.site || Astro.url.origin);
+
+// Generate Article structured data following schema.org
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description: description,
+  image: imageUrl.toString(),
+  datePublished: datePublished,
+  dateModified: dateModified,
+  author: {
+    "@type": "Person",
+    name: author,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: SITE.name,
+    logo: {
+      "@type": "ImageObject",
+      url: new URL("/favicon.svg", Astro.site || Astro.url.origin).toString(),
+    },
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": articleUrl.toString(),
+  },
+  ...(keywords.length > 0 && { keywords: keywords.join(", ") }),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

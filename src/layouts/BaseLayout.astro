@@ -3,35 +3,34 @@
  * BaseLayout Component - Desktop Only
  */
 
-import { SITE } from "../config/site";
 import { ClientRouter } from "astro:transitions";
 import SkipLink from "../components/SkipLink.astro";
+import SiteMeta from "../components/SiteMeta.astro";
 import "../styles/global.css";
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  type?: "website" | "article";
+  author?: string;
+  publishedTime?: string;
+  modifiedTime?: string;
   noindex?: boolean;
-  meta?: Record<string, string>;
+  keywords?: string[];
 }
 
 const {
-  title = SITE.title,
-  description = SITE.description,
-  image = "/og-image.jpg",
-  noindex = false,
-  meta = {},
+  title,
+  description,
+  image,
+  type,
+  author,
+  publishedTime,
+  modifiedTime,
+  noindex,
+  keywords,
 } = Astro.props;
-
-const canonicalURL = new URL(
-  Astro.url.pathname,
-  Astro.site || Astro.url.origin
-);
-
-const imageURL = new URL(image, Astro.site || Astro.url.origin);
-
-const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}`;
 ---
 
 <!doctype html>
@@ -39,44 +38,31 @@ const fullTitle = title.includes(SITE.name) ? title : `${title} — ${SITE.name}
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
 
-    <title>{fullTitle}</title>
-    <meta name="title" content={fullTitle} />
-    <meta name="description" content={description} />
+    <!-- SEO & Metadata Component -->
+    <SiteMeta
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      author={author}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      noindex={noindex}
+      keywords={keywords}
+    />
 
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
-    {!noindex && <meta name="robots" content="index, follow" />}
-
-    <link rel="canonical" href={canonicalURL} />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalURL} />
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={imageURL} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:site_name" content={SITE.name} />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content={canonicalURL} />
-    <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={imageURL} />
-
-    {
-      Object.entries(meta).map(([key, value]) => (
-        <meta name={key} content={value} />
-      ))
-    }
-
+    <!-- Favicons & Site Assets -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS Feed"
+      href="/rss.xml"
+    />
 
-    <meta name="theme-color" content="#000000" />
-    <meta name="msapplication-TileColor" content="#000000" />
-
+    <!-- View Transitions -->
     <ClientRouter fallback="animate" />
   </head>
   <body class="bg-white text-black antialiased">

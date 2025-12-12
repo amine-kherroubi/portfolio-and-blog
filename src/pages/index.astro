@@ -1,12 +1,15 @@
 ---
 /**
  * Home Page - Desktop Only
+ *
+ * Enhanced with WebSite structured data for better SEO
  */
 
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import ContactForm from "../components/ContactForm.astro";
+import WebSiteSchema from "../components/WebSiteSchema.astro";
 import { SITE } from "../config/site";
 import { getSocialLinks } from "../utils/social";
 
@@ -18,26 +21,39 @@ const socialLinks = getSocialLinks();
 
   <main id="main-content">
     <!-- Hero Section -->
-    <section class="min-h-[calc(100vh-5rem)] flex items-center px-8 py-24">
+    <section
+      class="min-h-[calc(100vh-5rem)] flex items-center px-8 py-24"
+      itemscope
+      itemtype="https://schema.org/Person"
+    >
       <div class="max-w-container w-full mx-auto">
         <h1
           class="text-[8rem] font-bold leading-[0.95] tracking-[-0.02em] mb-32"
+          itemprop="name"
         >
           Amine<br />Kherroubi
         </h1>
 
         <div class="grid grid-cols-12 gap-12">
           <div class="col-span-6">
-            <p class="text-2xl leading-relaxed font-light tracking-tight mb-4">
+            <p
+              class="text-2xl leading-relaxed font-light tracking-tight mb-4"
+              itemprop="jobTitle"
+            >
               Designer & Developer
             </p>
             <p
               class="text-2xl leading-relaxed font-light tracking-tight text-black/70"
+              itemprop="description"
             >
               Focused on clarity, function, and timeless solutions
             </p>
           </div>
         </div>
+
+        <!-- Hidden metadata for schema -->
+        <meta itemprop="email" content={SITE.email} />
+        <meta itemprop="url" content={Astro.url.origin} />
       </div>
     </section>
 
@@ -97,6 +113,9 @@ const socialLinks = getSocialLinks();
   </main>
 
   <Footer />
+
+  <!-- Structured Data for Website -->
+  <WebSiteSchema slot="head" url={Astro.site} />
 </BaseLayout>
 
 <style>

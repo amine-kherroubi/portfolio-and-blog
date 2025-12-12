@@ -1,11 +1,14 @@
 ---
 /**
  * Work Project Page - Desktop Only
+ *
+ * Enhanced with structured data and project-specific metadata
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
+import ProjectSchema from "../../components/ProjectSchema.astro";
 import { getCollection, render } from "astro:content";
 import Tag from "../../components/Tag.astro";
 import { getTagsByIds, type TagId } from "../../config/tags";
@@ -21,29 +24,50 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 const tagObjects = getTagsByIds(project.data.tags as TagId[]);
+
+// Generate project URL
+const projectUrl = new URL(
+  `/work/${project.id}`,
+  Astro.site || Astro.url.origin
+);
+
+// Use year as date created (format: YYYY-01-01)
+const dateCreated = `${project.data.year}-01-01`;
 ---
 
-<BaseLayout title={`${project.data.title} — Project`}>
+<BaseLayout
+  title={`${project.data.title} — Project`}
+  description={project.data.description}
+  keywords={project.data.tags}
+>
   <Navigation currentPage="work" />
 
   <main id="main-content">
     <!-- Project Header -->
-    <section class="py-24 px-8">
+    <section
+      class="py-24 px-8"
+      itemscope
+      itemtype="https://schema.org/CreativeWork"
+    >
       <div class="max-w-container mx-auto">
         <div
           class="mb-12 flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] text-black/50"
         >
-          <span>{project.data.year}</span>
+          <span itemprop="dateCreated">{project.data.year}</span>
         </div>
 
         <div class="w-16 h-0.5 bg-black mb-12"></div>
 
-        <h1 class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-8">
+        <h1
+          class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-8"
+          itemprop="name"
+        >
           {project.data.title}
         </h1>
 
         <p
           class="text-3xl text-black/70 leading-relaxed font-light tracking-tight max-w-5xl mb-8"
+          itemprop="description"
         >
           {project.data.description}
         </p>
@@ -57,6 +81,9 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
             </div>
           )
         }
+
+        <!-- Hidden metadata for schema -->
+        <meta itemprop="url" content={projectUrl.toString()} />
       </div>
     </section>
 
@@ -65,6 +92,7 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
       <div class="max-w-container mx-auto">
         <div
           class="aspect-video bg-gray-100 border-2 border-black flex items-center justify-center"
+          itemprop="image"
         >
           <p
             class="text-black/30 text-lg font-bold uppercase tracking-[0.15em]"
@@ -78,7 +106,7 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
     <!-- Project Content -->
     <section class="px-8 mb-24">
       <div class="max-w-container mx-auto">
-        <div class="prose prose-lg max-w-4xl">
+        <div class="prose prose-lg max-w-4xl" itemprop="text">
           <Content />
         </div>
       </div>
@@ -98,4 +126,14 @@ const tagObjects = getTagsByIds(project.data.tags as TagId[]);
   </main>
 
   <Footer />
+
+  <!-- Structured Data for SEO -->
+  <ProjectSchema
+    slot="head"
+    name={project.data.title}
+    description={project.data.description}
+    dateCreated={dateCreated}
+    url={projectUrl}
+    keywords={project.data.tags}
+  />
 </BaseLayout>

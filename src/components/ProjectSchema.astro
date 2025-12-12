@@ -1,0 +1,54 @@
+---
+/**
+ * ProjectSchema Component - Desktop Only
+ *
+ * Purpose: Add JSON-LD structured data for portfolio projects.
+ *
+ * Implementation: Output schema.org CreativeWork structured data for project pages.
+ *
+ * Justification: Helps search engines understand project content and can enable
+ * rich snippets in search results for portfolio items.
+ */
+
+import { SITE } from "../config/site";
+
+interface Props {
+  name: string;
+  description: string;
+  dateCreated: string;
+  url: URL | string;
+  image?: string;
+  keywords?: string[];
+}
+
+const {
+  name,
+  description,
+  dateCreated,
+  url,
+  image = "/og-image.jpg",
+  keywords = [],
+} = Astro.props;
+
+// Ensure URLs are absolute
+const projectUrl = typeof url === "string" ? new URL(url, Astro.site) : url;
+const imageUrl = new URL(image, Astro.site || Astro.url.origin);
+
+// Generate CreativeWork structured data following schema.org
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: name,
+  description: description,
+  image: imageUrl.toString(),
+  dateCreated: dateCreated,
+  creator: {
+    "@type": "Person",
+    name: SITE.name,
+  },
+  url: projectUrl.toString(),
+  ...(keywords.length > 0 && { keywords: keywords.join(", ") }),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

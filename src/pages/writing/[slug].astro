@@ -1,12 +1,16 @@
 ---
 /**
  * Writing Post Page - Desktop Only
+ *
+ * Enhanced with structured data and article-specific metadata
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
+import ArticleSchema from "../../components/ArticleSchema.astro";
 import { getCollection, render } from "astro:content";
+import { SITE } from "../../config/site";
 
 export async function getStaticPaths() {
   const writingPosts = await getCollection("writing");
@@ -18,34 +22,62 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+
+// Generate post URL
+const postUrl = new URL(`/writing/${post.id}`, Astro.site || Astro.url.origin);
+
+// Convert date string to ISO format for structured data
+const publishDate = new Date(post.data.date).toISOString();
 ---
 
-<BaseLayout title={post.data.title} description={post.data.excerpt}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.excerpt}
+  type="article"
+  author={SITE.name}
+  publishedTime={publishDate}
+  keywords={post.data.tags}
+>
   <Navigation currentPage="writing" />
 
-  <article id="main-content" class="py-24 px-8">
+  <article
+    id="main-content"
+    class="py-24 px-8"
+    itemscope
+    itemtype="https://schema.org/BlogPosting"
+  >
     <div class="max-w-container mx-auto">
       <header class="mb-32">
         <div
           class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-16 text-black/50"
         >
-          <time>{post.data.date}</time>
+          <time datetime={publishDate} itemprop="datePublished"
+            >{post.data.date}</time
+          >
           <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
-          <span>{post.data.readTime}</span>
+          <span itemprop="timeRequired">{post.data.readTime}</span>
         </div>
 
-        <h1 class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-16">
+        <h1
+          class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-16"
+          itemprop="headline"
+        >
           {post.data.title}
         </h1>
 
         <p
           class="text-2xl leading-relaxed font-light text-black/70 max-w-3xl mb-16"
+          itemprop="description"
         >
           {post.data.excerpt}
         </p>
+
+        <!-- Hidden metadata for schema -->
+        <meta itemprop="author" content={SITE.name} />
+        <meta itemprop="url" content={postUrl.toString()} />
       </header>
 
-      <div class="prose prose-lg max-w-none">
+      <div class="prose prose-lg max-w-none" itemprop="articleBody">
         <Content />
       </div>
 
@@ -61,4 +93,15 @@ const { Content } = await render(post);
   </article>
 
   <Footer />
+
+  <!-- Structured Data for SEO -->
+  <ArticleSchema
+    slot="head"
+    title={post.data.title}
+    description={post.data.excerpt}
+    datePublished={publishDate}
+    author={SITE.name}
+    url={postUrl}
+    keywords={post.data.tags}
+  />
 </BaseLayout>

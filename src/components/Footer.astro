@@ -1,6 +1,8 @@
 ---
 /**
  * Footer Component - Desktop Only
+ *
+ * Enhanced with RSS feed link for content discovery
  */
 
 import { getCurrentYear } from "../utils/format";
@@ -21,6 +23,16 @@ const year = getCurrentYear();
     class="max-w-container mx-auto flex justify-between items-center text-sm font-bold uppercase tracking-[0.15em]"
   >
     <p class="opacity-60">© {year}</p>
-    <p class="opacity-60">Built with Astro</p>
+
+    <div class="flex items-center gap-8">
+      <a
+        href="/rss.xml"
+        class="opacity-60 hover:opacity-100 transition-opacity duration-200 focus-visible:opacity-100"
+        aria-label="RSS Feed"
+      >
+        RSS
+      </a>
+      <p class="opacity-60">Built with Astro</p>
+    </div>
   </div>
 </footer>
