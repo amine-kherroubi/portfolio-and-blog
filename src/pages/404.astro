@@ -1,0 +1,142 @@
+---
+/**
+ * 404 Page - Desktop Only
+ *
+ * Purpose: Custom "Page Not Found" error page.
+ * Implementation: A static /404.html page with a friendly message, a link to the home page,
+ * and site navigation.
+ *
+ * Justification: A helpful 404 reduces user frustration. Instead of a generic server error,
+ * users are guided back to content, improving UX and keeping visitors on the site.
+ */
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<BaseLayout
+  title="Page Not Found — 404"
+  description="The page you're looking for doesn't exist"
+  noindex={true}
+>
+  <Navigation />
+
+  <main
+    class="min-h-[calc(100vh-20rem)] flex items-center justify-center px-8 py-24"
+  >
+    <div class="max-w-container mx-auto text-center">
+      <!-- Error Code -->
+      <div
+        class="text-[12rem] font-bold leading-none tracking-[-0.02em] mb-8"
+        aria-hidden="true"
+      >
+        404
+      </div>
+
+      <!-- Error Message -->
+      <h1
+        class="text-5xl font-bold leading-[1.1] tracking-[-0.02em] mb-6"
+        id="error-heading"
+      >
+        Page Not Found
+      </h1>
+
+      <p class="text-xl leading-relaxed text-black/70 max-w-2xl mx-auto mb-12">
+        The page you're looking for doesn't exist or has been moved. Let's get
+        you back on track.
+      </p>
+
+      <!-- Navigation Options -->
+      <div class="flex flex-wrap items-center justify-center gap-6">
+        <a
+          href="/"
+          class="inline-flex items-center gap-3 bg-black text-white border-2 border-black px-8 py-4 text-sm font-bold uppercase tracking-[0.15em] hover:bg-white hover:text-black transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="square"
+              stroke-linejoin="miter"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            ></path>
+          </svg>
+          Go Home
+        </a>
+
+        <a
+          href="/writing"
+          class="inline-flex items-center gap-3 bg-white text-black border-2 border-black px-8 py-4 text-sm font-bold uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
+        >
+          Browse Writing
+        </a>
+
+        <a
+          href="/work"
+          class="inline-flex items-center gap-3 bg-white text-black border-2 border-black px-8 py-4 text-sm font-bold uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-colors duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
+        >
+          View Work
+        </a>
+      </div>
+
+      <!-- Helpful Links Section -->
+      <div class="mt-24 pt-16 border-t-2 border-black/20">
+        <h2
+          class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-8"
+        >
+          Popular Pages
+        </h2>
+        <nav
+          class="flex flex-wrap items-center justify-center gap-8"
+          aria-label="Popular pages"
+        >
+          <a
+            href="/profile"
+            class="text-base hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+          >
+            Profile
+          </a>
+          <a
+            href="/work"
+            class="text-base hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+          >
+            Work
+          </a>
+          <a
+            href="/writing"
+            class="text-base hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+          >
+            Writing
+          </a>
+        </nav>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  @media (prefers-reduced-motion: no-preference) {
+    main {
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+</style>

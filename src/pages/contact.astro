@@ -1,0 +1,88 @@
+---
+/**
+ * Contact Page - Desktop Only
+ *
+ * Optional dedicated contact page featuring the ContactForm component.
+ */
+
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Navigation from "../components/Navigation.astro";
+import Footer from "../components/Footer.astro";
+import ContactForm from "../components/ContactForm.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { SITE, SOCIAL } from "../config/site";
+import { getSocialLinks } from "../utils/social";
+
+const socialLinks = getSocialLinks();
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch to discuss your project or collaboration"
+>
+  <Navigation />
+
+  <PageHeader
+    title="Contact"
+    description="Let's discuss how we can work together on your next project"
+  />
+
+  <!-- Contact Form -->
+  <ContactForm />
+
+  <!-- Additional Contact Information -->
+  <section class="py-24 px-8 bg-white border-t-2 border-black">
+    <div class="max-w-container mx-auto">
+      <div class="grid grid-cols-12 gap-12">
+        <div class="col-span-4">
+          <h2
+            class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-4"
+          >
+            Direct Email
+          </h2>
+          <a
+            href={`mailto:${SITE.email}`}
+            class="text-lg font-bold border-b-2 border-transparent hover:border-black transition-colors duration-200 focus-visible:border-black break-all inline-block"
+          >
+            {SITE.email}
+          </a>
+        </div>
+
+        {
+          socialLinks.length > 0 && (
+            <div class="col-span-4">
+              <h3 class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-4">
+                Social
+              </h3>
+              <div class="space-y-3">
+                {socialLinks.map(({ href, label }) => (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="block text-base hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+                  >
+                    {label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <div class="col-span-4">
+          <h3
+            class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-4"
+          >
+            Response Time
+          </h3>
+          <p class="text-base leading-relaxed text-black/70">
+            I typically respond within 24-48 hours during business days.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
