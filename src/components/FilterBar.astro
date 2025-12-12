@@ -62,7 +62,12 @@ const sortedTags = sortTagsByCategory(tags);
             aria-pressed="false"
             aria-label={`Filter by ${tag.label}`}
           >
-            <Tag label={tag.label} variant="filter" clickable={true} />
+            <span
+              class="inline-block font-bold uppercase tracking-[0.15em] border-black transition-colors duration-200 text-xs md:text-sm px-4 md:px-5 py-2 md:py-2.5 border-2 bg-white text-black cursor-pointer hover:bg-black hover:text-white"
+              data-tag-label={tag.label}
+            >
+              {tag.label}
+            </span>
           </button>
         ))
       }
@@ -79,21 +84,40 @@ const sortedTags = sortTagsByCategory(tags);
   </div>
 </div>
 
-<script define:vars={{ type }}>
+<script>
   /**
    * Filter Initialization
-   * Uses the extracted filter module for better code organization
+   * This script runs once per page load and initializes filters
    */
-  import { initializeFilters } from "../scripts/filter";
   
-  // Initialize filters for this content type
-  initializeFilters(type);
+  // Wait for DOM to be fully loaded
+  function initFilters() {
+    // Import and initialize the filter module
+    import("../scripts/filter.js").then(({ initializeFilters }) => {
+      const path = window.location.pathname;
+      if (path.includes("/writing")) {
+        initializeFilters("writing");
+      } else if (path.includes("/work")) {
+        initializeFilters("work");
+      }
+    });
+  }
+
+  // Run on initial load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFilters);
+  } else {
+    initFilters();
+  }
+
+  // Re-run on Astro page transitions
+  document.addEventListener("astro:page-load", initFilters);
 </script>
 
 <style>
   /* Smooth animations */
   @media (prefers-reduced-motion: no-preference) {
-    .filter-tag-btn [data-tag] {
+    .filter-tag-btn span {
       transition:
         background-color 0.2s ease,
         color 0.2s ease;
