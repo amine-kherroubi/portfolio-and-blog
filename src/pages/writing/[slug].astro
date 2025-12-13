@@ -28,8 +28,23 @@ type Props = {
 const { post } = Astro.props as Props;
 const { Content } = await render(post);
 
+// Format date properly - remove time portion if present
+function formatDisplayDate(dateStr: string): string {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+  if (dateStr.includes("T")) {
+    return dateStr.split("T")[0] || dateStr;
+  }
+  return dateStr;
+}
+
+const displayDate = formatDisplayDate(post.data.date);
 const postUrl = new URL(`/writing/${post.id}`, Astro.site || Astro.url.origin);
-const publishDate = new Date(post.data.date).toISOString();
+
+// For schema, use ISO format
+const dateObj = new Date(post.data.date);
+const publishDate = dateObj.toISOString();
 ---
 
 <BaseLayout
@@ -56,7 +71,7 @@ const publishDate = new Date(post.data.date).toISOString();
       <p data-pagefind-meta="description" class="sr-only">
         {post.data.excerpt}
       </p>
-      <time data-pagefind-meta="date" class="sr-only">{post.data.date}</time>
+      <time data-pagefind-meta="date" class="sr-only">{displayDate}</time>
       {
         post.data.tags.map((tag: string) => (
           <span data-pagefind-meta="tags" class="sr-only">
@@ -70,8 +85,8 @@ const publishDate = new Date(post.data.date).toISOString();
           <div
             class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-16 text-black/50"
           >
-            <time datetime={publishDate} itemprop="datePublished"
-              >{post.data.date}</time
+            <time datetime={displayDate} itemprop="datePublished"
+              >{displayDate}</time
             >
             <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
             <span itemprop="timeRequired">{post.data.readTime}</span>
