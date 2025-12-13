@@ -1,11 +1,11 @@
 ---
 /**
- * Footer Component - Desktop Only
+ * Footer Component - Desktop Only (Refactored)
  *
- * Enhanced with RSS feed link for content discovery
+ * Now uses shared format utility for consistent date formatting.
  */
 
-import { getCurrentYear } from "../utils/format";
+import { getCurrentYear } from "@/utils/format";
 
 interface Props {
   variant?: "default" | "light";

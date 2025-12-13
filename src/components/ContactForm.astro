@@ -5,10 +5,6 @@
  * Purpose: Let visitors send messages or inquiries.
  * Implementation: HTML form with fields (name, email, message) and <label> for each input.
  * Includes client-side validation and ARIA error messaging.
- *
- * Justification: A clear contact form converts interest into action. Accessibility requires
- * each field have an accessible name (label). Providing inline error feedback via ARIA
- * ensures all users can correct mistakes.
  */
 
 interface Props {
@@ -159,9 +155,20 @@ const { class: className = "" } = Astro.props;
   /**
    * Contact Form Validation and Submission
    *
-   * Implements client-side validation with ARIA error messaging
-   * for accessibility and user feedback.
+   * Uses shared utilities for validation and analytics tracking.
    */
+
+  import {
+    validateName,
+    validateEmail,
+    validateMessage,
+  } from "@/utils/use-form-validation";
+  import {
+    trackFormStart,
+    trackFormSubmit,
+    trackFormError,
+    trackFormSuccess,
+  } from "@/utils/use-analytics";
 
   function initContactForm() {
     const form = document.getElementById(
@@ -169,13 +176,37 @@ const { class: className = "" } = Astro.props;
     ) as HTMLFormElement | null;
     if (!form) return;
 
-    const nameInput = form.querySelector("#name") as HTMLInputElement;
-    const emailInput = form.querySelector("#email") as HTMLInputElement;
-    const messageInput = form.querySelector("#message") as HTMLTextAreaElement;
-    const submitButton = form.querySelector(
+    const nameInput = document.getElementById(
+      "name"
+    ) as HTMLInputElement | null;
+    const emailInput = document.getElementById(
+      "email"
+    ) as HTMLInputElement | null;
+    const messageInput = document.getElementById(
+      "message"
+    ) as HTMLTextAreaElement | null;
+    const submitButton = form!.querySelector(
       'button[type="submit"]'
-    ) as HTMLButtonElement;
+    ) as HTMLButtonElement | null;
     const formStatus = document.getElementById("form-status");
+
+    if (!nameInput || !emailInput || !messageInput || !submitButton) {
+      console.error("[ContactForm] Required form elements not found");
+      return;
+    }
+
+    // Track form start on first interaction
+    let hasInteracted = false;
+    const trackStart = () => {
+      if (!hasInteracted) {
+        trackFormStart("contact");
+        hasInteracted = true;
+      }
+    };
+
+    [nameInput!, emailInput!, messageInput!].forEach((input) => {
+      input.addEventListener("focus", trackStart, { once: true });
+    });
 
     /**
      * Validate a single field
@@ -183,54 +214,47 @@ const { class: className = "" } = Astro.props;
     function validateField(
       input: HTMLInputElement | HTMLTextAreaElement
     ): boolean {
-      const errorDiv = document.getElementById(
-        `${input.id}-error`
-      ) as HTMLElement;
-      let isValid = true;
-      let errorMessage = "";
+      const errorDiv = document.getElementById(`${input.id}-error`);
+      if (!errorDiv) return true;
 
-      // Check if field is empty
-      if (!input.value.trim()) {
-        isValid = false;
-        errorMessage = "This field is required";
-      }
-      // Additional email validation
-      else if (input.type === "email") {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(input.value)) {
-          isValid = false;
-          errorMessage = "Please enter a valid email address";
-        }
-      }
-      // Message minimum length
-      else if (input.id === "message" && input.value.trim().length < 10) {
-        isValid = false;
-        errorMessage = "Message must be at least 10 characters";
+      let error: string | null = null;
+
+      // Use shared validation functions
+      switch (input.id) {
+        case "name":
+          error = validateName(input.value);
+          break;
+        case "email":
+          error = validateEmail(input.value);
+          break;
+        case "message":
+          error = validateMessage(input.value);
+          break;
       }
 
       // Update ARIA and visual state
-      if (!isValid) {
+      if (error) {
         input.setAttribute("aria-invalid", "true");
         input.classList.add("border-red-500");
-        errorDiv.textContent = errorMessage;
+        errorDiv.textContent = error;
         errorDiv.classList.remove("hidden");
+        return false;
       } else {
         input.setAttribute("aria-invalid", "false");
         input.classList.remove("border-red-500");
         errorDiv.textContent = "";
         errorDiv.classList.add("hidden");
+        return true;
       }
-
-      return isValid;
     }
 
     /**
      * Validate all fields
      */
     function validateForm(): boolean {
-      const nameValid = validateField(nameInput);
-      const emailValid = validateField(emailInput);
-      const messageValid = validateField(messageInput);
+      const nameValid = validateField(nameInput!);
+      const emailValid = validateField(emailInput!);
+      const messageValid = validateField(messageInput!);
 
       return nameValid && emailValid && messageValid;
     }
@@ -256,7 +280,7 @@ const { class: className = "" } = Astro.props;
     }
 
     // Real-time validation on blur
-    [nameInput, emailInput, messageInput].forEach((input) => {
+    [nameInput!, emailInput!, messageInput!].forEach((input) => {
       input.addEventListener("blur", () => {
         if (input.value.trim()) {
           validateField(input);
@@ -274,31 +298,37 @@ const { class: className = "" } = Astro.props;
     /**
      * Handle form submission
      */
-    form.addEventListener("submit", async (e) => {
+    form!.addEventListener("submit", async (e) => {
       e.preventDefault();
       hideStatus();
 
       // Validate all fields
       if (!validateForm()) {
-        showStatus("Please correct the errors above", true);
+        const errorMessage = "Please correct the errors above";
+        showStatus(errorMessage, true);
+        trackFormError("contact", errorMessage);
+
         // Focus first invalid field
-        const firstInvalid = form.querySelector(
+        const firstInvalid = form!.querySelector(
           '[aria-invalid="true"]'
         ) as HTMLElement;
         firstInvalid?.focus();
         return;
       }
 
+      // Track submission attempt
+      trackFormSubmit("contact");
+
       // Disable submit button during submission
-      submitButton.disabled = true;
+      submitButton!.disabled = true;
       showStatus("Sending...");
 
       try {
         // Collect form data
         const formData = {
-          name: nameInput.value.trim(),
-          email: emailInput.value.trim(),
-          message: messageInput.value.trim(),
+          name: nameInput!.value.trim(),
+          email: emailInput!.value.trim(),
+          message: messageInput!.value.trim(),
           timestamp: new Date().toISOString(),
         };
 
@@ -308,17 +338,20 @@ const { class: className = "" } = Astro.props;
         // Simulate API call
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        // Success - For demo purposes, log to console
+        // Log to console for demo
         console.log("Form submitted:", formData);
+
+        // Track success
+        trackFormSuccess("contact");
 
         // Show success message
         showStatus("Message sent successfully!");
 
         // Reset form
-        form.reset();
+        form!.reset();
 
-        // Clear any validation states
-        [nameInput, emailInput, messageInput].forEach((input) => {
+        // Clear validation states
+        [nameInput!, emailInput!, messageInput!].forEach((input) => {
           input.removeAttribute("aria-invalid");
           input.classList.remove("border-red-500");
           const errorDiv = document.getElementById(`${input.id}-error`);
@@ -334,9 +367,11 @@ const { class: className = "" } = Astro.props;
         }, 5000);
       } catch (error) {
         console.error("Form submission error:", error);
-        showStatus("Failed to send message. Please try again.", true);
+        const errorMessage = "Failed to send message. Please try again.";
+        showStatus(errorMessage, true);
+        trackFormError("contact", errorMessage);
       } finally {
-        submitButton.disabled = false;
+        submitButton!.disabled = false;
       }
     });
   }

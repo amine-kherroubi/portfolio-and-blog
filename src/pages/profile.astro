@@ -1,6 +1,8 @@
 ---
 /**
- * Profile Page - Desktop Only
+ * Profile Page - Desktop Only (Refactored)
+ *
+ * Now uses shared social utilities for consistent link handling.
  */
 
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -8,8 +10,11 @@ import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
 import CapabilitiesSection from "../components/CapabilitiesSection.astro";
 import { SITE } from "../config/site";
-import { PAGE_IDS } from "../utils/constants";
+import { PAGE_IDS } from "@/utils/constants";
 import { experience, principles, capabilities } from "../data/profile";
+import { getSocialLinks } from "@/utils/social";
+
+const socialLinks = getSocialLinks();
 ---
 
 <BaseLayout
@@ -111,6 +116,48 @@ import { experience, principles, capabilities } from "../data/profile";
 
       <section class="space-y-6 border-t-2 border-black pt-16">
         <p class="text-sm font-bold uppercase tracking-[0.15em] text-black/60">
+          Connect
+        </p>
+        <div class="grid gap-8 grid-cols-2">
+          <div class="space-y-4">
+            <h3 class="text-base font-bold uppercase tracking-[0.15em]">
+              Email
+            </h3>
+            <a
+              href={`mailto:${SITE.email}`}
+              class="text-lg font-bold border-b-2 border-transparent hover:border-black transition-colors duration-200 focus-visible:border-black break-all inline-block"
+            >
+              {SITE.email}
+            </a>
+          </div>
+
+          {
+            socialLinks.length > 0 && (
+              <div class="space-y-4">
+                <h3 class="text-base font-bold uppercase tracking-[0.15em]">
+                  Social
+                </h3>
+                <div class="space-y-3">
+                  {socialLinks.map(({ href, label, platform }) => (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="block text-base hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+                      data-social-platform={platform}
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )
+          }
+        </div>
+      </section>
+
+      <section class="space-y-6 border-t-2 border-black pt-16">
+        <p class="text-sm font-bold uppercase tracking-[0.15em] text-black/60">
           Contact
         </p>
         <div class="flex gap-6 items-center justify-between">
@@ -133,3 +180,35 @@ import { experience, principles, capabilities } from "../data/profile";
 
   <Footer />
 </BaseLayout>
+
+<script>
+  /**
+   * Track social link clicks with analytics
+   */
+  import { trackSocialClick } from "@/utils/use-analytics";
+
+  function initSocialTracking() {
+    const socialLinks = document.querySelectorAll<HTMLAnchorElement>(
+      "[data-social-platform]"
+    );
+
+    socialLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        const platform = link.dataset["socialPlatform"];
+        if (platform) {
+          trackSocialClick(platform, "profile_page");
+        }
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSocialTracking);
+  } else {
+    initSocialTracking();
+  }
+
+  // Reinitialize on Astro page navigation
+  document.addEventListener("astro:page-load", initSocialTracking);
+</script>

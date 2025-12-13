@@ -1,6 +1,9 @@
 ---
 /**
- * Writing Post Page - Desktop Only
+ * Writing Post Page - Desktop Only (Refactored)
+ *
+ * Now uses shared analytics utilities for social sharing
+ * and article read tracking.
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -25,10 +28,7 @@ type Props = {
 const { post } = Astro.props as Props;
 const { Content } = await render(post);
 
-// Generate post URL
 const postUrl = new URL(`/writing/${post.id}`, Astro.site || Astro.url.origin);
-
-// Convert date string to ISO format for structured data
 const publishDate = new Date(post.data.date).toISOString();
 ---
 
@@ -50,7 +50,6 @@ const publishDate = new Date(post.data.date).toISOString();
     itemscope
     itemtype="https://schema.org/BlogPosting"
   >
-    <!-- Pagefind indexing metadata -->
     <div data-pagefind-body>
       <!-- Metadata for Pagefind -->
       <h1 data-pagefind-meta="title" class="sr-only">{post.data.title}</h1>
@@ -135,16 +134,13 @@ const publishDate = new Date(post.data.date).toISOString();
             </button>
           </div>
 
-          <!-- Hidden metadata for schema -->
           <meta itemprop="url" content={postUrl.toString()} />
         </header>
 
-        <!-- Article Body with Semantic Markup -->
         <div class="prose prose-lg max-w-none" itemprop="articleBody">
           <Content />
         </div>
 
-        <!-- Article Footer with Navigation -->
         <footer
           class="mt-32 pt-16 border-t-2 border-black"
           data-pagefind-ignore
@@ -179,7 +175,6 @@ const publishDate = new Date(post.data.date).toISOString();
     <Footer />
   </div>
 
-  <!-- Structured Data for SEO -->
   <ArticleSchema
     slot="head"
     title={post.data.title}
@@ -193,15 +188,41 @@ const publishDate = new Date(post.data.date).toISOString();
 
 <script>
   /**
-   * Social Share Functionality
+   * Social Share and Article Tracking with Shared Utilities
    */
 
-  function initSocialShare() {
+  import {
+    trackShareClick,
+    trackArticleRead,
+    trackPageView,
+  } from "@/utils/use-analytics";
+  import { querySelector } from "@/utils/use-dom-utils";
+
+  function initArticlePage() {
+    const articleTitle =
+      querySelector<HTMLHeadingElement>('h2[itemprop="headline"]')
+        ?.textContent || "";
+
+    // Track page view
+    trackPageView({
+      title: articleTitle,
+      path: window.location.pathname,
+      referrer: document.referrer,
+    });
+
+    // Initialize social sharing
+    initSocialShare(articleTitle);
+
+    // Track article reading progress
+    initReadingProgress(articleTitle);
+  }
+
+  /**
+   * Social share functionality
+   */
+  function initSocialShare(articleTitle: string) {
     const shareButtons = document.querySelectorAll(".share-button");
     const currentUrl = window.location.href;
-    const title = document.querySelector(
-      'h2[itemprop="headline"]'
-    )?.textContent;
 
     shareButtons.forEach((button) => {
       button.addEventListener("click", async () => {
@@ -210,14 +231,16 @@ const publishDate = new Date(post.data.date).toISOString();
         try {
           switch (shareType) {
             case "twitter":
+              trackShareClick("twitter", articleTitle);
               window.open(
-                `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(title || "")}`,
+                `https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(articleTitle)}`,
                 "_blank",
                 "width=550,height=420"
               );
               break;
 
             case "linkedin":
+              trackShareClick("linkedin", articleTitle);
               window.open(
                 `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
                 "_blank",
@@ -227,6 +250,7 @@ const publishDate = new Date(post.data.date).toISOString();
 
             case "copy":
               await navigator.clipboard.writeText(currentUrl);
+              trackShareClick("copy", articleTitle);
               const originalText = button.textContent;
               button.textContent = "Copied!";
               setTimeout(() => {
@@ -235,21 +259,59 @@ const publishDate = new Date(post.data.date).toISOString();
               break;
           }
         } catch (error) {
-          console.error("Share error:", error);
+          console.error("[Article] Share error:", error);
         }
       });
     });
   }
 
+  /**
+   * Track reading progress
+   */
+  function initReadingProgress(articleTitle: string) {
+    let hasTracked50 = false;
+    let hasTracked90 = false;
+
+    const trackProgress = () => {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const scrollPercentage =
+        (scrollTop / (documentHeight - windowHeight)) * 100;
+
+      if (scrollPercentage >= 50 && !hasTracked50) {
+        hasTracked50 = true;
+        trackArticleRead(articleTitle, 50);
+      }
+
+      if (scrollPercentage >= 90 && !hasTracked90) {
+        hasTracked90 = true;
+        trackArticleRead(articleTitle, 90);
+      }
+    };
+
+    // Throttle scroll events
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          trackProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
   // Initialize on page load
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initSocialShare);
+    document.addEventListener("DOMContentLoaded", initArticlePage);
   } else {
-    initSocialShare();
+    initArticlePage();
   }
 
   // Reinitialize on Astro page navigation
-  document.addEventListener("astro:page-load", initSocialShare);
+  document.addEventListener("astro:page-load", initArticlePage);
 </script>
 
 <style>

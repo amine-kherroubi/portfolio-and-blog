@@ -1,11 +1,20 @@
 /**
- * Filter Script - Client-side Content Filtering
+ * Filter Script - Client-side Content Filtering (Refactored)
  *
- * Provides interactive filtering for writing posts and work projects.
- * Includes URL state management, debouncing, and analytics tracking.
- *
- * Note: This is a client-side script that runs in the browser.
+ * Now uses shared analytics and DOM utilities for better
+ * code organization and tracking.
  */
+
+import { trackFilterChange, trackFilterClear } from "@/utils/use-analytics";
+import {
+  getElementById,
+  querySelectorAll,
+  addClass,
+  removeClass,
+  setAttribute,
+  getAttribute,
+  setText,
+} from "@/utils/use-dom-utils";
 
 // ============================================================================
 // Types
@@ -22,18 +31,10 @@ interface FilterConfig {
   tagAttribute: string;
 }
 
-interface FilterEventDetail {
-  type: FilterType;
-  tag: string;
-  isActive: boolean;
-  activeCount: number;
-}
-
 // ============================================================================
 // State Management
 // ============================================================================
 
-// Track initialized instances to prevent duplicates
 const initializedInstances = new Map<string, FilterInstance>();
 
 // ============================================================================
@@ -53,7 +54,6 @@ class FilterInstance {
   private debouncedUpdateURL: () => void;
 
   constructor(type: FilterType) {
-    // Initialize config
     this.config = {
       type,
       filterTagsId: `${type}-filter-tags`,
@@ -63,29 +63,29 @@ class FilterInstance {
       tagAttribute: `data-${type}-tags`,
     };
 
-    // Get DOM elements
     this.elements = this.getElements();
-
-    // Create abort controller for cleanup
     this.abortController = new AbortController();
-
-    // Create debounced URL update
     this.debouncedUpdateURL = this.createDebounce(() => this.updateURL(), 500);
-
-    // Initialize
     this.initialize();
   }
 
   /**
-   * Get and validate DOM elements
+   * Get and validate DOM elements using shared utilities
    */
   private getElements() {
-    const filterTags = document.getElementById(this.config.filterTagsId);
-    const clearBtn = document.getElementById(this.config.clearBtnId);
-    const resultsCount = document.getElementById(this.config.resultsCountId);
-    const items = document.querySelectorAll<HTMLElement>(
-      this.config.itemSelector
-    );
+    const filterTags = getElementById(this.config.filterTagsId, {
+      required: true,
+      errorMessage: `Filter tags element not found: ${this.config.filterTagsId}`,
+    });
+    const clearBtn = getElementById(this.config.clearBtnId, {
+      required: true,
+      errorMessage: `Clear button not found: ${this.config.clearBtnId}`,
+    });
+    const resultsCount = getElementById(this.config.resultsCountId, {
+      required: true,
+      errorMessage: `Results count element not found: ${this.config.resultsCountId}`,
+    });
+    const items = querySelectorAll<HTMLElement>(this.config.itemSelector);
 
     if (!filterTags || !clearBtn || !resultsCount) {
       throw new Error(
@@ -106,13 +106,8 @@ class FilterInstance {
   private initialize(): void {
     console.log(`[Filter] Initializing ${this.config.type} filters`);
 
-    // Load state from URL
     this.loadStateFromURL();
-
-    // Attach event listeners
     this.attachEventListeners();
-
-    // Initial update
     this.updateUI();
     this.filterItems();
 
@@ -148,17 +143,12 @@ class FilterInstance {
   private attachEventListeners(): void {
     const { signal } = this.abortController;
 
-    // Filter button clicks
     this.elements.filterTags.addEventListener("click", this.handleFilterClick, {
       signal,
     });
-
-    // Keyboard navigation
     this.elements.filterTags.addEventListener("keydown", this.handleKeyDown, {
       signal,
     });
-
-    // Clear button
     this.elements.clearBtn.addEventListener("click", this.handleClearAll, {
       signal,
     });
@@ -222,8 +212,8 @@ class FilterInstance {
     this.filterItems();
     this.debouncedUpdateURL();
 
-    // Dispatch custom event for analytics
-    this.dispatchFilterEvent(tagId, !wasActive);
+    // Track with analytics utility
+    trackFilterChange(this.config.type, tagId, !wasActive);
   }
 
   /**
@@ -232,18 +222,19 @@ class FilterInstance {
   private clearAllFilters(): void {
     console.log("[Filter] Clearing all filters");
 
+    const previousCount = this.activeFilters.size;
     this.activeFilters.clear();
 
     this.updateUI();
     this.filterItems();
     this.updateURL();
 
-    // Dispatch custom event
-    this.dispatchFilterEvent("clear_all", false);
+    // Track with analytics utility
+    trackFilterClear(this.config.type, previousCount);
   }
 
   /**
-   * Update UI state
+   * Update UI state using shared utilities
    */
   private updateUI(): void {
     const buttons =
@@ -251,7 +242,6 @@ class FilterInstance {
         ".filter-tag-btn"
       );
 
-    // Batch DOM updates with requestAnimationFrame
     requestAnimationFrame(() => {
       buttons.forEach((btn) => {
         const tagId = btn.dataset["tagId"];
@@ -259,22 +249,26 @@ class FilterInstance {
         const tagElement = btn.querySelector<HTMLElement>("[data-tag-label]");
 
         // Update ARIA state
-        btn.setAttribute("aria-pressed", String(isActive));
+        setAttribute(btn, "aria-pressed", String(isActive));
 
         // Update visual state
         if (tagElement) {
-          tagElement.classList.toggle("bg-white", !isActive);
-          tagElement.classList.toggle("text-black", !isActive);
-          tagElement.classList.toggle("bg-black", isActive);
-          tagElement.classList.toggle("text-white", isActive);
+          if (isActive) {
+            removeClass(tagElement, "bg-white", "text-black");
+            addClass(tagElement, "bg-black", "text-white");
+          } else {
+            removeClass(tagElement, "bg-black", "text-white");
+            addClass(tagElement, "bg-white", "text-black");
+          }
         }
       });
 
       // Show/hide clear button
-      this.elements.clearBtn.classList.toggle(
-        "hidden",
-        this.activeFilters.size === 0
-      );
+      if (this.activeFilters.size === 0) {
+        addClass(this.elements.clearBtn, "hidden");
+      } else {
+        removeClass(this.elements.clearBtn, "hidden");
+      }
     });
   }
 
@@ -285,10 +279,9 @@ class FilterInstance {
     let visibleCount = 0;
     const hasFilters = this.activeFilters.size > 0;
 
-    // Batch DOM updates
     requestAnimationFrame(() => {
       this.elements.items.forEach((item) => {
-        const itemTagsStr = item.getAttribute(this.config.tagAttribute);
+        const itemTagsStr = getAttribute(item, this.config.tagAttribute);
         const itemTags = itemTagsStr
           ? itemTagsStr
               .split(",")
@@ -322,7 +315,7 @@ class FilterInstance {
         ? `Showing ${count} of ${total} ${typeLabel}`
         : `${total} ${typeLabel} total`;
 
-    this.elements.resultsCount.textContent = message;
+    setText(this.elements.resultsCount, message);
   }
 
   /**
@@ -342,31 +335,6 @@ class FilterInstance {
       window.history.replaceState({}, "", url);
     } catch (error) {
       console.error("[Filter] Failed to update URL:", error);
-    }
-  }
-
-  /**
-   * Dispatch custom filter event
-   */
-  private dispatchFilterEvent(tagId: string, isActive: boolean): void {
-    const detail: FilterEventDetail = {
-      type: this.config.type,
-      tag: tagId,
-      isActive,
-      activeCount: this.activeFilters.size,
-    };
-
-    const event = new CustomEvent("filterChange", { detail });
-    window.dispatchEvent(event);
-
-    // Google Analytics tracking (if available)
-    if (typeof window !== "undefined" && (window as any).gtag) {
-      (window as any).gtag("event", "filter_change", {
-        filter_type: this.config.type,
-        filter_tag: tagId,
-        filter_active: isActive,
-        total_active_filters: this.activeFilters.size,
-      });
     }
   }
 
@@ -411,7 +379,6 @@ class FilterInstance {
 export function initializeFilters(type: FilterType): void {
   const instanceKey = `filter-${type}`;
 
-  // Prevent duplicate initialization
   if (initializedInstances.has(instanceKey)) {
     console.log(`[Filter] ${type} already initialized`);
     return;
@@ -450,7 +417,6 @@ export function destroyFilter(type: FilterType): void {
 // Cleanup
 // ============================================================================
 
-// Cleanup on page unload
 if (typeof window !== "undefined") {
   window.addEventListener("beforeunload", destroyAllFilters);
 }

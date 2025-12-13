@@ -1,8 +1,8 @@
 ---
 /**
- * Home Page - Desktop Only
+ * Home Page - Desktop Only (Refactored)
  *
- * Enhanced with WebSite structured data for better SEO
+ * Now uses shared social utilities for consistent social link handling.
  */
 
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -11,7 +11,7 @@ import Footer from "../components/Footer.astro";
 import ContactForm from "../components/ContactForm.astro";
 import WebSiteSchema from "../components/WebSiteSchema.astro";
 import { SITE } from "../config/site";
-import { getSocialLinks } from "../utils/social";
+import { getSocialLinks } from "@/utils/social";
 
 const socialLinks = getSocialLinks();
 ---
@@ -51,7 +51,6 @@ const socialLinks = getSocialLinks();
           </div>
         </div>
 
-        <!-- Hidden metadata for schema -->
         <meta itemprop="email" content={SITE.email} />
         <meta itemprop="url" content={Astro.url.origin} />
       </div>
@@ -95,12 +94,14 @@ const socialLinks = getSocialLinks();
               <span class="text-sm font-bold uppercase tracking-[0.15em] text-black/50">
                 Connect
               </span>
-              {socialLinks.map(({ href, label }) => (
+              {socialLinks.map(({ href, label, platform }) => (
                 <a
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   class="text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+                  data-social-platform={platform}
+                  data-social-label={label}
                 >
                   {label}
                 </a>
@@ -114,9 +115,42 @@ const socialLinks = getSocialLinks();
 
   <Footer slot="footer" />
 
-  <!-- Structured Data for Website -->
   <WebSiteSchema slot="head" url={Astro.site} />
 </BaseLayout>
+
+<script>
+  /**
+   * Track social interactions with shared utilities
+   */
+  import { trackSocialClick } from "@/utils/use-analytics";
+
+  function initHomePage() {
+    // Track social link clicks
+    const socialLinks = document.querySelectorAll<HTMLAnchorElement>(
+      "[data-social-platform]"
+    );
+
+    socialLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        const platform = link.dataset["socialPlatform"];
+        const label = link.dataset["socialLabel"];
+        if (platform) {
+          trackSocialClick(platform, `home_page_${label}`);
+        }
+      });
+    });
+  }
+
+  // Initialize on page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHomePage);
+  } else {
+    initHomePage();
+  }
+
+  // Reinitialize on Astro page navigation
+  document.addEventListener("astro:page-load", initHomePage);
+</script>
 
 <style>
   @media (prefers-reduced-motion: no-preference) {

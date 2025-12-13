@@ -7,11 +7,6 @@
  * Implementation: A dedicated search page powered by Pagefind, a client-side
  * search index generated at build time. On the client, JS listens for input
  * and displays results in real-time.
- *
- * Justification: On content-rich sites, search greatly improves content
- * discoverability. It provides a quick path to relevant posts or projects
- * without manual browsing. Pagefind provides fast, in-browser search with
- * zero runtime dependencies and excellent privacy.
  */
 
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -107,7 +102,6 @@ import Footer from "../components/Footer.astro";
           aria-label="Search results"
           aria-live="polite"
         >
-          <!-- Results will be injected here by Pagefind -->
         </div>
 
         <!-- No Results Message -->
@@ -169,50 +163,20 @@ import Footer from "../components/Footer.astro";
    * real-time results, debouncing, and accessibility features.
    */
 
-  // Type definitions for Pagefind
-  interface PagefindSearchResult {
-    id: string;
-    data: () => Promise<{
-      url: string;
-      content: string;
-      word_count: number;
-      filters: Record<string, string[]>;
-      meta: {
-        title: string;
-        description?: string;
-        date?: string;
-        tags?: string[];
-      };
-      excerpt: string;
-      sub_results: Array<{
-        title: string;
-        url: string;
-        excerpt: string;
-      }>;
-    }>;
-  }
+  import {
+    performSearch,
+    parseSearchQuery,
+    formatResultCount,
+    extractContentType,
+    highlightSearchTerms,
+    debounce,
+  } from "@/utils/search";
+  import {
+    trackSearch,
+    trackSearchSuccess,
+    trackSearchFailure,
+  } from "@/utils/use-analytics";
 
-  interface PagefindResponse {
-    results: PagefindSearchResult[];
-  }
-
-  interface Pagefind {
-    search: (query: string) => Promise<PagefindResponse>;
-    debouncedSearch: (
-      query: string,
-      options?: { debounce?: number }
-    ) => Promise<PagefindResponse>;
-  }
-
-  declare global {
-    interface Window {
-      pagefind?: Pagefind;
-    }
-  }
-
-  /**
-   * Initialize Pagefind search
-   */
   async function initializeSearch() {
     const searchInput = document.getElementById(
       "search-input"
@@ -222,140 +186,99 @@ import Footer from "../components/Footer.astro";
     const noResults = document.getElementById("no-results");
     const searchLoading = document.getElementById("search-loading");
 
-    if (!searchInput || !searchResults || !searchStatus) {
-      console.warn("Search elements not found");
-      return;
-    }
-
-    // Load Pagefind
-    let pagefind: any;
-    try {
-      // Dynamic import constructed at runtime to avoid bundler resolution
-      const pagefindPath = "/pagefind/pagefind.js";
-      // @ts-ignore
-      const module = await import(pagefindPath);
-
-      // Pagefind exports might be on default or directly on module
-      pagefind = module.default || module;
-
-      // Store for later use
-      window.pagefind = pagefind;
-
-      console.log("Pagefind loaded successfully", pagefind);
-    } catch (error) {
-      console.error("Failed to load Pagefind:", error);
-      if (searchStatus) {
-        searchStatus.textContent =
-          "Search is only available in production builds. Run 'npm run build' then 'npm run preview' to test search.";
-        searchStatus.classList.add("text-red-600");
-      }
-      if (searchInput) {
-        searchInput.disabled = true;
-        searchInput.placeholder = "Search unavailable (build required)";
-      }
+    if (
+      !searchInput ||
+      !searchResults ||
+      !searchStatus ||
+      !noResults ||
+      !searchLoading
+    ) {
+      console.warn("[Search] Required elements not found");
       return;
     }
 
     // Get query from URL if present
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialQuery = urlParams.get("q");
+    const initialQuery = parseSearchQuery(window.location.href);
     if (initialQuery) {
       searchInput.value = initialQuery;
-      performSearch(initialQuery);
+      await handleSearch(initialQuery);
     }
 
     /**
      * Perform search and display results
      */
-    async function performSearch(query: string) {
-      if (!pagefind || !searchResults || !searchStatus) return;
-
+    async function handleSearch(query: string) {
       const trimmedQuery = query.trim();
 
       // Clear results if query is empty
       if (!trimmedQuery) {
-        searchResults.innerHTML = "";
-        searchStatus.textContent = "";
-        noResults?.classList.add("hidden");
+        searchResults!.innerHTML = "";
+        searchStatus!.textContent = "";
+        noResults!.classList.add("hidden");
         return;
       }
 
       // Show loading state
-      searchLoading?.classList.remove("hidden");
-      noResults?.classList.add("hidden");
-      searchResults.innerHTML = "";
+      searchLoading!.classList.remove("hidden");
+      noResults!.classList.add("hidden");
+      searchResults!.innerHTML = "";
 
       // Clear any previous error state
-      searchStatus.classList.remove("text-red-600");
+      searchStatus!.classList.remove("text-red-600");
+
+      // Track search
+      trackSearch(trimmedQuery);
 
       try {
-        console.log("Searching for:", trimmedQuery);
+        console.log("[Search] Searching for:", trimmedQuery);
 
-        // Perform search - try debouncedSearch first, fall back to search
-        let searchResponse: any;
+        // Perform search using utility
+        const results = await performSearch(trimmedQuery, {
+          debounce: 300,
+          maxResults: 50,
+          retries: 3,
+          retryDelay: 1000,
+        });
 
-        if (typeof pagefind.debouncedSearch === "function") {
-          searchResponse = await pagefind.debouncedSearch(trimmedQuery, {
-            debounce: 300,
-          });
-        } else if (typeof pagefind.search === "function") {
-          searchResponse = await pagefind.search(trimmedQuery);
-        } else {
-          throw new Error("Pagefind search function not found");
-        }
-
-        console.log("Search response:", searchResponse);
+        console.log("[Search] Search response:", results);
 
         // Hide loading state
-        searchLoading?.classList.add("hidden");
-
-        // Extract results array
-        const results = searchResponse?.results || [];
-
-        if (!Array.isArray(results)) {
-          console.error("Results is not an array:", results);
-          throw new Error("Invalid search results format");
-        }
+        searchLoading!.classList.add("hidden");
 
         // Update status
         const resultCount = results.length;
-        searchStatus.textContent =
-          resultCount > 0
-            ? `Found ${resultCount} result${resultCount !== 1 ? "s" : ""}`
-            : "";
+        searchStatus!.textContent = formatResultCount(resultCount, "result");
 
         // Show no results message
         if (resultCount === 0) {
-          noResults?.classList.remove("hidden");
+          noResults!.classList.remove("hidden");
+          trackSearchFailure(trimmedQuery, "no_results");
           return;
         }
 
-        // Display results
-        const resultsHTML = await Promise.all(
-          results.map(async (result: PagefindSearchResult) => {
-            try {
-              const data = await result.data();
-              return createResultElement(data);
-            } catch (err) {
-              console.error("Error loading result data:", err);
-              return "";
-            }
-          })
-        );
+        // Track success
+        trackSearchSuccess(trimmedQuery, resultCount);
 
-        searchResults.innerHTML = resultsHTML.filter(Boolean).join("");
+        // Display results
+        const resultsHTML = results.map((result) => {
+          const contentType = extractContentType(result.url);
+          return createResultElement(result, contentType, trimmedQuery);
+        });
+
+        searchResults!.innerHTML = resultsHTML.filter(Boolean).join("");
 
         // Update URL
         const url = new URL(window.location.href);
         url.searchParams.set("q", trimmedQuery);
         window.history.replaceState({}, "", url);
       } catch (error) {
-        console.error("Search error:", error);
+        console.error("[Search] Search error:", error);
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
-        searchStatus.textContent = `Search error: ${errorMessage}`;
-        searchStatus.classList.add("text-red-600");
-        searchLoading?.classList.add("hidden");
+        searchStatus!.textContent = `Search error: ${errorMessage}`;
+        searchStatus!.classList.add("text-red-600");
+        searchLoading!.classList.add("hidden");
+        trackSearchFailure(trimmedQuery, errorMessage);
       }
     }
 
@@ -363,12 +286,17 @@ import Footer from "../components/Footer.astro";
      * Create HTML for a search result
      */
     function createResultElement(
-      data: Awaited<ReturnType<PagefindSearchResult["data"]>>
+      data: any,
+      contentType: string,
+      query: string
     ): string {
-      console.log("Creating result element for:", data);
+      console.log("[Search] Creating result element for:", data);
 
       const title = data.meta?.title || "Untitled";
-      const excerpt = data.excerpt || data.meta?.description || "";
+      const excerpt = highlightSearchTerms(
+        data.excerpt || data.meta?.description || "",
+        query
+      );
       const url = data.url;
       const date = data.meta?.date || "";
 
@@ -383,9 +311,12 @@ import Footer from "../components/Footer.astro";
       }
 
       // Determine content type from URL
-      const isWriting = url.includes("/writing/");
-      const isWork = url.includes("/work/");
-      const contentType = isWriting ? "Article" : isWork ? "Project" : "Page";
+      const typeLabel =
+        contentType === "writing"
+          ? "Article"
+          : contentType === "work"
+            ? "Project"
+            : "Page";
 
       return `
         <article class="border-b-2 border-black last:border-b-0">
@@ -406,7 +337,7 @@ import Footer from "../components/Footer.astro";
               `
                   : `
               <span class="col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity">
-                ${contentType}
+                ${typeLabel}
               </span>
               `
               }
@@ -445,27 +376,23 @@ import Footer from "../components/Footer.astro";
     /**
      * Handle search input
      */
-    let searchTimeout: NodeJS.Timeout;
-    searchInput.addEventListener("input", (e) => {
+    const debouncedSearch = debounce((query: string) => {
+      handleSearch(query);
+    }, 300);
+
+    searchInput!.addEventListener("input", (e) => {
       const query = (e.target as HTMLInputElement).value;
-
-      // Clear previous timeout
-      clearTimeout(searchTimeout);
-
-      // Debounce search
-      searchTimeout = setTimeout(() => {
-        performSearch(query);
-      }, 300);
+      debouncedSearch(query);
     });
 
     /**
      * Handle form submission (if wrapped in form)
      */
-    searchInput.addEventListener("keydown", (e) => {
+    searchInput!.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        const query = searchInput.value;
-        performSearch(query);
+        const query = searchInput!.value;
+        handleSearch(query);
       }
     });
   }
