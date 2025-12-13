@@ -1,12 +1,26 @@
 ---
 /**
- * BlogCard Component - Desktop Only
+ * BlogCard Component - Desktop Only (Refactored)
  *
- * Enhanced with proper image optimization, lazy loading, and accessibility features.
+ * Modular card component using shared utilities and sub-components
+ * to reduce duplication while maintaining self-sufficiency.
  */
 
-import Tag from "./Tag.astro";
+import OptimizedImage from "./OptimizedImage.astro";
+import CardMetadata from "./CardMetadata.astro";
+import CardContent from "./CardContent.astro";
 import { getTagsByIds, type TagId } from "../config/tags";
+import {
+  getCardContainerClasses,
+  getCardLinkClasses,
+  getCardContentClasses,
+  getImageContainerClasses,
+  getActionClasses,
+  getArrowIconClasses,
+  getCardAriaLabel,
+  isListLayout,
+  type CardVariant,
+} from "../utils/card-styles";
 
 interface Props {
   title: string;
@@ -15,7 +29,7 @@ interface Props {
   readTime: string;
   slug: string;
   tags?: TagId[];
-  variant?: "featured" | "list";
+  variant?: CardVariant;
   image?: string;
   imageAlt?: string;
   author?: string;
@@ -35,85 +49,60 @@ const {
 } = Astro.props;
 
 const tagObjects = tags.length > 0 ? getTagsByIds(tags) : [];
-
-// Generate alt text if not provided
 const finalImageAlt = imageAlt || `${title} article cover image`;
+const isListVariant = isListLayout(variant);
+const ariaLabel = getCardAriaLabel(title, "article");
 ---
 
-{
-  variant === "featured" ? (
-    <article
-      class="group bg-white border-4 border-black hover:bg-gray-50 transition-all duration-200"
-      itemscope
-      itemtype="https://schema.org/BlogPosting"
-    >
-      <a
-        href={`/writing/${slug}`}
-        class="block h-full focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black focus-visible:ring-offset-4"
-        aria-label={`Read article: ${title}`}
-      >
-        {image && (
-          <div class="aspect-video bg-gray-100 border-b-4 border-black overflow-hidden">
-            <picture>
-              <source
-                type="image/avif"
-                srcset={`${image}-640w.avif 640w, ${image}-1024w.avif 1024w, ${image}-1920w.avif 1920w`}
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <source
-                type="image/webp"
-                srcset={`${image}-640w.webp 640w, ${image}-1024w.webp 1024w, ${image}-1920w.webp 1920w`}
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              <img
-                src={`${image}-1024w.jpg`}
-                alt={finalImageAlt}
-                loading="lazy"
-                decoding="async"
-                width="1024"
-                height="576"
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                itemprop="image"
-              />
-            </picture>
-          </div>
-        )}
+<article
+  class={getCardContainerClasses(variant)}
+  itemscope
+  itemtype="https://schema.org/BlogPosting"
+>
+  <a
+    href={`/writing/${slug}`}
+    class={getCardLinkClasses(variant)}
+    aria-label={ariaLabel}
+  >
+    {
+      image && !isListVariant && (
+        <div class={getImageContainerClasses(true)}>
+          <OptimizedImage
+            src={image}
+            alt={finalImageAlt}
+            width={1024}
+            height={576}
+            loading="lazy"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            aspectRatio="video"
+          />
+        </div>
+      )
+    }
 
-        <div class="p-12">
-          <div class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-6">
-            <time datetime={date} itemprop="datePublished">
-              {date}
-            </time>
-            <span class="w-2 h-2 bg-black rounded-full" aria-hidden="true" />
-            <span itemprop="timeRequired">{readTime}</span>
-          </div>
+    <div class={getCardContentClasses(variant)}>
+      {
+        !isListVariant && (
+          <CardMetadata date={date} readTime={readTime} variant={variant} />
+        )
+      }
 
-          <h3
-            class="text-4xl font-bold leading-tight mb-4 group-hover:underline decoration-2 underline-offset-8"
-            itemprop="headline"
-          >
-            {title}
-          </h3>
+      {isListVariant && <CardMetadata date={date} variant="list" />}
 
-          <p
-            class="text-xl text-black/70 leading-relaxed mb-6"
-            itemprop="description"
-          >
-            {excerpt}
-          </p>
+      <CardContent
+        title={title}
+        description={excerpt}
+        tags={tagObjects}
+        variant={variant}
+        readTime={isListVariant ? readTime : undefined}
+      />
 
-          {tagObjects.length > 0 && (
-            <div class="flex flex-wrap gap-2 mb-6" role="list">
-              {tagObjects.map((tag) => (
-                <Tag label={tag.label} variant="default" />
-              ))}
-            </div>
-          )}
-
-          <span class="inline-flex items-center gap-3 font-bold uppercase text-sm tracking-[0.15em]">
+      {
+        !isListVariant && (
+          <span class={getActionClasses(variant)}>
             Read Article
             <svg
-              class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-1"
+              class={getArrowIconClasses()}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -127,67 +116,14 @@ const finalImageAlt = imageAlt || `${title} article cover image`;
               />
             </svg>
           </span>
+        )
+      }
+    </div>
 
-          {author && <meta itemprop="author" content={author} />}
-        </div>
-      </a>
-    </article>
-  ) : (
-    <article
-      class="border-b-2 border-black last:border-b-0"
-      itemscope
-      itemtype="https://schema.org/BlogPosting"
-    >
-      <a
-        href={`/writing/${slug}`}
-        class="group block py-16 transition-colors duration-200 hover:bg-black hover:text-white focus-visible:bg-black focus-visible:text-white focus-visible:outline-none"
-        aria-label={`Read article: ${title}`}
-      >
-        <div class="grid grid-cols-12 gap-12 items-start px-16">
-          <time
-            class="col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
-            datetime={date}
-            itemprop="datePublished"
-          >
-            {date}
-          </time>
-
-          <div class="col-span-7">
-            <h3
-              class="text-[2.75rem] font-bold leading-[1.1] tracking-[-0.02em] mb-5"
-              itemprop="headline"
-            >
-              {title}
-            </h3>
-            <p
-              class="text-[1.25rem] leading-[1.6] opacity-70 group-hover:opacity-100 transition-opacity mb-6"
-              itemprop="description"
-            >
-              {excerpt}
-            </p>
-            {tagObjects.length > 0 && (
-              <div class="flex flex-wrap gap-2" role="list">
-                {tagObjects.map((tag) => (
-                  <Tag label={tag.label} variant="default" />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <span
-            class="col-span-3 flex items-center justify-end text-[0.8125rem] uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
-            itemprop="timeRequired"
-          >
-            {readTime}
-          </span>
-        </div>
-
-        {author && <meta itemprop="author" content={author} />}
-        {image && <meta itemprop="image" content={image} />}
-      </a>
-    </article>
-  )
-}
+    {author && <meta itemprop="author" content={author} />}
+    {image && <meta itemprop="image" content={image} />}
+  </a>
+</article>
 
 <style>
   @media (prefers-reduced-motion: no-preference) {
@@ -199,10 +135,6 @@ const finalImageAlt = imageAlt || `${title} article cover image`;
 
     article svg {
       transition: transform 0.2s ease;
-    }
-
-    article img {
-      transition: transform 0.3s ease;
     }
   }
 </style>

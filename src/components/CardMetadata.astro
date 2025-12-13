@@ -1,0 +1,61 @@
+---
+/**
+ * CardMetadata Component - Shared Metadata Display
+ *
+ * Purpose: Reusable component for displaying metadata like dates,
+ * reading time, and other temporal information on cards.
+ *
+ * Self-contained: Handles all metadata patterns used across
+ * BlogCard and ProjectCard with consistent styling.
+ */
+
+interface Props {
+  date?: string;
+  readTime?: string;
+  year?: string;
+  variant?: "featured" | "grid" | "list";
+  class?: string;
+}
+
+const {
+  date,
+  readTime,
+  year,
+  variant = "featured",
+  class: className = "",
+} = Astro.props;
+
+// Base classes based on variant
+const variantClasses = {
+  featured:
+    "flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-6",
+  grid: "flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-6",
+  list: "col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity",
+};
+
+// Determine what to display
+const primaryDisplay = date || year;
+const secondaryDisplay = readTime;
+const showSeparator = primaryDisplay && secondaryDisplay;
+---
+
+{
+  primaryDisplay && (
+    <div class:list={[variantClasses[variant], className]}>
+      {date && (
+        <time datetime={date} itemprop="datePublished">
+          {date}
+        </time>
+      )}
+      {year && !date && <span itemprop="dateCreated">{year}</span>}
+
+      {showSeparator && variant !== "list" && (
+        <span class="w-2 h-2 bg-black rounded-full" aria-hidden="true" />
+      )}
+
+      {readTime && variant !== "list" && (
+        <span itemprop="timeRequired">{readTime}</span>
+      )}
+    </div>
+  )
+}

@@ -1,0 +1,68 @@
+---
+/**
+ * CardContent Component - Shared Card Text Content
+ *
+ * Purpose: Reusable component for card title, description, and tags
+ * with consistent styling across variants.
+ *
+ * Self-contained: Encapsulates the main content area of cards with
+ * variant-specific layouts.
+ */
+
+import TagList from "./TagList.astro";
+import { getTitleClasses, getDescriptionClasses } from "../utils/card-styles";
+import type { Tag } from "../config/tags";
+import type { CardVariant } from "../utils/card-styles";
+
+interface Props {
+  title: string;
+  description: string;
+  tags?: readonly Tag[];
+  variant?: CardVariant;
+  readTime?: string;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  tags = [],
+  variant = "list",
+  readTime,
+  class: className = "",
+} = Astro.props;
+
+const isListLayout = variant === "list";
+---
+
+<div class:list={[isListLayout ? "col-span-7" : "", className]}>
+  <h3 class={getTitleClasses(variant)} itemprop="headline">
+    {title}
+  </h3>
+
+  <p class={getDescriptionClasses(variant)} itemprop="description">
+    {description}
+  </p>
+
+  {
+    tags.length > 0 && (
+      <TagList
+        tags={tags}
+        variant="default"
+        class="mb-6"
+        ariaLabel="Content tags"
+      />
+    )
+  }
+</div>
+
+{
+  isListLayout && readTime && (
+    <span
+      class="col-span-3 flex items-center justify-end text-[0.8125rem] uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity"
+      itemprop="timeRequired"
+    >
+      {readTime}
+    </span>
+  )
+}

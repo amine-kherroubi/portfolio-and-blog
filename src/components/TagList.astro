@@ -1,0 +1,39 @@
+---
+/**
+ * TagList Component - Shared Tag List
+ *
+ * Purpose: Reusable component for displaying lists of tags with
+ * consistent styling and accessibility.
+ *
+ * Self-contained: Handles all tag rendering patterns used across
+ * content cards and detail pages.
+ */
+
+import Tag from "./Tag.astro";
+import type { Tag as TagType } from "../config/tags";
+
+interface Props {
+  tags: readonly TagType[];
+  variant?: "default" | "filter" | "large";
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  tags,
+  variant = "default",
+  class: className = "",
+  ariaLabel = "Content tags",
+} = Astro.props;
+
+// Don't render if no tags
+if (tags.length === 0) return null;
+---
+
+<div
+  class:list={["flex flex-wrap gap-2", className]}
+  role="list"
+  aria-label={ariaLabel}
+>
+  {tags.map((tag) => <Tag label={tag.label} variant={variant} />)}
+</div>
