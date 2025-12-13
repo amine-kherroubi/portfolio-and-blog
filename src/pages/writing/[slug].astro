@@ -7,18 +7,22 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
 import ArticleSchema from "../../components/ArticleSchema.astro";
-import { getCollection, render } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import { SITE } from "../../config/site";
 
 export async function getStaticPaths() {
   const writingPosts = await getCollection("writing");
-  return writingPosts.map((post) => ({
+  return writingPosts.map((post: CollectionEntry<"writing">) => ({
     params: { slug: post.id },
     props: { post },
   }));
 }
 
-const { post } = Astro.props;
+type Props = {
+  post: CollectionEntry<"writing">;
+};
+
+const { post } = Astro.props as Props;
 const { Content } = await render(post);
 
 // Generate post URL

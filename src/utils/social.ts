@@ -92,22 +92,22 @@ export function extractUsername(
       case "github":
         // GitHub: https://github.com/username
         const githubMatch = pathname.match(/^\/([^\/]+)/);
-        return githubMatch ? githubMatch[1] : null;
+        return githubMatch?.[1] ?? null;
 
       case "linkedin":
         // LinkedIn: https://linkedin.com/in/username
         const linkedinMatch = pathname.match(/^\/in\/([^\/]+)/);
-        return linkedinMatch ? linkedinMatch[1] : null;
+        return linkedinMatch?.[1] ?? null;
 
       case "twitter":
         // Twitter: https://twitter.com/username
         const twitterMatch = pathname.match(/^\/([^\/]+)/);
-        return twitterMatch ? twitterMatch[1] : null;
+        return twitterMatch?.[1] ?? null;
 
       case "mastodon":
         // Mastodon: https://mastodon.social/@username
         const mastodonMatch = pathname.match(/^\/@?([^\/]+)/);
-        return mastodonMatch ? mastodonMatch[1] : null;
+        return mastodonMatch?.[1] ?? null;
 
       default:
         return null;

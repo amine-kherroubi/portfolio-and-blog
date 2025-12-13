@@ -7,7 +7,7 @@ import type { Tag as TagType } from "../config/tags";
 import { sortTagsByCategory } from "../config/tags";
 
 interface Props {
-  tags: TagType[];
+  tags: readonly TagType[];
   type: "writing" | "work";
 }
 

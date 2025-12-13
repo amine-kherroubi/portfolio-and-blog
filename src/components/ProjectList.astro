@@ -1,17 +1,6 @@
 ---
 /**
  * ProjectList Component - Desktop Only
- *
- * Purpose: Grid or list of portfolio projects.
- *
- * Implementation: Query the "projects" collection and render each item with a thumbnail,
- * title, and short description. Use a responsive grid layout. Images use loading="lazy"
- * and srcset for different resolutions.
- *
- * Justification: Visual portfolio is key for showcasing work. Lazy-loading off-screen
- * thumbnails speeds up page load. Always include descriptive alt text on project images
- * so screen readers and search engines understand them. Responsive srcset images improve
- * performance and adapt to devices.
  */
 
 import ProjectCard from "./ProjectCard.astro";
@@ -41,7 +30,7 @@ const { projects, variant = "grid", class: className = "" } = Astro.props;
                 title={project.title}
                 description={project.description}
                 year={project.year}
-                tags={project.tags}
+                tags={[...project.tags]}
                 link={project.link}
                 variant="grid"
                 gridSpan="col-span-1"
@@ -57,7 +46,7 @@ const { projects, variant = "grid", class: className = "" } = Astro.props;
                 title={project.title}
                 description={project.description}
                 year={project.year}
-                tags={project.tags}
+                tags={[...project.tags]}
                 link={project.link}
                 variant="list"
               />

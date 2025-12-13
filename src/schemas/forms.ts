@@ -72,7 +72,7 @@ export const honeypotSchema = z
 /**
  * Contact form schema with comprehensive validation
  */
-export const contactFormSchema = z.object({
+const contactFormSchemaBase = z.object({
   name: nameSchema,
   email: emailSchema,
   message: messageSchema,
@@ -89,19 +89,22 @@ export const contactFormSchema = z.object({
       z.date().transform((d) => d.toISOString())
     ) as unknown as z.ZodType<ISODate>,
   honeypot: honeypotSchema,
-}) as unknown as z.ZodType<ContactFormData>;
+});
+
+export const contactFormSchema =
+  contactFormSchemaBase as unknown as z.ZodType<ContactFormData>;
 
 /**
  * Contact form without timestamp (for client-side validation)
  */
-export const contactFormClientSchema = contactFormSchema.omit({
+export const contactFormClientSchema = contactFormSchemaBase.omit({
   timestamp: true,
 });
 
 /**
  * Partial contact form for progressive validation
  */
-export const contactFormPartialSchema = contactFormSchema.partial();
+export const contactFormPartialSchema = contactFormSchemaBase.partial();
 
 // ============================================================================
 // Search Form Schema
@@ -382,6 +385,6 @@ export const rateLimitConfigSchema = z.object({
 // Type Exports
 // ============================================================================
 
-export type ValidatedContactForm = z.infer<typeof contactFormSchema>;
+export type ValidatedContactForm = z.infer<typeof contactFormSchemaBase>;
 export type ValidatedSearchForm = z.infer<typeof searchFormSchema>;
 export type ValidatedFilterForm = z.infer<typeof filterFormSchema>;

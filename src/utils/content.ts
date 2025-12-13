@@ -16,8 +16,6 @@ import type {
   ISODate,
 } from "@/types/index";
 import {
-  validateWritingPost,
-  validateWorkProject,
   safeValidateWritingPost,
   safeValidateWorkProject,
   formatZodError,
@@ -53,34 +51,6 @@ class ValidationError extends Error {
     super(message);
     this.name = "ValidationError";
   }
-}
-
-// ============================================================================
-// Type Guards
-// ============================================================================
-
-/**
- * Type guard for writing post
- */
-function isWritingPost(content: unknown): content is WritingPost {
-  return (
-    typeof content === "object" &&
-    content !== null &&
-    "type" in content &&
-    content.type === "post"
-  );
-}
-
-/**
- * Type guard for work project
- */
-function isWorkProject(content: unknown): content is WorkProject {
-  return (
-    typeof content === "object" &&
-    content !== null &&
-    "type" in content &&
-    content.type === "project"
-  );
 }
 
 // ============================================================================
@@ -256,7 +226,9 @@ function processWorkProject(
       client: data.client ? String(data.client).trim() : undefined,
       role: data.role ? String(data.role).trim() : undefined,
       technologies: Array.isArray(data.technologies)
-        ? (data.technologies.map((t) => String(t).trim()) as readonly string[])
+        ? (data.technologies.map((t: unknown) =>
+            String(t).trim()
+          ) as readonly string[])
         : undefined,
       featured: Boolean(data.featured ?? false),
     };

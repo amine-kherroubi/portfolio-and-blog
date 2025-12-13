@@ -26,7 +26,8 @@ export function formatDateISO(date: Date | string): string {
       throw new Error("Invalid date");
     }
 
-    return dateObj.toISOString().split("T")[0];
+    const isoString = dateObj.toISOString().split("T")[0];
+    return isoString ?? "";
   } catch (error) {
     console.error("[Format] Date formatting failed:", error);
     return "";
@@ -239,7 +240,7 @@ export function formatReadingTime(minutes: number): string {
  */
 export function formatList(items: string[], locale = "en-US"): string {
   if (items.length === 0) return "";
-  if (items.length === 1) return items[0];
+  if (items.length === 1) return items[0] ?? "";
   if (items.length === 2) return `${items[0]} and ${items[1]}`;
 
   try {

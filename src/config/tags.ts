@@ -147,10 +147,12 @@ export type { TagId, Tag };
  * @param tagIds - Array of tag IDs to look up
  * @returns Array of Tag objects corresponding to the provided IDs
  */
-export function getTagsByIds(tagIds: readonly TagId[]): Tag[] {
+export function getTagsByIds(tagIds: readonly TagId[]): readonly Tag[] {
   return tagIds
     .map((id) => TAGS[id as keyof typeof TAGS])
-    .filter((tag): tag is Tag => Boolean(tag));
+    .filter(
+      (tag): tag is (typeof TAGS)[keyof typeof TAGS] => tag !== undefined
+    );
 }
 
 /**
@@ -162,7 +164,7 @@ export function getTagsByIds(tagIds: readonly TagId[]): Tag[] {
  * @param tags - Array of Tag objects to sort
  * @returns New sorted array of Tag objects
  */
-export function sortTagsByCategory(tags: readonly Tag[]): Tag[] {
+export function sortTagsByCategory(tags: readonly Tag[]): readonly Tag[] {
   return [...tags].sort((a, b) =>
     // First sort by category, then by label within the same category
     a.category === b.category

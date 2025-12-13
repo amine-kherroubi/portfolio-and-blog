@@ -7,19 +7,23 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Navigation from "../../components/Navigation.astro";
 import Footer from "../../components/Footer.astro";
 import ProjectSchema from "../../components/ProjectSchema.astro";
-import { getCollection, render } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import Tag from "../../components/Tag.astro";
 import { getTagsByIds, type TagId } from "../../config/tags";
 
 export async function getStaticPaths() {
   const workProjects = await getCollection("work");
-  return workProjects.map((project) => ({
+  return workProjects.map((project: CollectionEntry<"work">) => ({
     params: { slug: project.id },
     props: { project },
   }));
 }
 
-const { project } = Astro.props;
+type Props = {
+  project: CollectionEntry<"work">;
+};
+
+const { project } = Astro.props as Props;
 const { Content } = await render(project);
 const tagObjects = getTagsByIds(project.data.tags as TagId[]);
 
@@ -223,7 +227,7 @@ const dateCreated = `${project.data.year}-01-01`;
               </p>
             </div>
 
-            <!-- Additional Project Info could go here -->
+            <!-- Additional Project Info -->
             <div class="col-span-6">
               <h3
                 class="text-sm font-bold uppercase tracking-[0.15em] text-black/50 mb-6"
@@ -251,7 +255,7 @@ const dateCreated = `${project.data.year}-01-01`;
         </div>
       </section>
 
-      <!-- Additional Project Images (if any) -->
+      <!-- Additional Project Images -->
       <section
         class="px-8 mb-24"
         aria-label="Additional project images"

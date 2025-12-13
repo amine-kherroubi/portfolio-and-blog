@@ -158,7 +158,7 @@ export const yearSchema = z
 /**
  * Writing post schema with comprehensive validation
  */
-export const writingPostSchema = z.object({
+const writingPostSchemaBase = z.object({
   type: z.literal("post"),
   id: slugSchema,
   title: z
@@ -184,12 +184,15 @@ export const writingPostSchema = z.object({
   author: z.string().min(1).max(100).trim().optional(),
   image: urlSchema.optional(),
   published: z.boolean().default(true),
-}) as unknown as z.ZodType<WritingPost>;
+});
+
+export const writingPostSchema =
+  writingPostSchemaBase as unknown as z.ZodType<WritingPost>;
 
 /**
  * Partial writing post schema for updates
  */
-export const writingPostUpdateSchema = writingPostSchema
+export const writingPostUpdateSchema = writingPostSchemaBase
   .partial()
   .omit({ id: true, type: true });
 
@@ -200,7 +203,7 @@ export const writingPostUpdateSchema = writingPostSchema
 /**
  * Work project schema with comprehensive validation
  */
-export const workProjectSchema = z.object({
+const workProjectSchemaBase = z.object({
   type: z.literal("project"),
   id: slugSchema,
   title: z
@@ -224,12 +227,15 @@ export const workProjectSchema = z.object({
     .optional()
     .readonly(),
   featured: z.boolean().default(false),
-}) as unknown as z.ZodType<WorkProject>;
+});
+
+export const workProjectSchema =
+  workProjectSchemaBase as unknown as z.ZodType<WorkProject>;
 
 /**
  * Partial work project schema for updates
  */
-export const workProjectUpdateSchema = workProjectSchema
+export const workProjectUpdateSchema = workProjectSchemaBase
   .partial()
   .omit({ id: true, type: true });
 
@@ -434,6 +440,6 @@ export function groupErrorsByField(
 /**
  * Infer TypeScript type from Zod schema
  */
-export type InferWritingPost = z.infer<typeof writingPostSchema>;
-export type InferWorkProject = z.infer<typeof workProjectSchema>;
+export type InferWritingPost = z.infer<typeof writingPostSchemaBase>;
+export type InferWorkProject = z.infer<typeof workProjectSchemaBase>;
 export type InferTag = z.infer<typeof tagSchema>;

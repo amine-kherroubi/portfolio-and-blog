@@ -52,7 +52,7 @@ const structuredData = generateBlogStructuredData(posts, Astro.site);
               date={post.date}
               readTime={post.readTime}
               slug={post.slug}
-              tags={post.tags}
+              tags={[...post.tags]}
               variant="list"
             />
           </div>

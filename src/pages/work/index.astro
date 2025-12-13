@@ -45,7 +45,7 @@ const allTags = getUniqueTagsFromProjects(projects);
               title={project.title}
               description={project.description}
               year={project.year}
-              tags={project.tags}
+              tags={[...project.tags]}
               link={project.link}
               variant="list"
             />

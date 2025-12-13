@@ -307,12 +307,13 @@ export function formatResultCount(
 }
 
 /**
- * Extract content type from URL
+ * Extract content type from URL (Fixed version for search.ts)
  */
 export function extractContentType(url: string): string {
   try {
     const match = url.match(/^\/(writing|work|profile)\//);
-    return match ? match[1] : "page";
+    const result = match?.[1];
+    return result ?? "page";
   } catch (error) {
     console.error("[Search] Content type extraction failed:", error);
     return "page";
