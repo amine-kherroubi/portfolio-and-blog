@@ -66,8 +66,19 @@ export default defineConfig({
     sitemap({
       changefreq: "weekly",
       priority: 0.7,
-      // Filter out development URLs from sitemap
-      filter: (page) => !page.includes("localhost"),
+      // Only filter when site URL is set to production
+      filter: (page) => {
+        // Don't include 404 page in sitemap
+        if (page.includes("/404")) return false;
+
+        // If using production URL, include all pages
+        if (SITE_URL && !SITE_URL.includes("localhost")) {
+          return true;
+        }
+
+        // For local builds, still generate sitemap
+        return true;
+      },
     }),
   ],
 
