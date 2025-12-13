@@ -1,26 +1,67 @@
-/**
- * TypeScript Configuration
- * 
- * Extends Astro's base TypeScript configuration with project-specific settings.
- * This ensures type safety across the entire codebase.
- * 
- * @see https://docs.astro.build/en/reference/configuration-reference/#typescript
- */
 {
-  /**
-   * Extend Astro's base TypeScript configuration
-   * Provides sensible defaults for Astro projects
-   */
-  "extends": "astro/tsconfigs/base",
-  
-  /**
-   * Include all TypeScript files and Astro-generated types
-   * .astro/types.d.ts contains Astro's type definitions
-   */
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "exactOptionalPropertyTypes": false, // Can cause issues with Astro
+    
+    // Module Resolution
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    
+    // Emit
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "importHelpers": true,
+    "downlevelIteration": true,
+    
+    // Interop Constraints
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    
+    // Language and Environment
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "preserve",
+    "jsxImportSource": "react",
+    
+    // Type Acquisition
+    "types": ["astro/client"],
+    
+    // Path Mapping
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@layouts/*": ["./src/layouts/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@types/*": ["./src/types/*"],
+      "@schemas/*": ["./src/schemas/*"],
+      "@config/*": ["./src/config/*"],
+      "@data/*": ["./src/data/*"]
+    }
+  },
   "include": [".astro/types.d.ts", "**/*"],
-  
-  /**
-   * Exclude build output directory from type checking
-   */
-  "exclude": ["dist"]
+  "exclude": ["dist", "node_modules", ".astro"]
 }
