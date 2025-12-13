@@ -1,9 +1,9 @@
 /**
  * Content Collections Configuration
- * 
+ *
  * Defines content collections for type-safe content management.
  * Uses Zod schemas for validation and TypeScript type inference.
- * 
+ *
  * @see https://docs.astro.build/en/guides/content-collections/
  */
 

@@ -1,6 +1,6 @@
 /**
  * Profile Data
- * 
+ *
  * Centralized profile information including experience, principles, and capabilities.
  * Separated from page files to maintain separation of concerns.
  */

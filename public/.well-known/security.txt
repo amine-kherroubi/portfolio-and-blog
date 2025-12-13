@@ -1,0 +1,62 @@
+# security.txt - RFC 9116
+# https://securitytxt.org/
+
+# Contact information for security researchers
+Contact: mailto:elaminekherroubi@gmail.com
+Contact: https://github.com/amine-kherroubi/security
+
+# Preferred language for security reports
+Preferred-Languages: en, fr
+
+# Canonical URL for this file
+Canonical: https://yourdomain.com/.well-known/security.txt
+
+# Expiration date (update annually)
+Expires: 2026-12-31T23:59:59.000Z
+
+# Policy information
+Policy: https://yourdomain.com/security-policy
+
+# Acknowledgments page (optional)
+# Acknowledgments: https://yourdomain.com/security-acknowledgments
+
+# Encryption key for secure communication (optional)
+# Encryption: https://yourdomain.com/pgp-key.txt
+
+# Hiring information (optional)
+# Hiring: https://yourdomain.com/jobs
+
+# ============================================================================
+# Additional Information
+# ============================================================================
+
+# Scope:
+# This security policy covers:
+# - yourdomain.com and all subdomains
+# - Associated APIs and services
+# 
+# Out of scope:
+# - Third-party dependencies (report to their maintainers)
+# - Social engineering attacks
+# - Physical security issues
+# 
+# Please report:
+# - Security vulnerabilities
+# - Data exposure issues
+# - Authentication/authorization bypasses
+# - XSS, CSRF, SQL injection
+# - Any other security concerns
+# 
+# Response time:
+# - Initial response: 48 hours
+# - Status update: 7 days
+# - Resolution target: 30 days (varies by severity)
+# 
+# Disclosure policy:
+# - Responsible disclosure preferred
+# - Allow reasonable time for fix before public disclosure
+# - Credit given to researchers (if desired)
+# 
+# Bug bounty: Not currently offered
+# 
+# Thank you for helping keep our site secure!

@@ -1,0 +1,35 @@
+# Build outputs
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# Cache
+.cache/
+.temp/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Pagefind
+/public/pagefind/
+/dist/pagefind/
+
+# Auto-generated
+*.min.js
+*.min.css

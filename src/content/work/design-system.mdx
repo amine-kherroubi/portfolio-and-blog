@@ -7,7 +7,8 @@ tags: ["design", "design-systems", "react", "typescript", "frontend"]
 
 # Minimal Design System
 
-A production-ready design system built for scalability, accessibility, and developer experience. Used across 15+ applications serving millions of users.
+A production-ready design system built for scalability, accessibility, and
+developer experience. Used across 15+ applications serving millions of users.
 
 ## The Challenge
 
@@ -22,14 +23,15 @@ Create a unified design language that:
 
 ### Core Principles
 
-**1. Constraint as Liberation**
-Limited components force thoughtful composition. Every element serves a clear purpose.
+**1. Constraint as Liberation** Limited components force thoughtful composition.
+Every element serves a clear purpose.
 
-**2. Accessibility First**
-WCAG 2.1 AA compliance isn't optional—it's the foundation. Every component works with keyboard, screen readers, and assistive technologies.
+**2. Accessibility First** WCAG 2.1 AA compliance isn't optional—it's the
+foundation. Every component works with keyboard, screen readers, and assistive
+technologies.
 
-**3. Performance by Default**
-Tree-shakeable components, minimal runtime, zero dependencies. Bundle size measured in KB, not MB.
+**3. Performance by Default** Tree-shakeable components, minimal runtime, zero
+dependencies. Bundle size measured in KB, not MB.
 
 ## System Architecture
 
@@ -163,16 +165,16 @@ Built with Astro and MDX, featuring:
 
 ```astro
 ---
-import { Button } from '@minimal/ui';
-import Playground from '@/components/Playground.astro';
+import { Button } from "@minimal/ui";
+import Playground from "@/components/Playground.astro";
 ---
 
 <Playground
   component={Button}
   code={`<Button variant="primary">Click me</Button>`}
   props={{
-    variant: ['primary', 'secondary', 'ghost'],
-    size: ['sm', 'md', 'lg'],
+    variant: ["primary", "secondary", "ghost"],
+    size: ["sm", "md", "lg"],
     disabled: [true, false],
   }}
 />
@@ -246,7 +248,8 @@ describe('Button accessibility', () => {
 
 **Product Team**: _"Reduced design-to-development time by 60%"_
 
-**Accessibility Team**: _"First design system to pass our audit with zero violations"_
+**Accessibility Team**: _"First design system to pass our audit with zero
+violations"_
 
 **Engineering**: _"Bundle size decreased by 40% after migration"_
 
@@ -266,7 +269,8 @@ describe('Button accessibility', () => {
 
 ## Open Source
 
-Available on GitHub under MIT license. Comprehensive documentation, Storybook examples, and starter templates included.
+Available on GitHub under MIT license. Comprehensive documentation, Storybook
+examples, and starter templates included.
 
 ```bash
 npm install @minimal/ui

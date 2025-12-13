@@ -1,16 +1,21 @@
 ---
 title: "Modern CSS Features You Should Be Using"
 date: "2024-12-10"
-excerpt: "Container queries, cascade layers, and OKLCH colors—the CSS features that are changing how we build interfaces."
+excerpt:
+  "Container queries, cascade layers, and OKLCH colors—the CSS features that are
+  changing how we build interfaces."
 readTime: "10 min read"
 tags: ["design", "web-development", "frontend"]
 ---
 
-CSS has evolved dramatically in recent years. Features that once required JavaScript or complex workarounds are now native browser capabilities. Here are the modern CSS features transforming how we build interfaces.
+CSS has evolved dramatically in recent years. Features that once required
+JavaScript or complex workarounds are now native browser capabilities. Here are
+the modern CSS features transforming how we build interfaces.
 
 ## Container Queries
 
-The most significant addition to CSS in a decade. Instead of responding to viewport size, components now respond to their **container** size.
+The most significant addition to CSS in a decade. Instead of responding to
+viewport size, components now respond to their **container** size.
 
 ### The Old Way: Media Queries
 
@@ -24,7 +29,8 @@ The most significant addition to CSS in a decade. Instead of responding to viewp
 }
 ```
 
-**Problem**: The card layout depends on viewport width, not the actual space available. A card in a sidebar breaks the layout.
+**Problem**: The card layout depends on viewport width, not the actual space
+available. A card in a sidebar breaks the layout.
 
 ### The New Way: Container Queries
 
@@ -47,7 +53,8 @@ The most significant addition to CSS in a decade. Instead of responding to viewp
 }
 ```
 
-**Solution**: Cards respond to their own width. Drop them anywhere—sidebars, modals, full-width—and they adapt automatically.
+**Solution**: Cards respond to their own width. Drop them anywhere—sidebars,
+modals, full-width—and they adapt automatically.
 
 ### Real-World Example
 
@@ -87,7 +94,8 @@ The most significant addition to CSS in a decade. Instead of responding to viewp
 
 ## Cascade Layers
 
-Control CSS specificity and manage style conflicts without `!important` or excessive specificity.
+Control CSS specificity and manage style conflicts without `!important` or
+excessive specificity.
 
 ### The Problem
 
@@ -147,7 +155,8 @@ This specificity arms race is unsustainable.
 }
 ```
 
-Layers have **order-based priority**, not specificity-based. A simple selector in a higher layer beats complex selectors in lower layers.
+Layers have **order-based priority**, not specificity-based. A simple selector
+in a higher layer beats complex selectors in lower layers.
 
 ### Practical Application
 
@@ -189,11 +198,14 @@ Layers have **order-based priority**, not specificity-based. A simple selector i
 
 ## OKLCH Colors
 
-A perceptually uniform color space that makes color manipulation intuitive and accessible.
+A perceptually uniform color space that makes color manipulation intuitive and
+accessible.
 
 ### Why OKLCH?
 
-Traditional RGB and HSL don't align with human color perception. Two colors with different RGB values might have the same perceived brightness, breaking contrast ratios.
+Traditional RGB and HSL don't align with human color perception. Two colors with
+different RGB values might have the same perceived brightness, breaking contrast
+ratios.
 
 OKLCH solves this:
 
@@ -213,7 +225,8 @@ OKLCH solves this:
 }
 ```
 
-All four colors have **identical lightness** (0.5), ensuring consistent text contrast regardless of hue.
+All four colors have **identical lightness** (0.5), ensuring consistent text
+contrast regardless of hue.
 
 ### Color Manipulation
 
@@ -256,7 +269,8 @@ All four colors have **identical lightness** (0.5), ensuring consistent text con
 }
 ```
 
-**Browser Support**: Chrome 111+, Safari 15.4+, Firefox 113+ (85%+ support with fallbacks)
+**Browser Support**: Chrome 111+, Safari 15.4+, Firefox 113+ (85%+ support with
+fallbacks)
 
 ### Fallbacks for Wider Support
 
@@ -342,11 +356,13 @@ Write Sass-like nested selectors in vanilla CSS.
 }
 ```
 
-**Browser Support**: Chrome 120+, Safari 17.2+ (Limited, but progressive enhancement)
+**Browser Support**: Chrome 120+, Safari 17.2+ (Limited, but progressive
+enhancement)
 
 ## :has() - The Parent Selector
 
-Select elements based on their **descendants**. Unlock layout patterns previously impossible with CSS alone.
+Select elements based on their **descendants**. Unlock layout patterns
+previously impossible with CSS alone.
 
 ### Form Validation Styling
 
@@ -393,7 +409,8 @@ ul:not(:has(li:nth-child(4))) {
 }
 ```
 
-**Browser Support**: Chrome 105+, Safari 15.4+, Firefox 121+ (93%+ global support)
+**Browser Support**: Chrome 105+, Safari 15.4+, Firefox 121+ (93%+ global
+support)
 
 ## color-mix()
 
@@ -421,7 +438,8 @@ Blend colors directly in CSS without preprocessors.
 }
 ```
 
-**Browser Support**: Chrome 111+, Safari 16.2+, Firefox 113+ (88%+ global support)
+**Browser Support**: Chrome 111+, Safari 16.2+, Firefox 113+ (88%+ global
+support)
 
 ## Putting It All Together
 
@@ -483,7 +501,9 @@ A modern component using all these features:
 
 ## Conclusion
 
-Modern CSS eliminates the need for many JavaScript solutions and CSS preprocessors. Container queries, cascade layers, OKLCH colors, and the `:has()` selector give us unprecedented control with less code.
+Modern CSS eliminates the need for many JavaScript solutions and CSS
+preprocessors. Container queries, cascade layers, OKLCH colors, and the `:has()`
+selector give us unprecedented control with less code.
 
 The future of CSS is already here—and it's spectacular.
 

@@ -15,8 +15,13 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 
+// Load environment variables
+const SITE_URL = process.env.PUBLIC_SITE_URL || "http://localhost:4321";
+
 export default defineConfig({
-  site: "http://localhost:4321",
+  // Site URL - used for sitemap, RSS, and canonical URLs
+  // Set PUBLIC_SITE_URL in production environment
+  site: SITE_URL,
 
   vite: {
     plugins: [tailwindcss()],
@@ -45,6 +50,11 @@ export default defineConfig({
         },
       },
     },
+
+    // Define environment variables for client-side access
+    define: {
+      "import.meta.env.PUBLIC_SITE_URL": JSON.stringify(SITE_URL),
+    },
   },
 
   integrations: [
@@ -56,11 +66,15 @@ export default defineConfig({
     sitemap({
       changefreq: "weekly",
       priority: 0.7,
+      // Filter out development URLs from sitemap
+      filter: (page) => !page.includes("localhost"),
     }),
   ],
 
   image: {
     domains: ["yourdomain.com"],
+    // Add your image CDN domains here if using external images
+    // remotePatterns: [{ protocol: "https", hostname: "**.cdn.com" }],
   },
 
   security: {
@@ -91,5 +105,19 @@ export default defineConfig({
   build: {
     inlineStylesheets: "auto",
     format: "directory",
+    // Assets configuration
+    assets: "_astro",
+  },
+
+  // Server configuration for development
+  server: {
+    port: 4321,
+    host: true, // Listen on all addresses
+  },
+
+  // Experimental features (optional)
+  experimental: {
+    // Enable as needed
+    // contentLayer: true,
   },
 });

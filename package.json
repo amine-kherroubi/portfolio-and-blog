@@ -8,7 +8,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
@@ -23,7 +26,11 @@
     "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@astrojs/ts-plugin": "^1.10.3"
+    "@astrojs/ts-plugin": "^1.10.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
+    "prettier-plugin-astro": "^0.14.1"
   },
   "engines": {
     "node": ">=18.14.1"

@@ -1,0 +1,47 @@
+# robots.txt - SEO Configuration
+# https://developers.google.com/search/docs/crawling-indexing/robots/intro
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin/utility paths
+Disallow: /api/
+Disallow: /_astro/
+Disallow: /pagefind/
+
+# Crawl delay (optional - adjust based on server capacity)
+# Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap-index.xml
+
+# Common crawler-specific rules
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Block AI scrapers (optional - uncomment if needed)
+# User-agent: GPTBot
+# Disallow: /
+# 
+# User-agent: ChatGPT-User
+# Disallow: /
+# 
+# User-agent: CCBot
+# Disallow: /
+# 
+# User-agent: anthropic-ai
+# Disallow: /
+# 
+# User-agent: Claude-Web
+# Disallow: /
+
+# Archive crawlers
+User-agent: ia_archiver
+Allow: /
+
+# Performance note: Keep this file under 500KB
+# Google ignores robots.txt files larger than 500KB

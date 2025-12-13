@@ -20,7 +20,7 @@
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "exactOptionalPropertyTypes": false, // Can cause issues with Astro
-    
+
     // Module Resolution
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
@@ -28,7 +28,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    
+
     // Emit
     "declaration": true,
     "declarationMap": true,
@@ -36,20 +36,20 @@
     "removeComments": false,
     "importHelpers": true,
     "downlevelIteration": true,
-    
+
     // Interop Constraints
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    
+
     // Language and Environment
     "target": "ES2022",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "jsx": "preserve",
     "jsxImportSource": "react",
-    
+
     // Type Acquisition
     "types": ["astro/client"],
-    
+
     // Path Mapping
     "paths": {
       "@/*": ["./src/*"],
