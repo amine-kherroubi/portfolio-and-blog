@@ -79,13 +79,10 @@ function parseDateSafe(dateStr: unknown): Date {
 }
 
 /**
- * Format date to simple YYYY-MM-DD string for display
+ * Format date to ISO string - KEEP THE ORIGINAL FORMAT
  */
-function formatDateDisplay(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+function formatDateISO(date: Date): ISODate {
+  return date.toISOString() as ISODate;
 }
 
 // ============================================================================
@@ -155,9 +152,14 @@ function processWritingPost(
 
     const { id, data } = entry;
 
-    // Parse and validate date
+    // Parse date to Date object for sorting
     const dateObj = parseDateSafe(data.date);
-    const displayDate = formatDateDisplay(dateObj);
+
+    // Keep original ISO string OR convert to ISO if needed
+    const isoDate =
+      typeof data.date === "string" && data.date.includes("T")
+        ? data.date // Already ISO format, keep it
+        : formatDateISO(dateObj); // Convert to ISO
 
     // Prepare data for validation
     const postData = {
@@ -166,35 +168,24 @@ function processWritingPost(
       title: String(data.title ?? "").trim(),
       description: String(data.description ?? data.excerpt ?? "").trim(),
       excerpt: String(data.excerpt ?? "").trim(),
-      date: displayDate as ISODate, // Use simple date format for display
+      date: isoDate as ISODate, // Use full ISO format for validation
       readTime: String(data.readTime ?? "").trim(),
       slug: id as Slug,
       tags: validateTagIds(data.tags),
-      dateObj,
+      dateObj, // Keep Date object for sorting
       author: data.author ? String(data.author).trim() : undefined,
       image: data.image ? String(data.image) : undefined,
       published: Boolean(data.published ?? true),
     };
 
-    // Validate with Zod - but skip the strict ISO date check
-    // since we're using display dates
+    // Validate with Zod
     const result = safeValidateWritingPost(postData);
 
     if (!result.success) {
-      // Log validation errors but continue if it's just date format issues
-      const errorMessages = formatZodError(result.error);
-      if (!errorMessages.includes("ISO date")) {
-        throw new ValidationError(
-          `Validation failed for post "${id}"`,
-          result.error
-        );
-      }
-      // If only date format issues, use the data anyway
-      console.warn(
-        `[Content] Minor validation issues for post "${id}":`,
-        errorMessages
+      throw new ValidationError(
+        `Validation failed for post "${id}"`,
+        result.error
       );
-      return postData as WritingPost;
     }
 
     return result.data;

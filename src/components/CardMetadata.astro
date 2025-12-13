@@ -33,20 +33,19 @@ const variantClasses = {
   list: "col-span-2 text-[0.8125rem] font-bold uppercase tracking-[0.15em] opacity-60 group-hover:opacity-100 transition-opacity",
 };
 
-// Format date to remove time portion (YYYY-MM-DD only)
-function formatDisplayDate(dateStr: string): string {
-  // If already in YYYY-MM-DD format, return as is
-  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    return dateStr;
+/**
+ * Format ISO date string to simple date (YYYY-MM-DD) for display
+ * Input: "2024-12-11T00:00:00.000Z"
+ * Output: "2024-12-11"
+ */
+function formatDisplayDate(isoDateStr: string): string {
+  try {
+    // Extract just the date part from ISO string
+    return isoDateStr.split("T")[0] || isoDateStr;
+  } catch (error) {
+    console.warn("[CardMetadata] Date formatting failed:", error);
+    return isoDateStr;
   }
-
-  // If it's an ISO string with time, extract just the date part
-  if (dateStr.includes("T")) {
-    return dateStr.split("T")[0] || dateStr;
-  }
-
-  // Otherwise return as is
-  return dateStr;
 }
 
 // Determine what to display
@@ -60,7 +59,7 @@ const showSeparator = primaryDisplay && secondaryDisplay;
   primaryDisplay && (
     <div class:list={[variantClasses[variant], className]}>
       {displayDate && (
-        <time datetime={displayDate} itemprop="datePublished">
+        <time datetime={date} itemprop="datePublished">
           {displayDate}
         </time>
       )}

@@ -28,23 +28,25 @@ type Props = {
 const { post } = Astro.props as Props;
 const { Content } = await render(post);
 
-// Format date properly - remove time portion if present
-function formatDisplayDate(dateStr: string): string {
-  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    return dateStr;
+/**
+ * Format ISO date for display (YYYY-MM-DD only)
+ * Input: "2024-12-11T00:00:00.000Z"
+ * Output: "2024-12-11"
+ */
+function formatDisplayDate(isoDateStr: string): string {
+  try {
+    return isoDateStr.split("T")[0] || isoDateStr;
+  } catch (error) {
+    console.warn("[WritingPost] Date formatting failed:", error);
+    return isoDateStr;
   }
-  if (dateStr.includes("T")) {
-    return dateStr.split("T")[0] || dateStr;
-  }
-  return dateStr;
 }
 
 const displayDate = formatDisplayDate(post.data.date);
 const postUrl = new URL(`/writing/${post.id}`, Astro.site || Astro.url.origin);
 
-// For schema, use ISO format
-const dateObj = new Date(post.data.date);
-const publishDate = dateObj.toISOString();
+// Keep full ISO format for schema
+const publishDate = post.data.date;
 ---
 
 <BaseLayout
@@ -85,7 +87,7 @@ const publishDate = dateObj.toISOString();
           <div
             class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-16 text-black/50"
           >
-            <time datetime={displayDate} itemprop="datePublished"
+            <time datetime={publishDate} itemprop="datePublished"
               >{displayDate}</time
             >
             <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
