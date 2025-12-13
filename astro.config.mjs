@@ -1,8 +1,13 @@
 /**
- * Astro Configuration - Desktop Only
+ * Astro Configuration - December 2025
  *
- * Enhanced with search support via Pagefind.
- * Note: Pagefind runs as a post-build step (see package.json build script)
+ * Enhanced with Astro 5.16 features:
+ * - SVG optimization with SVGO
+ * - Content Layer API (stable)
+ * - Better conflict handling
+ * - Improved prefetch
+ *
+ * Tailwind 4.1 integrated via @tailwindcss/vite plugin
  */
 
 import { defineConfig } from "astro/config";
@@ -52,8 +57,6 @@ export default defineConfig({
       changefreq: "weekly",
       priority: 0.7,
     }),
-    // Note: Pagefind integration happens via post-build script
-    // See package.json: "build": "astro check && astro build && pagefind --site dist"
   ],
 
   image: {
@@ -66,10 +69,15 @@ export default defineConfig({
 
   output: "static",
 
+  // Astro 5: Enhanced prefetch with throttling
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "viewport",
+    throttle: 3, // Limit concurrent prefetch requests
   },
+
+  // Astro 5: Prerender conflict handling
+  prerenderConflictBehavior: "warn", // or "error" for stricter builds
 
   markdown: {
     shikiConfig: {
