@@ -9,7 +9,7 @@ import Footer from "../../components/Footer.astro";
 import ProjectSchema from "../../components/ProjectSchema.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import Tag from "../../components/Tag.astro";
-import { getTagsByIds, type TagId } from "../../config/tags";
+import { getTagsByIds, type TagId } from "../../config/tags.config";
 
 export async function getStaticPaths() {
   const workProjects = await getCollection("work");

@@ -49,7 +49,7 @@ security, and performance.
 
 - [ ] All posts have required frontmatter (title, excerpt, date, readTime, tags)
 - [ ] Dates are in ISO format (YYYY-MM-DD)
-- [ ] Tags exist in `src/config/tags.ts`
+- [ ] Tags exist in `src/config/tags.config.ts`
 - [ ] Remove any draft/placeholder posts
 - [ ] Verify links are working
 - [ ] Check images are optimized
@@ -58,7 +58,7 @@ security, and performance.
 
 - [ ] All projects have required frontmatter (title, description, year, tags)
 - [ ] Years are valid (YYYY format)
-- [ ] Tags exist in `src/config/tags.ts`
+- [ ] Tags exist in `src/config/tags.config.ts`
 - [ ] Remove any placeholder projects
 - [ ] Verify external links work
 - [ ] Check images are optimized

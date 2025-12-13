@@ -6,7 +6,7 @@
  */
 
 import type { WritingPost } from "@/utils/content";
-import { SITE } from "@/config/site";
+import { SITE } from "@/config/site.config";
 
 // ============================================================================
 // Types

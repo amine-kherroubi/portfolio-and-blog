@@ -20,7 +20,7 @@ import {
   safeValidateWorkProject,
   formatZodError,
 } from "@/schemas/content";
-import { getTagsByIds, TAGS } from "@/config/tags";
+import { getTagsByIds, TAGS } from "@/config/tags.config";
 
 // ============================================================================
 // Export Types for External Use

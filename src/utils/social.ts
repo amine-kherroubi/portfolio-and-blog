@@ -4,7 +4,7 @@
  * Utilities for processing and formatting social media links.
  */
 
-import { SOCIAL } from "../config/site";
+import { SOCIAL } from "../config/site.config";
 
 // ============================================================================
 // Types

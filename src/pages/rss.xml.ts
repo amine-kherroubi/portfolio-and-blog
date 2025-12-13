@@ -6,7 +6,7 @@
 
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
-import { SITE } from "../config/site";
+import { SITE } from "../config/site.config";
 import type { APIRoute } from "astro";
 import type { CollectionEntry } from "astro:content";
 

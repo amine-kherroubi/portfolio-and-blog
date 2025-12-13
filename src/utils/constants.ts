@@ -1,8 +1,8 @@
 /**
  * Application Constants
  *
- * Type-safe constants with strict typing and comprehensive type guards.
- * All constants are deeply readonly and use modern TypeScript features.
+ * Type-safe constants that reference the centralized configuration system.
+ * All configurable values come from config files, not hard-coded here.
  */
 
 import type {
@@ -13,13 +13,19 @@ import type {
   AnimationDuration,
   Easing,
 } from "@/types/index";
+import {
+  NAVIGATION_CONFIG,
+  CONTENT_CONFIG,
+  SEARCH_CONFIG,
+  DESIGN_CONFIG,
+} from "@/config/site.config";
 
 // ============================================================================
 // Page Configuration
 // ============================================================================
 
 /**
- * Page identifiers as const assertion for type narrowing
+ * Page identifiers - These are framework constants, not configurable
  */
 export const PAGE_IDS = {
   HOME: "home",
@@ -31,20 +37,17 @@ export const PAGE_IDS = {
 } as const satisfies Record<string, PageId>;
 
 /**
- * Navigation links with strict typing
+ * Navigation links from configuration
  */
-export const NAVIGATION_LINKS = [
-  { href: "/profile", label: "Profile", page: PAGE_IDS.PROFILE },
-  { href: "/work", label: "Work", page: PAGE_IDS.WORK },
-  { href: "/writing", label: "Writing", page: PAGE_IDS.WRITING },
-] as const satisfies readonly NavigationLink[];
+export const NAVIGATION_LINKS =
+  NAVIGATION_CONFIG.links as unknown as readonly NavigationLink[];
 
 // ============================================================================
 // Content Configuration
 // ============================================================================
 
 /**
- * Content type identifiers
+ * Content type identifiers - Framework constants
  */
 export const CONTENT_TYPES = {
   POST: "post",
@@ -53,74 +56,56 @@ export const CONTENT_TYPES = {
 } as const satisfies Record<string, ContentType>;
 
 /**
- * Reading speed in words per minute
+ * Reading speed from configuration
  */
-export const DEFAULT_READING_SPEED = 200 as const;
+export const DEFAULT_READING_SPEED = CONTENT_CONFIG.wordsPerMinute;
 
 /**
- * Default excerpt length in characters
+ * Default excerpt length from configuration
  */
-export const DEFAULT_EXCERPT_LENGTH = 160 as const;
+export const DEFAULT_EXCERPT_LENGTH = CONTENT_CONFIG.excerptLength;
 
 /**
- * Maximum content lengths
+ * Maximum content lengths from configuration
  */
 export const CONTENT_LIMITS = {
-  TITLE_MIN: 1,
-  TITLE_MAX: 100,
-  EXCERPT_MIN: 1,
-  EXCERPT_MAX: 300,
-  DESCRIPTION_MIN: 1,
-  DESCRIPTION_MAX: 500,
-  MESSAGE_MIN: 10,
-  MESSAGE_MAX: 1000,
-  TAG_MIN: 1,
-  TAG_MAX: 10,
+  TITLE_MIN: CONTENT_CONFIG.limits.titleMin,
+  TITLE_MAX: CONTENT_CONFIG.limits.titleMax,
+  EXCERPT_MIN: CONTENT_CONFIG.limits.excerptMin,
+  EXCERPT_MAX: CONTENT_CONFIG.limits.excerptMax,
+  DESCRIPTION_MIN: CONTENT_CONFIG.limits.descriptionMin,
+  DESCRIPTION_MAX: CONTENT_CONFIG.limits.descriptionMax,
+  MESSAGE_MIN: CONTENT_CONFIG.limits.messageMin,
+  MESSAGE_MAX: CONTENT_CONFIG.limits.messageMax,
+  TAG_MIN: CONTENT_CONFIG.limits.tagsMin,
+  TAG_MAX: CONTENT_CONFIG.limits.tagsMax,
 } as const;
 
 // ============================================================================
-// Search Configuration
+// Search Configuration (from config system)
+// ============================================================================
+
+export { SEARCH_CONFIG } from "@/config/site.config";
+
+// ============================================================================
+// Filter Configuration (from config system)
+// ============================================================================
+
+export { FILTER_CONFIG } from "@/config/site.config";
+
+// ============================================================================
+// Breakpoints (from design config)
 // ============================================================================
 
 /**
- * Search configuration with strict types
- */
-export const SEARCH_CONFIG = {
-  MIN_QUERY_LENGTH: 2,
-  MAX_QUERY_LENGTH: 200,
-  MAX_RESULTS: 50,
-  DEBOUNCE_DELAY: 300,
-  HIGHLIGHT_CLASS: "search-highlight",
-  WORDS_PER_MINUTE: DEFAULT_READING_SPEED,
-} as const;
-
-// ============================================================================
-// Filter Configuration
-// ============================================================================
-
-/**
- * Filter configuration with strict types
- */
-export const FILTER_CONFIG = {
-  URL_PARAM: "tags",
-  URL_UPDATE_DELAY: 500,
-  ANIMATION_DURATION: 200,
-  MAX_ACTIVE_FILTERS: 5,
-} as const;
-
-// ============================================================================
-// Breakpoints
-// ============================================================================
-
-/**
- * Responsive breakpoints (matches Tailwind)
+ * Responsive breakpoints from design configuration
  */
 export const BREAKPOINTS = {
-  SM: 640,
-  MD: 768,
-  LG: 1024,
-  XL: 1280,
-  "2XL": 1536,
+  SM: DESIGN_CONFIG.breakpoints.sm,
+  MD: DESIGN_CONFIG.breakpoints.md,
+  LG: DESIGN_CONFIG.breakpoints.lg,
+  XL: DESIGN_CONFIG.breakpoints.xl,
+  "2XL": DESIGN_CONFIG.breakpoints["2xl"],
 } as const;
 
 /**
@@ -138,21 +123,20 @@ export const MEDIA_QUERIES = {
 } as const;
 
 // ============================================================================
-// Animation Configuration
+// Animation Configuration (from design config)
 // ============================================================================
 
 /**
- * Animation durations in milliseconds
+ * Animation durations from design configuration
  */
 export const ANIMATION_DURATION = {
-  FAST: 150,
-  BASE: 200,
-  SLOW: 300,
-  VERY_SLOW: 500,
+  FAST: DESIGN_CONFIG.animation.durationFast as AnimationDuration,
+  BASE: DESIGN_CONFIG.animation.durationBase as AnimationDuration,
+  SLOW: DESIGN_CONFIG.animation.durationSlow as AnimationDuration,
 } as const satisfies Record<string, AnimationDuration>;
 
 /**
- * Animation easing functions
+ * Animation easing functions - Framework constants
  */
 export const EASING = {
   LINEAR: "linear",
@@ -163,28 +147,24 @@ export const EASING = {
 } as const satisfies Record<string, Easing>;
 
 // ============================================================================
-// SEO Configuration
+// SEO Configuration (from site config)
 // ============================================================================
 
-/**
- * SEO default values
- */
+import { SITE_CONFIG } from "@/config/site.config";
+
 export const SEO_DEFAULTS = {
-  TITLE_SEPARATOR: "—",
-  OG_IMAGE: "/og-image.jpg",
-  TWITTER_CARD: "summary_large_image",
-  LOCALE: "en_US",
-  MAX_TITLE_LENGTH: 60,
-  MAX_DESCRIPTION_LENGTH: 160,
+  TITLE_SEPARATOR: SITE_CONFIG.seo.titleSeparator,
+  OG_IMAGE: SITE_CONFIG.seo.ogImage,
+  TWITTER_CARD: SITE_CONFIG.seo.twitterCard,
+  LOCALE: SITE_CONFIG.locale,
+  MAX_TITLE_LENGTH: SITE_CONFIG.seo.maxTitleLength,
+  MAX_DESCRIPTION_LENGTH: SITE_CONFIG.seo.maxDescriptionLength,
 } as const;
 
 // ============================================================================
-// HTTP Configuration
+// HTTP Configuration - Framework constants
 // ============================================================================
 
-/**
- * HTTP status codes
- */
 export const HTTP_STATUS = {
   OK: 200,
   CREATED: 201,
@@ -198,12 +178,9 @@ export const HTTP_STATUS = {
 } as const satisfies Record<string, HttpStatus>;
 
 // ============================================================================
-// Validation Rules
+// Validation Rules - Framework constants (patterns don't change)
 // ============================================================================
 
-/**
- * Regular expressions for validation
- */
 export const VALIDATION_REGEX = {
   EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   URL: /^https?:\/\/.+/,
@@ -214,27 +191,26 @@ export const VALIDATION_REGEX = {
 } as const;
 
 /**
- * Validation constraints
+ * Validation constraints from form configuration
  */
+import { FORM_CONFIG } from "@/config/site.config";
+
 export const VALIDATION_CONSTRAINTS = {
-  NAME_MIN_LENGTH: 2,
-  NAME_MAX_LENGTH: 100,
-  EMAIL_MAX_LENGTH: 255,
-  PASSWORD_MIN_LENGTH: 8,
-  PASSWORD_MAX_LENGTH: 128,
-  MESSAGE_MIN_LENGTH: 10,
-  MESSAGE_MAX_LENGTH: 1000,
-  SEARCH_MIN_LENGTH: 2,
-  SEARCH_MAX_LENGTH: 200,
+  NAME_MIN_LENGTH: FORM_CONFIG.validation.nameMin,
+  NAME_MAX_LENGTH: FORM_CONFIG.validation.nameMax,
+  EMAIL_MAX_LENGTH: FORM_CONFIG.validation.emailMax,
+  PASSWORD_MIN_LENGTH: 8, // Security requirement, not configurable
+  PASSWORD_MAX_LENGTH: 128, // Security requirement, not configurable
+  MESSAGE_MIN_LENGTH: FORM_CONFIG.validation.messageMin,
+  MESSAGE_MAX_LENGTH: FORM_CONFIG.validation.messageMax,
+  SEARCH_MIN_LENGTH: SEARCH_CONFIG.minQueryLength,
+  SEARCH_MAX_LENGTH: SEARCH_CONFIG.maxQueryLength,
 } as const;
 
 // ============================================================================
-// Analytics Events
+// Analytics Events - Framework constants
 // ============================================================================
 
-/**
- * Analytics event names
- */
 export const ANALYTICS_EVENTS = {
   PAGE_VIEW: "page_view",
   SEARCH: "search",
@@ -252,32 +228,15 @@ export const ANALYTICS_EVENTS = {
 } as const;
 
 // ============================================================================
-// Error Messages
+// Error Messages (from config system)
 // ============================================================================
 
-/**
- * User-facing error messages
- */
-export const ERROR_MESSAGES = {
-  GENERIC: "Something went wrong. Please try again.",
-  NETWORK: "Network error. Please check your connection.",
-  NOT_FOUND: "The requested content could not be found.",
-  SEARCH_FAILED: "Search is temporarily unavailable.",
-  SEARCH_EMPTY: "Please enter a search query.",
-  VALIDATION_FAILED: "Please check your input and try again.",
-  FORM_SUBMIT_FAILED: "Failed to submit form. Please try again.",
-  RATE_LIMIT: "Too many requests. Please try again later.",
-  UNAUTHORIZED: "You are not authorized to perform this action.",
-  SERVER_ERROR: "Server error. Please try again later.",
-} as const;
+export { ERROR_MESSAGES } from "@/config/site.config";
 
 // ============================================================================
-// Storage Keys
+// Storage Keys - Framework constants
 // ============================================================================
 
-/**
- * Local storage key prefixes
- */
 export const STORAGE_KEYS = {
   THEME: "theme",
   FILTER_STATE: "filter-state",
@@ -288,43 +247,36 @@ export const STORAGE_KEYS = {
 } as const;
 
 // ============================================================================
-// Cache Configuration
+// Cache Configuration (from performance config)
 // ============================================================================
 
-/**
- * Cache durations in milliseconds
- */
+import { PERFORMANCE_CONFIG } from "@/config/site.config";
+
 export const CACHE_DURATION = {
   FIVE_MINUTES: 5 * 60 * 1000,
   FIFTEEN_MINUTES: 15 * 60 * 1000,
-  ONE_HOUR: 60 * 60 * 1000,
-  ONE_DAY: 24 * 60 * 60 * 1000,
+  ONE_HOUR: PERFORMANCE_CONFIG.cache.dynamicContent * 1000,
+  ONE_DAY: PERFORMANCE_CONFIG.cache.searchIndex * 1000,
   ONE_WEEK: 7 * 24 * 60 * 60 * 1000,
 } as const;
 
 // ============================================================================
-// Rate Limiting
+// Rate Limiting (from form config)
 // ============================================================================
 
-/**
- * Rate limit configuration
- */
 export const RATE_LIMIT = {
-  MAX_REQUESTS: 5,
-  WINDOW_MS: 60 * 1000, // 1 minute
+  MAX_REQUESTS: FORM_CONFIG.rateLimit.maxRequests,
+  WINDOW_MS: FORM_CONFIG.rateLimit.windowMs,
   FORM_SUBMIT_MAX: 3,
-  FORM_SUBMIT_WINDOW: 5 * 60 * 1000, // 5 minutes
+  FORM_SUBMIT_WINDOW: 5 * 60 * 1000,
   SEARCH_MAX: 20,
-  SEARCH_WINDOW: 60 * 1000, // 1 minute
+  SEARCH_WINDOW: 60 * 1000,
 } as const;
 
 // ============================================================================
 // Type Guards
 // ============================================================================
 
-/**
- * Check if value is a valid page ID
- */
 export function isPageId(value: unknown): value is PageId {
   return (
     typeof value === "string" &&
@@ -332,9 +284,6 @@ export function isPageId(value: unknown): value is PageId {
   );
 }
 
-/**
- * Check if value is a valid content type
- */
 export function isContentType(value: unknown): value is ContentType {
   return (
     typeof value === "string" &&
@@ -342,9 +291,6 @@ export function isContentType(value: unknown): value is ContentType {
   );
 }
 
-/**
- * Check if value is a valid HTTP status
- */
 export function isHttpStatus(value: unknown): value is HttpStatus {
   return (
     typeof value === "number" &&
@@ -352,9 +298,6 @@ export function isHttpStatus(value: unknown): value is HttpStatus {
   );
 }
 
-/**
- * Check if value is a valid animation duration
- */
 export function isAnimationDuration(
   value: unknown
 ): value is AnimationDuration {
@@ -368,9 +311,6 @@ export function isAnimationDuration(
 // Utility Functions
 // ============================================================================
 
-/**
- * Get page ID by path
- */
 export function getPageIdByPath(path: string): PageId | null {
   const normalized = path.toLowerCase().replace(/^\/|\/$/g, "");
 
@@ -392,16 +332,10 @@ export function getPageIdByPath(path: string): PageId | null {
   }
 }
 
-/**
- * Get navigation link by page ID
- */
 export function getNavigationLink(pageId: PageId): NavigationLink | undefined {
   return NAVIGATION_LINKS.find((link) => link.page === pageId);
 }
 
-/**
- * Check if path matches page
- */
 export function isCurrentPage(path: string, pageId: PageId): boolean {
   const currentPageId = getPageIdByPath(path);
   return currentPageId === pageId;
