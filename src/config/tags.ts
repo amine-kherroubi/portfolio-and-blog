@@ -1,112 +1,168 @@
 /**
  * Tags Configuration
- * 
+ *
  * Tag definitions for categorizing content.
  * Tags are organized by category for better organization.
  */
 
-/**
- * Tag interface
- */
-export interface Tag {
-  /** Unique tag identifier */
-  id: string;
-  /** Display label */
-  label: string;
-  /** Category for grouping */
-  category: "technology" | "design" | "domain" | "skill";
-}
+import type { Tag, TagId } from "@/types/index";
 
-export const TAGS: Record<string, Tag> = {
+export const TAGS = {
   // Technology tags
-  ai: { id: "ai", label: "AI", category: "technology" },
-  python: { id: "python", label: "Python", category: "technology" },
-  typescript: { id: "typescript", label: "TypeScript", category: "technology" },
-  react: { id: "react", label: "React", category: "technology" },
-  astro: { id: "astro", label: "Astro", category: "technology" },
-  tensorflow: { id: "tensorflow", label: "TensorFlow", category: "technology" },
-  pytorch: { id: "pytorch", label: "PyTorch", category: "technology" },
-  qiskit: { id: "qiskit", label: "Qiskit", category: "technology" },
-  canvas: { id: "canvas", label: "Canvas API", category: "technology" },
+  ai: { id: "ai" as TagId, label: "AI", category: "technology" as const },
+  python: {
+    id: "python" as TagId,
+    label: "Python",
+    category: "technology" as const,
+  },
+  typescript: {
+    id: "typescript" as TagId,
+    label: "TypeScript",
+    category: "technology" as const,
+  },
+  react: {
+    id: "react" as TagId,
+    label: "React",
+    category: "technology" as const,
+  },
+  astro: {
+    id: "astro" as TagId,
+    label: "Astro",
+    category: "technology" as const,
+  },
+  tensorflow: {
+    id: "tensorflow" as TagId,
+    label: "TensorFlow",
+    category: "technology" as const,
+  },
+  pytorch: {
+    id: "pytorch" as TagId,
+    label: "PyTorch",
+    category: "technology" as const,
+  },
+  qiskit: {
+    id: "qiskit" as TagId,
+    label: "Qiskit",
+    category: "technology" as const,
+  },
+  canvas: {
+    id: "canvas" as TagId,
+    label: "Canvas API",
+    category: "technology" as const,
+  },
 
   // Design tags
-  design: { id: "design", label: "Design", category: "design" },
-  typography: { id: "typography", label: "Typography", category: "design" },
-  minimalism: { id: "minimalism", label: "Minimalism", category: "design" },
+  design: {
+    id: "design" as TagId,
+    label: "Design",
+    category: "design" as const,
+  },
+  typography: {
+    id: "typography" as TagId,
+    label: "Typography",
+    category: "design" as const,
+  },
+  minimalism: {
+    id: "minimalism" as TagId,
+    label: "Minimalism",
+    category: "design" as const,
+  },
   "swiss-design": {
-    id: "swiss-design",
+    id: "swiss-design" as TagId,
     label: "Swiss Design",
-    category: "design",
+    category: "design" as const,
   },
   "design-systems": {
-    id: "design-systems",
+    id: "design-systems" as TagId,
     label: "Design Systems",
-    category: "design",
+    category: "design" as const,
   },
 
   // Domain tags
-  research: { id: "research", label: "Research", category: "domain" },
-  creative: { id: "creative", label: "Creative", category: "domain" },
+  research: {
+    id: "research" as TagId,
+    label: "Research",
+    category: "domain" as const,
+  },
+  creative: {
+    id: "creative" as TagId,
+    label: "Creative",
+    category: "domain" as const,
+  },
   "machine-learning": {
-    id: "machine-learning",
+    id: "machine-learning" as TagId,
     label: "Machine Learning",
-    category: "domain",
+    category: "domain" as const,
   },
   "quantum-computing": {
-    id: "quantum-computing",
+    id: "quantum-computing" as TagId,
     label: "Quantum Computing",
-    category: "domain",
+    category: "domain" as const,
   },
   "web-development": {
-    id: "web-development",
+    id: "web-development" as TagId,
     label: "Web Development",
-    category: "domain",
+    category: "domain" as const,
   },
 
   // Skill tags
-  frontend: { id: "frontend", label: "Frontend", category: "skill" },
-  backend: { id: "backend", label: "Backend", category: "skill" },
-  "full-stack": { id: "full-stack", label: "Full Stack", category: "skill" },
+  frontend: {
+    id: "frontend" as TagId,
+    label: "Frontend",
+    category: "skill" as const,
+  },
+  backend: {
+    id: "backend" as TagId,
+    label: "Backend",
+    category: "skill" as const,
+  },
+  "full-stack": {
+    id: "full-stack" as TagId,
+    label: "Full Stack",
+    category: "skill" as const,
+  },
   architecture: {
-    id: "architecture",
+    id: "architecture" as TagId,
     label: "Architecture",
-    category: "skill",
+    category: "skill" as const,
   },
   optimization: {
-    id: "optimization",
+    id: "optimization" as TagId,
     label: "Optimization",
-    category: "skill",
+    category: "skill" as const,
   },
-} as const;
+} as const satisfies Record<string, Tag>;
 
 /**
  * Tag ID type (keys of TAGS object)
  */
-export type TagId = keyof typeof TAGS;
+export type { TagId, Tag };
 
 /**
  * Get tags by their IDs
- * 
+ *
  * Converts an array of tag IDs to their corresponding Tag objects.
  * Filters out any invalid or missing tag IDs.
- * 
+ *
  * @param tagIds - Array of tag IDs to look up
  * @returns Array of Tag objects corresponding to the provided IDs
  */
-export function getTagsByIds(tagIds: TagId[]): Tag[] {
-  return tagIds.map((id) => TAGS[id]).filter(Boolean);
+export function getTagsByIds(tagIds: readonly TagId[]): Tag[] {
+  return tagIds
+    .map((id) => TAGS[id as keyof typeof TAGS])
+    .filter((tag): tag is Tag => Boolean(tag));
 }
 
 /**
  * Sort tags by category, then by label
- * 
+ *
  * Sorts tags first by their category (alphabetically), then by their
  * label within each category. Returns a new array without mutating the original.
- * 
+ *
  * @param tags - Array of Tag objects to sort
  * @returns New sorted array of Tag objects
  */
-export function sortTagsByCategory(tags: Tag[]): Tag[] {
+export function sortTagsByCategory(tags: readonly Tag[]): Tag[] {
   return [...tags].sort((a, b) =>
     // First sort by category, then by label within the same category
     a.category === b.category

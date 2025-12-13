@@ -33,7 +33,7 @@ export type KeysOfType<T, V> = {
 /**
  * Create a branded type for type-safe primitives
  */
-export type Brand<T, B> = T & { readonly __brand: B };
+export type Brand<T, B extends string> = T & { readonly __brand: B };
 
 /**
  * Make properties K of T optional
@@ -133,7 +133,7 @@ export interface WritingPost extends BaseContent {
 export interface WorkProject extends BaseContent {
   readonly type: typeof CONTENT_TYPES.PROJECT;
   readonly year: string;
-  readonly link: URL;
+  readonly link: string;
   readonly client?: string;
   readonly role?: string;
   readonly technologies?: readonly string[];
@@ -194,7 +194,7 @@ export interface SearchResultMeta {
 
 export interface SearchResult {
   readonly id: string;
-  readonly url: URL;
+  readonly url: string;
   readonly excerpt: string;
   readonly meta: SearchResultMeta;
   readonly content: string;
@@ -206,7 +206,7 @@ export interface SearchResult {
 
 export interface SearchSubResult {
   readonly title: string;
-  readonly url: URL;
+  readonly url: string;
   readonly excerpt: string;
 }
 
@@ -256,7 +256,7 @@ export interface ContactFormData {
   readonly email: Email;
   readonly message: string;
   readonly timestamp: ISODate;
-  readonly honeypot?: string; // Bot detection
+  readonly honeypot?: string;
 }
 
 export interface FormValidationError {
@@ -281,8 +281,8 @@ export interface OpenGraphMeta {
   readonly "og:type": "website" | "article";
   readonly "og:title": string;
   readonly "og:description": string;
-  readonly "og:url": URL;
-  readonly "og:image": URL;
+  readonly "og:url": string;
+  readonly "og:image": string;
   readonly "og:site_name": string;
   readonly "og:locale"?: string;
 }
@@ -291,8 +291,8 @@ export interface TwitterCardMeta {
   readonly "twitter:card": "summary" | "summary_large_image";
   readonly "twitter:title": string;
   readonly "twitter:description": string;
-  readonly "twitter:url": URL;
-  readonly "twitter:image": URL;
+  readonly "twitter:url": string;
+  readonly "twitter:image": string;
   readonly "twitter:creator"?: string;
 }
 
@@ -312,15 +312,15 @@ export interface ArticleSchema extends StructuredData {
     readonly "@type": "Person";
     readonly name: string;
   };
-  readonly image?: URL;
-  readonly url: URL;
+  readonly image?: string;
+  readonly url: string;
 }
 
 export interface BreadcrumbItem {
   readonly "@type": "ListItem";
   readonly position: number;
   readonly name: string;
-  readonly item: URL;
+  readonly item: string;
 }
 
 export interface BreadcrumbSchema extends StructuredData {
@@ -343,7 +343,7 @@ export type SocialPlatform =
   (typeof SOCIAL_PLATFORMS)[keyof typeof SOCIAL_PLATFORMS];
 
 export interface SocialLink {
-  readonly href: URL;
+  readonly href: string;
   readonly label: string;
   readonly platform: SocialPlatform;
   readonly icon: string;
@@ -351,7 +351,7 @@ export interface SocialLink {
 }
 
 export interface ShareOptions {
-  readonly url: URL;
+  readonly url: string;
   readonly title?: string;
   readonly text?: string;
   readonly hashtags?: readonly string[];
@@ -366,7 +366,7 @@ export interface SiteConfig {
   readonly title: string;
   readonly description: string;
   readonly email: Email;
-  readonly url: URL;
+  readonly url: string;
   readonly locale: string;
   readonly timezone: string;
 }
@@ -432,13 +432,14 @@ export interface AppError {
   readonly code: string;
   readonly timestamp: ISODate;
   readonly context?: Readonly<Record<string, unknown>>;
-  readonly cause?: Error;
+  readonly cause?: Error | undefined;
 }
 
 export class ValidationError extends Error implements AppError {
   readonly code = "VALIDATION_ERROR";
   readonly timestamp: ISODate;
   readonly context?: Readonly<Record<string, unknown>>;
+  override readonly cause?: Error | undefined;
 
   constructor(message: string, context?: Record<string, unknown>) {
     super(message);
@@ -452,6 +453,7 @@ export class NotFoundError extends Error implements AppError {
   readonly code = "NOT_FOUND";
   readonly timestamp: ISODate;
   readonly context?: Readonly<Record<string, unknown>>;
+  override readonly cause?: Error | undefined;
 
   constructor(message: string, context?: Record<string, unknown>) {
     super(message);

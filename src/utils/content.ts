@@ -14,16 +14,22 @@ import type {
   TagId,
   Slug,
   ISODate,
-} from "@types/index";
+} from "@/types/index";
 import {
   validateWritingPost,
   validateWorkProject,
   safeValidateWritingPost,
   safeValidateWorkProject,
-  validateContentBatch,
   formatZodError,
-} from "@schemas/content";
-import { getTagsByIds, TAGS } from "@config/tags";
+} from "@/schemas/content";
+import { getTagsByIds, TAGS } from "@/config/tags";
+
+// ============================================================================
+// Export Types for External Use
+// ============================================================================
+
+export type ProcessedWritingPost = WritingPost;
+export type ProcessedWorkProject = WorkProject;
 
 // ============================================================================
 // Error Classes
@@ -135,7 +141,7 @@ function validateTagIds(tags: unknown): readonly TagId[] {
     return true;
   });
 
-  // Remove duplicates
+  // Remove duplicates and return as readonly
   return [...new Set(validTags)] as readonly TagId[];
 }
 
@@ -153,9 +159,8 @@ function extractUniqueTags<T extends { readonly tags: readonly TagId[] }>(
     }
   }
 
-  return getTagsByIds([...tagIds]).sort((a, b) =>
-    a.label.localeCompare(b.label)
-  );
+  const tags = getTagsByIds([...tagIds]);
+  return [...tags].sort((a, b) => a.label.localeCompare(b.label));
 }
 
 // ============================================================================
@@ -251,7 +256,7 @@ function processWorkProject(
       client: data.client ? String(data.client).trim() : undefined,
       role: data.role ? String(data.role).trim() : undefined,
       technologies: Array.isArray(data.technologies)
-        ? data.technologies.map((t) => String(t).trim())
+        ? (data.technologies.map((t) => String(t).trim()) as readonly string[])
         : undefined,
       featured: Boolean(data.featured ?? false),
     };

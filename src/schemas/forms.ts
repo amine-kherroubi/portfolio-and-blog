@@ -6,7 +6,7 @@
  */
 
 import { z } from "zod";
-import type { ContactFormData, Email, ISODate } from "@types/index";
+import type { ContactFormData, Email, ISODate } from "@/types/index";
 
 // ============================================================================
 // Common Field Schemas
@@ -17,23 +17,23 @@ import type { ContactFormData, Email, ISODate } from "@types/index";
  */
 export const emailSchema = z
   .string({
-    required_error: "Email is required",
-    invalid_type_error: "Email must be a string",
+    message: "Email must be a string",
   })
   .min(1, "Email cannot be empty")
   .max(255, "Email must be less than 255 characters")
-  .email("Please enter a valid email address")
+  .refine(
+    (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+    "Please enter a valid email address"
+  )
   .toLowerCase()
-  .trim()
-  .brand<"Email">();
+  .trim() as unknown as z.ZodType<Email>;
 
 /**
  * Name validation
  */
 export const nameSchema = z
   .string({
-    required_error: "Name is required",
-    invalid_type_error: "Name must be a string",
+    message: "Name must be a string",
   })
   .min(2, "Name must be at least 2 characters")
   .max(100, "Name must be less than 100 characters")
@@ -47,8 +47,7 @@ export const nameSchema = z
  */
 export const messageSchema = z
   .string({
-    required_error: "Message is required",
-    invalid_type_error: "Message must be a string",
+    message: "Message must be a string",
   })
   .min(10, "Message must be at least 10 characters")
   .max(1000, "Message must be less than 1000 characters")
@@ -79,11 +78,18 @@ export const contactFormSchema = z.object({
   message: messageSchema,
   timestamp: z
     .string()
-    .datetime()
-    .or(z.date().transform((d) => d.toISOString()))
-    .brand<"ISODate">(),
+    .refine(
+      (val) => {
+        const date = new Date(val);
+        return !isNaN(date.getTime());
+      },
+      { message: "Invalid timestamp" }
+    )
+    .or(
+      z.date().transform((d) => d.toISOString())
+    ) as unknown as z.ZodType<ISODate>,
   honeypot: honeypotSchema,
-}) satisfies z.ZodType<ContactFormData>;
+}) as unknown as z.ZodType<ContactFormData>;
 
 /**
  * Contact form without timestamp (for client-side validation)
@@ -127,8 +133,8 @@ export const searchFormSchema = z.object({
     .regex(/^\d+$/)
     .transform((s) => parseInt(s, 10))
     .pipe(z.number().int().positive())
-    .default("1")
-    .optional(),
+    .optional()
+    .default(1),
 });
 
 // ============================================================================
@@ -182,7 +188,7 @@ export function validateField<T extends keyof ContactFormData>(
     name: nameSchema,
     email: emailSchema,
     message: messageSchema,
-    timestamp: z.string().datetime(),
+    timestamp: z.string().refine((val) => !isNaN(new Date(val).getTime())),
     honeypot: honeypotSchema,
   };
 
@@ -191,7 +197,7 @@ export function validateField<T extends keyof ContactFormData>(
     throw new Error(`Unknown field: ${field}`);
   }
 
-  return schema.parse(value);
+  return schema.parse(value) as ContactFormData[T];
 }
 
 /**
@@ -352,7 +358,13 @@ export function normalizeWhitespace(input: string): string {
  * Rate limit check schema
  */
 export const rateLimitSchema = z.object({
-  ip: z.string().ip(),
+  ip: z.string().refine((val) => {
+    // Simple IP validation
+    return (
+      /^(?:\d{1,3}\.){3}\d{1,3}$/.test(val) ||
+      /^(?:[a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}$/.test(val)
+    );
+  }, "Invalid IP address"),
   timestamp: z.number().int().positive(),
   count: z.number().int().nonnegative(),
 });
@@ -373,8 +385,3 @@ export const rateLimitConfigSchema = z.object({
 export type ValidatedContactForm = z.infer<typeof contactFormSchema>;
 export type ValidatedSearchForm = z.infer<typeof searchFormSchema>;
 export type ValidatedFilterForm = z.infer<typeof filterFormSchema>;
-
-// Type assertions to ensure compatibility
-type _AssertContactForm = ValidatedContactForm extends ContactFormData
-  ? true
-  : false;

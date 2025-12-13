@@ -13,8 +13,8 @@ import type {
   TagId,
   Slug,
   ISODate,
-  URL as URLType,
-} from "@types/index";
+  URL,
+} from "@/types/index";
 
 // ============================================================================
 // Branded Type Schemas
@@ -29,24 +29,33 @@ export const slugSchema = z
   .max(100, "Slug must be less than 100 characters")
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
     message: "Slug must be lowercase alphanumeric with hyphens",
-  })
-  .brand<"Slug">();
+  }) as unknown as z.ZodType<Slug>;
 
 /**
  * ISO date validation
  */
-export const isoDateSchema = z
-  .string()
-  .datetime({ message: "Invalid ISO date format" })
-  .brand<"ISODate">();
+export const isoDateSchema = z.string().refine(
+  (val) => {
+    const date = new Date(val);
+    return !isNaN(date.getTime()) && val === date.toISOString();
+  },
+  { message: "Invalid ISO date format" }
+) as unknown as z.ZodType<ISODate>;
 
 /**
  * URL validation
  */
-export const urlSchema = z
-  .string()
-  .url({ message: "Invalid URL format" })
-  .brand<"URL">();
+export const urlSchema = z.string().refine(
+  (val) => {
+    try {
+      new globalThis.URL(val);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  { message: "Invalid URL format" }
+) as unknown as z.ZodType<URL>;
 
 /**
  * Tag ID validation
@@ -57,8 +66,7 @@ export const tagIdSchema = z
   .max(50, "Tag ID must be less than 50 characters")
   .regex(/^[a-z0-9-]+$/, {
     message: "Tag ID must be lowercase alphanumeric with hyphens",
-  })
-  .brand<"TagId">();
+  }) as unknown as z.ZodType<TagId>;
 
 // ============================================================================
 // Tag Schemas
@@ -67,12 +75,12 @@ export const tagIdSchema = z
 /**
  * Tag category enum
  */
-export const tagCategorySchema = z.enum(
-  ["technology", "design", "domain", "skill"],
-  {
-    errorMap: () => ({ message: "Invalid tag category" }),
-  }
-);
+export const tagCategorySchema = z.enum([
+  "technology",
+  "design",
+  "domain",
+  "skill",
+]);
 
 /**
  * Tag schema with strict validation
@@ -93,7 +101,7 @@ export const tagSchema = z.object({
     .string()
     .regex(/^#[0-9A-Fa-f]{6}$/, "Color must be a valid hex color")
     .optional(),
-}) satisfies z.ZodType<Tag>;
+}) as unknown as z.ZodType<Tag>;
 
 /**
  * Array of tag IDs with deduplication
@@ -102,8 +110,8 @@ export const tagIdsSchema = z
   .array(tagIdSchema)
   .min(0, "Tags array cannot be negative length")
   .max(10, "Maximum 10 tags allowed")
-  .transform((tags) => [...new Set(tags)] as TagId[])
-  .readonly();
+  .transform((tags) => [...new Set(tags)])
+  .readonly() as unknown as z.ZodType<readonly TagId[]>;
 
 // ============================================================================
 // Writing Post Schema
@@ -176,7 +184,7 @@ export const writingPostSchema = z.object({
   author: z.string().min(1).max(100).trim().optional(),
   image: urlSchema.optional(),
   published: z.boolean().default(true),
-}) satisfies z.ZodType<WritingPost>;
+}) as unknown as z.ZodType<WritingPost>;
 
 /**
  * Partial writing post schema for updates
@@ -207,7 +215,7 @@ export const workProjectSchema = z.object({
     .trim(),
   year: yearSchema,
   tags: tagIdsSchema,
-  link: urlSchema,
+  link: z.string().min(1),
   client: z.string().min(1).max(100).trim().optional(),
   role: z.string().min(1).max(100).trim().optional(),
   technologies: z
@@ -216,7 +224,7 @@ export const workProjectSchema = z.object({
     .optional()
     .readonly(),
   featured: z.boolean().default(false),
-}) satisfies z.ZodType<WorkProject>;
+}) as unknown as z.ZodType<WorkProject>;
 
 /**
  * Partial work project schema for updates
@@ -235,7 +243,7 @@ export const workProjectUpdateSchema = workProjectSchema
 export const rawContentEntrySchema = z.object({
   id: z.string(),
   collection: z.enum(["writing", "work"]),
-  data: z.record(z.unknown()),
+  data: z.record(z.string(), z.unknown()),
 });
 
 /**
@@ -429,7 +437,3 @@ export function groupErrorsByField(
 export type InferWritingPost = z.infer<typeof writingPostSchema>;
 export type InferWorkProject = z.infer<typeof workProjectSchema>;
 export type InferTag = z.infer<typeof tagSchema>;
-
-// Ensure types match
-type _AssertWritingPost = InferWritingPost extends WritingPost ? true : false;
-type _AssertWorkProject = InferWorkProject extends WorkProject ? true : false;

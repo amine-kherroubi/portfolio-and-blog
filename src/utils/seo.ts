@@ -5,8 +5,8 @@
  * Implements schema.org types with validation and error handling.
  */
 
-import type { ProcessedWritingPost } from "./content";
-import { SITE } from "../config/site";
+import type { WritingPost } from "@/utils/content";
+import { SITE } from "@/config/site";
 
 // ============================================================================
 // Types
@@ -140,8 +140,8 @@ export function generateCanonicalURL(
  * Generate blog structured data
  */
 export function generateBlogStructuredData(
-  posts: ProcessedWritingPost[],
-  baseUrl: string | URL,
+  posts: readonly WritingPost[],
+  baseUrl: string | URL | undefined,
   path = "/writing"
 ): BlogStructuredData {
   try {

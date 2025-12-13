@@ -171,10 +171,10 @@ class FilterInstance {
     const target = event.target as HTMLElement;
     const btn = target.closest<HTMLButtonElement>(".filter-tag-btn");
 
-    if (btn?.dataset.tagId) {
+    if (btn?.dataset["tagId"]) {
       event.preventDefault();
       event.stopPropagation();
-      this.toggleFilter(btn.dataset.tagId);
+      this.toggleFilter(btn.dataset["tagId"]);
     }
   };
 
@@ -185,11 +185,11 @@ class FilterInstance {
     const target = event.target as HTMLElement;
     const btn = target.closest<HTMLButtonElement>(".filter-tag-btn");
 
-    if (!btn?.dataset.tagId) return;
+    if (!btn?.dataset["tagId"]) return;
 
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      this.toggleFilter(btn.dataset.tagId);
+      this.toggleFilter(btn.dataset["tagId"]);
     }
   };
 
@@ -254,7 +254,7 @@ class FilterInstance {
     // Batch DOM updates with requestAnimationFrame
     requestAnimationFrame(() => {
       buttons.forEach((btn) => {
-        const tagId = btn.dataset.tagId;
+        const tagId = btn.dataset["tagId"];
         const isActive = tagId ? this.activeFilters.has(tagId) : false;
         const tagElement = btn.querySelector<HTMLElement>("[data-tag-label]");
 
