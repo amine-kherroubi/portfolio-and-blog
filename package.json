@@ -34,5 +34,10 @@
   },
   "engines": {
     "node": ">=18.14.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,astro,json,css,md,mdx}": [
+      "prettier --write"
+    ]
   }
 }

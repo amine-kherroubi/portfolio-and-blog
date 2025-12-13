@@ -1,58 +1,52 @@
 #!/bin/bash
 
-# Husky Setup Script
-# Run this script to automatically set up Husky with lint-staged
+# Husky 9 Setup Script
+# Run this script to set up Husky with lint-staged
 
 set -e
 
-echo "🐶 Setting up Husky with lint-staged..."
+echo "🐶 Setting up Husky 9 with lint-staged..."
 echo ""
 
-# Step 1: Install dependencies
+# Step 1: Clean up old Husky installations
+if [ -d ".husky" ]; then
+    echo "🧹 Cleaning up old Husky files..."
+    rm -rf .husky
+fi
+
+# Step 2: Install dependencies
 echo "📦 Installing dependencies..."
 npm install
 
-# Step 2: Initialize Husky
+# Step 3: Initialize Husky
 echo "🔧 Initializing Husky..."
 npx husky init
 
-# Step 3: Create pre-commit hook
+# Step 4: Create pre-commit hook (Husky 9 style - simple command only)
 echo "📝 Creating pre-commit hook..."
-cat > .husky/pre-commit << 'EOF'
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "npx lint-staged" > .husky/pre-commit
 
-# Run lint-staged to format staged files
-npx lint-staged
-EOF
-
-# Step 4: Make pre-commit executable
+# Step 5: Make pre-commit executable
 chmod +x .husky/pre-commit
 
-# Step 5: (Optional) Create pre-push hook
+# Step 6: (Optional) Create pre-push hook
 echo "📝 Creating pre-push hook..."
-cat > .husky/pre-push << 'EOF'
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "npm run format:check" > .husky/pre-push
 
-# Check formatting before push
-npm run format:check
-EOF
-
-# Step 6: Make pre-push executable
+# Step 7: Make pre-push executable
 chmod +x .husky/pre-push
 
-# Step 7: Format existing code
+# Step 8: Format existing code
 echo "✨ Formatting existing code..."
 npm run format
 
 echo ""
-echo "✅ Husky setup complete!"
+echo "✅ Husky 9 setup complete!"
 echo ""
 echo "📋 What happens now:"
 echo "   • Code will be auto-formatted on commit"
 echo "   • Formatting will be checked before push"
-echo "   • All team members will follow the same style"
+echo "   • No more DEPRECATED warnings!"
 echo ""
 echo "🧪 Test it:"
 echo "   1. Make a change to a file"
