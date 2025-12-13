@@ -228,11 +228,20 @@ import Footer from "../components/Footer.astro";
     }
 
     // Load Pagefind
+    let pagefind: any;
     try {
-      // @ts-ignore - Pagefind is loaded dynamically at build time
-      const pagefind = await import(/* @vite-ignore */ "/pagefind/pagefind.js");
+      // Dynamic import constructed at runtime to avoid bundler resolution
+      const pagefindPath = "/pagefind/pagefind.js";
+      // @ts-ignore
+      const module = await import(pagefindPath);
+
+      // Pagefind exports might be on default or directly on module
+      pagefind = module.default || module;
+
+      // Store for later use
       window.pagefind = pagefind;
-      console.log("Pagefind loaded successfully");
+
+      console.log("Pagefind loaded successfully", pagefind);
     } catch (error) {
       console.error("Failed to load Pagefind:", error);
       if (searchStatus) {
@@ -259,7 +268,7 @@ import Footer from "../components/Footer.astro";
      * Perform search and display results
      */
     async function performSearch(query: string) {
-      if (!window.pagefind || !searchResults || !searchStatus) return;
+      if (!pagefind || !searchResults || !searchStatus) return;
 
       const trimmedQuery = query.trim();
 
@@ -276,17 +285,40 @@ import Footer from "../components/Footer.astro";
       noResults?.classList.add("hidden");
       searchResults.innerHTML = "";
 
+      // Clear any previous error state
+      searchStatus.classList.remove("text-red-600");
+
       try {
-        // Perform debounced search
-        const results = await window.pagefind.debouncedSearch(trimmedQuery, {
-          debounce: 300,
-        });
+        console.log("Searching for:", trimmedQuery);
+
+        // Perform search - try debouncedSearch first, fall back to search
+        let searchResponse: any;
+
+        if (typeof pagefind.debouncedSearch === "function") {
+          searchResponse = await pagefind.debouncedSearch(trimmedQuery, {
+            debounce: 300,
+          });
+        } else if (typeof pagefind.search === "function") {
+          searchResponse = await pagefind.search(trimmedQuery);
+        } else {
+          throw new Error("Pagefind search function not found");
+        }
+
+        console.log("Search response:", searchResponse);
 
         // Hide loading state
         searchLoading?.classList.add("hidden");
 
+        // Extract results array
+        const results = searchResponse?.results || [];
+
+        if (!Array.isArray(results)) {
+          console.error("Results is not an array:", results);
+          throw new Error("Invalid search results format");
+        }
+
         // Update status
-        const resultCount = results.results.length;
+        const resultCount = results.length;
         searchStatus.textContent =
           resultCount > 0
             ? `Found ${resultCount} result${resultCount !== 1 ? "s" : ""}`
@@ -300,13 +332,18 @@ import Footer from "../components/Footer.astro";
 
         // Display results
         const resultsHTML = await Promise.all(
-          results.results.map(async (result) => {
-            const data = await result.data();
-            return createResultElement(data);
+          results.map(async (result: PagefindSearchResult) => {
+            try {
+              const data = await result.data();
+              return createResultElement(data);
+            } catch (err) {
+              console.error("Error loading result data:", err);
+              return "";
+            }
           })
         );
 
-        searchResults.innerHTML = resultsHTML.join("");
+        searchResults.innerHTML = resultsHTML.filter(Boolean).join("");
 
         // Update URL
         const url = new URL(window.location.href);
@@ -314,7 +351,10 @@ import Footer from "../components/Footer.astro";
         window.history.replaceState({}, "", url);
       } catch (error) {
         console.error("Search error:", error);
-        searchStatus.textContent = "Search error occurred";
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        searchStatus.textContent = `Search error: ${errorMessage}`;
+        searchStatus.classList.add("text-red-600");
         searchLoading?.classList.add("hidden");
       }
     }
@@ -325,11 +365,22 @@ import Footer from "../components/Footer.astro";
     function createResultElement(
       data: Awaited<ReturnType<PagefindSearchResult["data"]>>
     ): string {
+      console.log("Creating result element for:", data);
+
       const title = data.meta?.title || "Untitled";
       const excerpt = data.excerpt || data.meta?.description || "";
       const url = data.url;
       const date = data.meta?.date || "";
-      const tags = data.meta?.tags || [];
+
+      // Handle tags - they might be a string or array
+      let tags: string[] = [];
+      if (data.meta?.tags) {
+        if (Array.isArray(data.meta.tags)) {
+          tags = data.meta.tags;
+        } else if (typeof data.meta.tags === "string") {
+          tags = [data.meta.tags];
+        }
+      }
 
       // Determine content type from URL
       const isWriting = url.includes("/writing/");

@@ -36,7 +36,7 @@ const publishDate = new Date(post.data.date).toISOString();
   publishedTime={publishDate}
   keywords={post.data.tags}
 >
-  <div slot="header">
+  <div slot="header" data-pagefind-ignore>
     <Navigation currentPage="writing" />
   </div>
 
@@ -45,124 +45,133 @@ const publishDate = new Date(post.data.date).toISOString();
     class="py-24 px-8"
     itemscope
     itemtype="https://schema.org/BlogPosting"
-    data-pagefind-body
   >
-    <!-- Pagefind metadata -->
-    <div data-pagefind-meta="title">{post.data.title}</div>
-    <div data-pagefind-meta="description">{post.data.excerpt}</div>
-    <div data-pagefind-meta="date">{post.data.date}</div>
-    {
-      post.data.tags.map((tag: string) => (
-        <div data-pagefind-meta="tags">{tag}</div>
-      ))
-    }
-
-    <div class="max-w-container mx-auto">
-      <header class="mb-32">
-        <div
-          class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-16 text-black/50"
-        >
-          <time datetime={publishDate} itemprop="datePublished"
-            >{post.data.date}</time
-          >
-          <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
-          <span itemprop="timeRequired">{post.data.readTime}</span>
-          <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
-          <span
-            itemprop="author"
-            itemscope
-            itemtype="https://schema.org/Person"
-          >
-            <span itemprop="name">{SITE.name}</span>
+    <!-- Pagefind indexing metadata -->
+    <div data-pagefind-body>
+      <!-- Metadata for Pagefind -->
+      <h1 data-pagefind-meta="title" class="sr-only">{post.data.title}</h1>
+      <p data-pagefind-meta="description" class="sr-only">
+        {post.data.excerpt}
+      </p>
+      <time data-pagefind-meta="date" class="sr-only">{post.data.date}</time>
+      {
+        post.data.tags.map((tag: string) => (
+          <span data-pagefind-meta="tags" class="sr-only">
+            {tag}
           </span>
+        ))
+      }
+
+      <div class="max-w-container mx-auto">
+        <header class="mb-32">
+          <div
+            class="flex items-center gap-4 text-sm font-bold uppercase tracking-[0.15em] mb-16 text-black/50"
+          >
+            <time datetime={publishDate} itemprop="datePublished"
+              >{post.data.date}</time
+            >
+            <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
+            <span itemprop="timeRequired">{post.data.readTime}</span>
+            <span class="w-2 h-2 bg-black" aria-hidden="true"></span>
+            <span
+              itemprop="author"
+              itemscope
+              itemtype="https://schema.org/Person"
+            >
+              <span itemprop="name">{SITE.name}</span>
+            </span>
+          </div>
+
+          <h2
+            class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-16"
+            itemprop="headline"
+          >
+            {post.data.title}
+          </h2>
+
+          <p
+            class="text-2xl leading-relaxed font-light text-black/70 max-w-3xl mb-16"
+            itemprop="description"
+          >
+            {post.data.excerpt}
+          </p>
+
+          <!-- Social Share Buttons -->
+          <div
+            class="flex items-center gap-4"
+            role="group"
+            aria-label="Share this article"
+            data-pagefind-ignore
+          >
+            <span
+              class="text-sm font-bold uppercase tracking-[0.15em] text-black/50"
+            >
+              Share:
+            </span>
+            <button
+              class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+              data-share="twitter"
+              aria-label="Share on Twitter"
+            >
+              Twitter
+            </button>
+            <button
+              class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+              data-share="linkedin"
+              aria-label="Share on LinkedIn"
+            >
+              LinkedIn
+            </button>
+            <button
+              class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
+              data-share="copy"
+              aria-label="Copy link"
+            >
+              Copy Link
+            </button>
+          </div>
+
+          <!-- Hidden metadata for schema -->
+          <meta itemprop="url" content={postUrl.toString()} />
+        </header>
+
+        <!-- Article Body with Semantic Markup -->
+        <div class="prose prose-lg max-w-none" itemprop="articleBody">
+          <Content />
         </div>
 
-        <h1
-          class="text-7xl font-bold leading-[1.1] tracking-[-0.02em] mb-16"
-          itemprop="headline"
-        >
-          {post.data.title}
-        </h1>
-
-        <p
-          class="text-2xl leading-relaxed font-light text-black/70 max-w-3xl mb-16"
-          itemprop="description"
-        >
-          {post.data.excerpt}
-        </p>
-
-        <!-- Social Share Buttons -->
-        <div
-          class="flex items-center gap-4"
-          role="group"
-          aria-label="Share this article"
+        <!-- Article Footer with Navigation -->
+        <footer
+          class="mt-32 pt-16 border-t-2 border-black"
           data-pagefind-ignore
         >
-          <span
-            class="text-sm font-bold uppercase tracking-[0.15em] text-black/50"
-          >
-            Share:
-          </span>
-          <button
-            class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
-            data-share="twitter"
-            aria-label="Share on Twitter"
-          >
-            Twitter
-          </button>
-          <button
-            class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
-            data-share="linkedin"
-            aria-label="Share on LinkedIn"
-          >
-            LinkedIn
-          </button>
-          <button
-            class="share-button text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
-            data-share="copy"
-            aria-label="Copy link"
-          >
-            Copy Link
-          </button>
-        </div>
-
-        <!-- Hidden metadata for schema -->
-        <meta itemprop="url" content={postUrl.toString()} />
-      </header>
-
-      <!-- Article Body with Semantic Markup -->
-      <div class="prose prose-lg max-w-none" itemprop="articleBody">
-        <Content />
-      </div>
-
-      <!-- Article Footer with Navigation -->
-      <footer class="mt-32 pt-16 border-t-2 border-black" data-pagefind-ignore>
-        <div class="flex items-center justify-between">
-          <a
-            href="/writing"
-            class="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              aria-hidden="true"
+          <div class="flex items-center justify-between">
+            <a
+              href="/writing"
+              class="inline-flex items-center gap-3 text-sm font-bold uppercase tracking-[0.15em] hover:opacity-50 transition-opacity duration-200 focus-visible:opacity-50"
             >
-              <path
-                stroke-linecap="square"
-                stroke-linejoin="miter"
-                d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
-            </svg>
-            All Posts
-          </a>
-        </div>
-      </footer>
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="square"
+                  stroke-linejoin="miter"
+                  d="M7 16l-4-4m0 0l4-4m-4 4h18"></path>
+              </svg>
+              All Posts
+            </a>
+          </div>
+        </footer>
+      </div>
     </div>
   </article>
 
-  <div slot="footer">
+  <div slot="footer" data-pagefind-ignore>
     <Footer />
   </div>
 
@@ -187,7 +196,7 @@ const publishDate = new Date(post.data.date).toISOString();
     const shareButtons = document.querySelectorAll(".share-button");
     const currentUrl = window.location.href;
     const title = document.querySelector(
-      'h1[itemprop="headline"]'
+      'h2[itemprop="headline"]'
     )?.textContent;
 
     shareButtons.forEach((button) => {

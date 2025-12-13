@@ -1,31 +1,34 @@
 # Pagefind Configuration
 # Configures how Pagefind indexes your static site content.
 
-# Source directory (where built HTML files are located)
-source = "dist"
+# Site directory (where built HTML files are located)
+site = "dist"
 
-# Bundle directory (where Pagefind assets will be placed)
-bundle_dir = "pagefind"
+# Output subdirectory (where Pagefind assets will be placed, relative to site)
+output_subdir = "pagefind"
 
-# Glob patterns for files to exclude from indexing
+# Glob patterns for files to include in indexing
 glob = "**/*.html"
 
-# Exclude specific paths
+# Exclude specific paths from indexing
 exclude_selectors = [
     "nav",
-    "header",
-    "footer",
+    "header[role='banner']",
+    "footer[role='contentinfo']",
     ".no-search",
     "[data-pagefind-ignore]",
     "#mobile-menu",
-    ".skip-link"
+    ".skip-link",
+    "script",
+    "style",
+    ".sr-only:not([data-pagefind-meta])"
 ]
 
 # Force language (optional, auto-detected by default)
-# force_language = "en"
+force_language = "en"
 
 # Keep index URL in results
 keep_index_url = false
 
 # Verbose output during build
-verbose = false
+verbose = true

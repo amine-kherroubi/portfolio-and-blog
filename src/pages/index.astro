@@ -17,9 +17,9 @@ const socialLinks = getSocialLinks();
 ---
 
 <BaseLayout>
-  <Navigation currentPage="home" />
+  <Navigation currentPage="home" slot="header" />
 
-  <main id="main-content">
+  <main id="main-content" data-pagefind-ignore>
     <!-- Hero Section -->
     <section
       class="min-h-[calc(100vh-5rem)] flex items-center px-8 py-24"
@@ -112,7 +112,7 @@ const socialLinks = getSocialLinks();
     }
   </main>
 
-  <Footer />
+  <Footer slot="footer" />
 
   <!-- Structured Data for Website -->
   <WebSiteSchema slot="head" url={Astro.site} />

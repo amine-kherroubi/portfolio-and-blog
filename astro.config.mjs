@@ -22,10 +22,21 @@ export default defineConfig({
 
     build: {
       rollupOptions: {
+        external: ["/pagefind/pagefind.js"],
         output: {
           manualChunks: {
             vendor: ["astro"],
           },
+        },
+        onwarn(warning, warn) {
+          // Suppress warnings about unused imports in Astro's internal code
+          if (
+            warning.code === "UNUSED_EXTERNAL_IMPORT" &&
+            warning.id?.includes("@astrojs/internal-helpers")
+          ) {
+            return;
+          }
+          warn(warning);
         },
       },
     },

@@ -261,10 +261,14 @@ export async function loadPagefind(): Promise<any> {
   }
 
   try {
+    // Dynamic import constructed at runtime to avoid bundler resolution
+    const pagefindPath = "/pagefind/pagefind.js";
     // @ts-ignore
-    const pagefind = await import("/pagefind/pagefind.js");
-    (window as any).pagefind = pagefind;
-    return pagefind;
+    const module = await import(pagefindPath);
+
+    // Store the module directly
+    (window as any).pagefind = module;
+    return module;
   } catch (error) {
     console.error("Failed to load Pagefind:", error);
     throw error;
