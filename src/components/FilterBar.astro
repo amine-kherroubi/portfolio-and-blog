@@ -1,14 +1,20 @@
 ---
 /**
- * FilterBar Component - Desktop Only
+ * FilterBar Component - WORKING & GENERIC
+ *
+ * Usage for ANY section:
+ * <FilterBar tags={tags} type="writing" />
+ * <FilterBar tags={tags} type="work" />
+ * <FilterBar tags={tags} type="blog" />
+ * <FilterBar tags={tags} type="anything-you-want" />
  */
 
-import type { Tag as TagType } from "../config/tags";
+import type { Tag } from "../config/tags";
 import { sortTagsByCategory } from "../config/tags";
 
 interface Props {
-  tags: readonly TagType[];
-  type: "writing" | "work";
+  tags: readonly Tag[];
+  type: string; // ANY string - completely generic!
 }
 
 const { tags, type } = Astro.props;
@@ -19,6 +25,7 @@ const sortedTags = sortTagsByCategory(tags);
   class="filter-bar border-b-2 border-black bg-white sticky top-20 z-40"
   role="search"
   aria-label="Filter content"
+  data-filter-type={type}
 >
   <div class="max-w-container mx-auto px-8 py-6">
     <div class="flex items-center gap-6 mb-6">
@@ -75,25 +82,37 @@ const sortedTags = sortTagsByCategory(tags);
 </div>
 
 <script>
-  import("../scripts/filter.js").then(({ initializeFilters }) => {
-    const path = window.location.pathname;
-    if (path.includes("/writing")) {
-      initializeFilters("writing");
-    } else if (path.includes("/work")) {
-      initializeFilters("work");
-    }
-  });
+  /**
+   * Initialize filters when component loads
+   * Uses data-filter-type attribute to get the type
+   */
+  import { initializeFilters } from "../scripts/filter.js";
 
-  document.addEventListener("astro:page-load", () => {
-    import("../scripts/filter.js").then(({ initializeFilters }) => {
-      const path = window.location.pathname;
-      if (path.includes("/writing")) {
-        initializeFilters("writing");
-      } else if (path.includes("/work")) {
-        initializeFilters("work");
+  function initFilter() {
+    // Get type from the filter bar element
+    const filterBar = document.querySelector<HTMLElement>(
+      ".filter-bar[data-filter-type]"
+    );
+
+    if (filterBar) {
+      const type = filterBar.dataset["filterType"];
+
+      if (type) {
+        console.log(`[FilterBar] Initializing filters for type: ${type}`);
+        initializeFilters(type);
       }
-    });
-  });
+    }
+  }
+
+  // Initialize on page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFilter);
+  } else {
+    initFilter();
+  }
+
+  // Reinitialize on Astro navigation
+  document.addEventListener("astro:page-load", initFilter);
 </script>
 
 <style>
@@ -103,15 +122,5 @@ const sortedTags = sortTagsByCategory(tags);
         background-color 0.2s ease,
         color 0.2s ease;
     }
-
-    [data-writing-item],
-    [data-work-item] {
-      transition: opacity 0.2s ease;
-    }
-  }
-
-  [data-writing-item][style*="display: none"],
-  [data-work-item][style*="display: none"] {
-    opacity: 0;
   }
 </style>
