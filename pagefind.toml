@@ -17,7 +17,6 @@ exclude_selectors = [
     "footer[role='contentinfo']",
     ".no-search",
     "[data-pagefind-ignore]",
-    "#mobile-menu",
     ".skip-link",
     "script",
     "style",

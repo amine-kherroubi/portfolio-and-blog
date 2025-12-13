@@ -1,15 +1,16 @@
 /**
- * Content Transformation Utilities - December 2025
+ * Content Processing Utilities
  *
- * Enhanced with:
- * - Robust error handling for malformed data
- * - Better type safety with strict validation
- * - Defensive programming against edge cases
- * - Performance optimization for large collections
+ * Transforms and validates content collection entries with robust error handling.
+ * Provides type-safe content processing for writing posts and work projects.
  */
 
 import type { CollectionEntry } from "astro:content";
 import { getTagsByIds, TAGS, type TagId, type Tag } from "../config/tags";
+
+// ============================================================================
+// Types
+// ============================================================================
 
 export interface ProcessedWritingPost {
   title: string;
@@ -29,45 +30,53 @@ export interface ProcessedWorkProject {
   link: string;
 }
 
+export interface ContentStats {
+  posts: {
+    total: number;
+    tags: number;
+    dateRange: { oldest: string; newest: string } | null;
+  };
+  projects: {
+    total: number;
+    tags: number;
+    yearRange: { oldest: string; newest: string } | null;
+  };
+}
+
+// ============================================================================
+// Validation Helpers
+// ============================================================================
+
 /**
  * Safely parse date string with fallback
- * @param dateStr - Date string to parse
- * @param fallback - Fallback date (defaults to current date)
- * @returns Valid Date object
  */
 function parseDate(dateStr: string, fallback: Date = new Date()): Date {
   try {
     const date = new Date(dateStr);
-    // Check if date is valid
     if (isNaN(date.getTime())) {
-      console.warn(
-        `[Content] Invalid date format: "${dateStr}", using fallback`
-      );
+      console.warn(`[Content] Invalid date: "${dateStr}"`);
       return fallback;
     }
     return date;
   } catch (error) {
-    console.error(`[Content] Error parsing date: "${dateStr}"`, error);
+    console.error(`[Content] Date parsing error:`, error);
     return fallback;
   }
 }
 
 /**
  * Validate and filter tag IDs
- * Ensures only valid tags are included
- * @param tags - Array of tag strings
- * @returns Validated TagId array
  */
-function validateTags(tags: string[]): TagId[] {
+function validateTags(tags: unknown): TagId[] {
   if (!Array.isArray(tags)) {
-    console.warn(`[Content] Invalid tags format, expected array`);
     return [];
   }
 
   return tags.filter((tag): tag is TagId => {
+    if (typeof tag !== "string") return false;
     const isValid = tag in TAGS;
     if (!isValid && tag) {
-      console.warn(`[Content] Unknown tag ID: "${tag}" - skipping`);
+      console.warn(`[Content] Unknown tag: "${tag}"`);
     }
     return isValid;
   });
@@ -75,81 +84,70 @@ function validateTags(tags: string[]): TagId[] {
 
 /**
  * Validate year string
- * @param year - Year string to validate
- * @returns Valid year string or current year as fallback
  */
-function validateYear(year: string): string {
-  const parsed = parseInt(year, 10);
+function validateYear(year: unknown): string {
+  const yearStr = String(year);
+  const parsed = parseInt(yearStr, 10);
   const currentYear = new Date().getFullYear();
 
   if (isNaN(parsed) || parsed < 1900 || parsed > currentYear + 10) {
-    console.warn(`[Content] Invalid year: "${year}", using current year`);
+    console.warn(`[Content] Invalid year: "${yearStr}"`);
     return currentYear.toString();
   }
 
-  return year;
+  return yearStr;
 }
 
 /**
- * Transform and sort writing posts by date (newest first)
- *
- * Enhanced with:
- * - Robust date parsing with fallbacks
- * - Tag validation
- * - Error boundaries for malformed content
- * - Performance optimization
- *
- * @param posts - Array of writing post entries
- * @returns Sorted and validated processed posts
+ * Safe string trim
+ */
+function safeTrim(value: unknown): string {
+  return String(value ?? "").trim();
+}
+
+// ============================================================================
+// Content Processing
+// ============================================================================
+
+/**
+ * Process writing posts with validation
  */
 export function processWritingPosts(
   posts: CollectionEntry<"writing">[]
 ): ProcessedWritingPost[] {
   if (!Array.isArray(posts)) {
-    console.error(`[Content] processWritingPosts received non-array input`);
+    console.error("[Content] Invalid posts array");
     return [];
   }
 
   const processed = posts
     .map((post, index) => {
       try {
-        // Validate required fields
         if (!post?.id || !post?.data) {
-          console.error(
-            `[Content] Post at index ${index} missing required fields`
-          );
+          console.error(`[Content] Invalid post at index ${index}`);
           return null;
         }
 
         const { id, data } = post;
         const { title, excerpt, date, readTime, tags } = data;
 
-        // Validate required data
+        // Validate required fields
         if (!title || !excerpt || !date || !readTime) {
-          console.error(`[Content] Post "${id}" missing required data fields`);
+          console.error(`[Content] Missing fields in post "${id}"`);
           return null;
         }
 
-        // Parse and validate date
-        const dateObj = parseDate(date);
-
-        // Validate tags
-        const validatedTags = validateTags(tags || []);
-
         return {
-          title: String(title).trim(),
-          excerpt: String(excerpt).trim(),
-          date: String(date).trim(),
-          readTime: String(readTime).trim(),
+          title: safeTrim(title),
+          excerpt: safeTrim(excerpt),
+          date: safeTrim(date),
+          readTime: safeTrim(readTime),
           slug: id,
-          tags: validatedTags,
-          dateObj,
+          tags: validateTags(tags),
+          dateObj: parseDate(safeTrim(date)),
         };
       } catch (error) {
-        console.error(
-          `[Content] Error processing post at index ${index}:`,
-          error
-        );
+        console.error(`[Content] Processing error at index ${index}:`, error);
         return null;
       }
     })
@@ -157,166 +155,119 @@ export function processWritingPosts(
     .sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime());
 
   if (processed.length < posts.length) {
-    console.warn(
-      `[Content] Processed ${processed.length}/${posts.length} posts (${posts.length - processed.length} failed validation)`
-    );
+    const failed = posts.length - processed.length;
+    console.warn(`[Content] ${failed}/${posts.length} posts failed validation`);
   }
 
   return processed;
 }
 
 /**
- * Transform and sort work projects by year (newest first)
- *
- * Enhanced with:
- * - Year validation
- * - Tag validation
- * - Error boundaries
- * - Performance optimization
- *
- * @param projects - Array of work project entries
- * @returns Sorted and validated processed projects
+ * Process work projects with validation
  */
 export function processWorkProjects(
   projects: CollectionEntry<"work">[]
 ): ProcessedWorkProject[] {
   if (!Array.isArray(projects)) {
-    console.error(`[Content] processWorkProjects received non-array input`);
+    console.error("[Content] Invalid projects array");
     return [];
   }
 
   const processed = projects
     .map((project, index) => {
       try {
-        // Validate required fields
         if (!project?.id || !project?.data) {
-          console.error(
-            `[Content] Project at index ${index} missing required fields`
-          );
+          console.error(`[Content] Invalid project at index ${index}`);
           return null;
         }
 
         const { id, data } = project;
         const { title, description, year, tags } = data;
 
-        // Validate required data
+        // Validate required fields
         if (!title || !description || !year) {
-          console.error(
-            `[Content] Project "${id}" missing required data fields`
-          );
+          console.error(`[Content] Missing fields in project "${id}"`);
           return null;
         }
 
-        // Validate year
-        const validatedYear = validateYear(year);
-
-        // Validate tags
-        const validatedTags = validateTags(tags || []);
-
         return {
-          title: String(title).trim(),
-          description: String(description).trim(),
-          year: validatedYear,
-          tags: validatedTags,
+          title: safeTrim(title),
+          description: safeTrim(description),
+          year: validateYear(year),
+          tags: validateTags(tags),
           link: `/work/${id}`,
         };
       } catch (error) {
-        console.error(
-          `[Content] Error processing project at index ${index}:`,
-          error
-        );
+        console.error(`[Content] Processing error at index ${index}:`, error);
         return null;
       }
     })
     .filter((project): project is ProcessedWorkProject => project !== null)
-    .sort((a, b) => {
-      const yearA = parseInt(a.year, 10);
-      const yearB = parseInt(b.year, 10);
-      return yearB - yearA;
-    });
+    .sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
   if (processed.length < projects.length) {
+    const failed = projects.length - processed.length;
     console.warn(
-      `[Content] Processed ${processed.length}/${projects.length} projects (${projects.length - processed.length} failed validation)`
+      `[Content] ${failed}/${projects.length} projects failed validation`
     );
   }
 
   return processed;
 }
 
+// ============================================================================
+// Tag Extraction
+// ============================================================================
+
 /**
- * Get all unique tags from processed writing posts
- *
- * Enhanced with deduplication and sorting
- *
- * @param posts - Array of processed writing posts
- * @returns Sorted array of unique tag objects
+ * Extract unique tags from writing posts
  */
 export function getUniqueTagsFromPosts(posts: ProcessedWritingPost[]): Tag[] {
   if (!Array.isArray(posts)) {
-    console.error(`[Content] getUniqueTagsFromPosts received non-array input`);
+    console.error("[Content] Invalid posts array");
     return [];
   }
 
   try {
-    // Extract unique tag IDs
-    const tagIds = [...new Set(posts.flatMap((p) => p.tags || []))] as TagId[];
-
-    // Get tag objects and sort by label
+    const tagIds = [...new Set(posts.flatMap((p) => p.tags || []))];
     return getTagsByIds(tagIds).sort((a, b) => a.label.localeCompare(b.label));
   } catch (error) {
-    console.error(`[Content] Error extracting unique tags from posts:`, error);
+    console.error("[Content] Error extracting tags:", error);
     return [];
   }
 }
 
 /**
- * Get all unique tags from processed work projects
- *
- * Enhanced with deduplication and sorting
- *
- * @param projects - Array of processed work projects
- * @returns Sorted array of unique tag objects
+ * Extract unique tags from work projects
  */
 export function getUniqueTagsFromProjects(
   projects: ProcessedWorkProject[]
 ): Tag[] {
   if (!Array.isArray(projects)) {
-    console.error(
-      `[Content] getUniqueTagsFromProjects received non-array input`
-    );
+    console.error("[Content] Invalid projects array");
     return [];
   }
 
   try {
-    // Extract unique tag IDs
-    const tagIds = [
-      ...new Set(projects.flatMap((p) => p.tags || [])),
-    ] as TagId[];
-
-    // Get tag objects and sort by label
+    const tagIds = [...new Set(projects.flatMap((p) => p.tags || []))];
     return getTagsByIds(tagIds).sort((a, b) => a.label.localeCompare(b.label));
   } catch (error) {
-    console.error(
-      `[Content] Error extracting unique tags from projects:`,
-      error
-    );
+    console.error("[Content] Error extracting tags:", error);
     return [];
   }
 }
 
+// ============================================================================
+// Statistics
+// ============================================================================
+
 /**
  * Get content statistics
- * Useful for debugging and monitoring
- *
- * @param posts - Processed posts
- * @param projects - Processed projects
- * @returns Statistics object
  */
 export function getContentStats(
   posts: ProcessedWritingPost[],
   projects: ProcessedWorkProject[]
-) {
+): ContentStats {
   return {
     posts: {
       total: posts.length,
@@ -324,8 +275,8 @@ export function getContentStats(
       dateRange:
         posts.length > 0
           ? {
-              oldest: posts[posts.length - 1]?.date,
-              newest: posts[0]?.date,
+              oldest: posts[posts.length - 1].date,
+              newest: posts[0].date,
             }
           : null,
     },
@@ -335,8 +286,8 @@ export function getContentStats(
       yearRange:
         projects.length > 0
           ? {
-              oldest: projects[projects.length - 1]?.year,
-              newest: projects[0]?.year,
+              oldest: projects[projects.length - 1].year,
+              newest: projects[0].year,
             }
           : null,
     },

@@ -1,16 +1,14 @@
 /**
- * Search Utilities - December 2025
+ * Search Utilities
  *
- * Enhanced Pagefind integration with:
- * - Better error handling
- * - Type-safe search results
- * - Performance optimization
- * - Retry logic for failed searches
+ * Pagefind integration utilities with type safety and error handling.
+ * Provides search functionality with retry logic and performance optimization.
  */
 
-/**
- * Pagefind metadata attributes
- */
+// ============================================================================
+// Constants
+// ============================================================================
+
 export const SEARCH_ATTRIBUTES = {
   BODY: "data-pagefind-body",
   IGNORE: "data-pagefind-ignore",
@@ -18,9 +16,14 @@ export const SEARCH_ATTRIBUTES = {
   FILTER: "data-pagefind-filter",
 } as const;
 
-/**
- * Search result metadata interface
- */
+const DEFAULT_RETRY_ATTEMPTS = 3;
+const DEFAULT_RETRY_DELAY = 1000;
+const DEFAULT_WORDS_PER_MINUTE = 200;
+
+// ============================================================================
+// Types
+// ============================================================================
+
 export interface SearchResultMeta {
   title: string;
   description?: string;
@@ -30,9 +33,6 @@ export interface SearchResultMeta {
   [key: string]: string | string[] | undefined;
 }
 
-/**
- * Complete search result interface
- */
 export interface SearchResult {
   id: string;
   url: string;
@@ -48,9 +48,6 @@ export interface SearchResult {
   }>;
 }
 
-/**
- * Pagefind search response
- */
 export interface PagefindResponse {
   results: Array<{
     id: string;
@@ -58,9 +55,6 @@ export interface PagefindResponse {
   }>;
 }
 
-/**
- * Pagefind instance interface
- */
 export interface PagefindInstance {
   search: (query: string) => Promise<PagefindResponse>;
   debouncedSearch?: (
@@ -69,24 +63,40 @@ export interface PagefindInstance {
   ) => Promise<PagefindResponse>;
 }
 
+export interface SearchOptions {
+  debounce?: number;
+  maxResults?: number;
+  retries?: number;
+  retryDelay?: number;
+}
+
+// ============================================================================
+// Pagefind Loading
+// ============================================================================
+
+let pagefindInstance: PagefindInstance | null = null;
+
+/**
+ * Check if running in browser
+ */
+function isBrowser(): boolean {
+  return typeof window !== "undefined";
+}
+
 /**
  * Load Pagefind with retry logic
- *
- * @param retries - Number of retry attempts
- * @param delay - Delay between retries in ms
- * @returns Pagefind instance
  */
 export async function loadPagefind(
-  retries: number = 3,
-  delay: number = 1000
+  retries = DEFAULT_RETRY_ATTEMPTS,
+  delay = DEFAULT_RETRY_DELAY
 ): Promise<PagefindInstance> {
-  if (typeof window === "undefined") {
-    throw new Error("[Search] Pagefind can only be loaded in the browser");
+  if (!isBrowser()) {
+    throw new Error("[Search] Pagefind requires browser environment");
   }
 
-  // Check if already loaded
-  if ((window as any).pagefind) {
-    return (window as any).pagefind;
+  // Return cached instance
+  if (pagefindInstance) {
+    return pagefindInstance;
   }
 
   let lastError: Error | null = null;
@@ -95,30 +105,29 @@ export async function loadPagefind(
     try {
       console.log(`[Search] Loading Pagefind (attempt ${attempt}/${retries})`);
 
-      // Dynamic import constructed at runtime to avoid bundler resolution
+      // Dynamic import to avoid bundler resolution
       const pagefindPath = "/pagefind/pagefind.js";
-      // @ts-ignore
-      const module = await import(pagefindPath);
+      const module = await import(/* @vite-ignore */ pagefindPath);
       const pagefind = module.default || module;
 
+      // Validate module
       if (!pagefind || typeof pagefind.search !== "function") {
         throw new Error("Invalid Pagefind module");
       }
 
-      // Cache for future use
-      (window as any).pagefind = pagefind;
-
+      // Cache instance
+      pagefindInstance = pagefind;
       console.log("[Search] Pagefind loaded successfully");
+
       return pagefind;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
       console.warn(
-        `[Search] Failed to load Pagefind (attempt ${attempt}/${retries}):`,
+        `[Search] Load attempt ${attempt}/${retries} failed:`,
         error
       );
 
       if (attempt < retries) {
-        // Wait before retry
         await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
@@ -133,75 +142,84 @@ export async function loadPagefind(
  * Check if Pagefind is available
  */
 export function isSearchAvailable(): boolean {
-  return (
-    typeof window !== "undefined" && (window as any).pagefind !== undefined
-  );
+  return pagefindInstance !== null;
+}
+
+/**
+ * Reset Pagefind instance (useful for testing)
+ */
+export function resetPagefind(): void {
+  pagefindInstance = null;
+}
+
+// ============================================================================
+// Search Operations
+// ============================================================================
+
+/**
+ * Validate search query
+ */
+function validateQuery(query: unknown): string | null {
+  if (typeof query !== "string") return null;
+  const trimmed = query.trim();
+  return trimmed.length > 0 ? trimmed : null;
 }
 
 /**
  * Perform search with error handling
- *
- * @param query - Search query
- * @param options - Search options
- * @returns Search results
  */
 export async function performSearch(
   query: string,
-  options: {
-    debounce?: number;
-    maxResults?: number;
-  } = {}
+  options: SearchOptions = {}
 ): Promise<SearchResult[]> {
-  if (!query || typeof query !== "string") {
-    console.warn("[Search] Invalid query:", query);
-    return [];
-  }
-
-  const trimmedQuery = query.trim();
-  if (!trimmedQuery) {
+  const validQuery = validateQuery(query);
+  if (!validQuery) {
     return [];
   }
 
   try {
-    // Load Pagefind if not already loaded
-    const pagefind = await loadPagefind();
+    // Load Pagefind
+    const pagefind = await loadPagefind(options.retries, options.retryDelay);
 
-    // Use debounced search if available and requested
+    // Choose search method
     const searchFn =
       options.debounce && pagefind.debouncedSearch
         ? (q: string) =>
             pagefind.debouncedSearch!(q, { debounce: options.debounce })
         : pagefind.search;
 
-    console.log(`[Search] Searching for: "${trimmedQuery}"`);
-    const response = await searchFn(trimmedQuery);
+    console.log(`[Search] Searching: "${validQuery}"`);
+    const response = await searchFn(validQuery);
 
-    if (!response || !Array.isArray(response.results)) {
-      console.error("[Search] Invalid response format:", response);
+    // Validate response
+    if (!response?.results || !Array.isArray(response.results)) {
+      console.error("[Search] Invalid response format");
       return [];
     }
 
-    // Limit results if specified
+    // Limit results
     const results = options.maxResults
       ? response.results.slice(0, options.maxResults)
       : response.results;
 
     // Load result data
-    const loadedResults = await Promise.all(
-      results.map(async (result) => {
-        try {
-          return await result.data();
-        } catch (error) {
-          console.error("[Search] Error loading result data:", error);
-          return null;
-        }
-      })
+    const loadedResults = await Promise.allSettled(
+      results.map((result) => result.data())
     );
 
-    // Filter out failed loads
-    const validResults = loadedResults.filter(
-      (result): result is SearchResult => result !== null
-    );
+    // Extract successful results
+    const validResults = loadedResults
+      .filter(
+        (result): result is PromiseFulfilledResult<SearchResult> =>
+          result.status === "fulfilled"
+      )
+      .map((result) => result.value);
+
+    // Log failed results
+    const failedCount = loadedResults.length - validResults.length;
+    if (failedCount > 0) {
+      console.warn(`[Search] ${failedCount} results failed to load`);
+    }
 
     console.log(`[Search] Found ${validResults.length} results`);
     return validResults;
@@ -211,109 +229,120 @@ export async function performSearch(
   }
 }
 
+// ============================================================================
+// URL Utilities
+// ============================================================================
+
 /**
- * Generate search URL with query parameter
- *
- * @param query - Search query
- * @param baseUrl - Base URL (defaults to current origin)
- * @returns Complete search URL
+ * Generate search URL
  */
 export function generateSearchUrl(query: string, baseUrl?: string): string {
-  const base =
-    baseUrl || (typeof window !== "undefined" ? window.location.origin : "");
+  const validQuery = validateQuery(query);
+  if (!validQuery) return "/search";
+
+  const base = baseUrl || (isBrowser() ? window.location.origin : "");
 
   try {
     const url = new URL("/search", base);
-    url.searchParams.set("q", query.trim());
+    url.searchParams.set("q", validQuery);
     return url.toString();
   } catch (error) {
-    console.error("[Search] Error generating URL:", error);
-    return `/search?q=${encodeURIComponent(query)}`;
+    console.error("[Search] URL generation failed:", error);
+    return `/search?q=${encodeURIComponent(validQuery)}`;
   }
 }
 
 /**
  * Parse search query from URL
- *
- * @param url - URL string or URL object
- * @returns Search query or null
  */
 export function parseSearchQuery(url: string | URL): string | null {
   try {
     const urlObj = typeof url === "string" ? new URL(url) : url;
-    return urlObj.searchParams.get("q");
+    return validateQuery(urlObj.searchParams.get("q"));
   } catch (error) {
-    console.error("[Search] Error parsing URL:", error);
+    console.error("[Search] URL parsing failed:", error);
     return null;
   }
 }
 
+// ============================================================================
+// Text Processing
+// ============================================================================
+
 /**
  * Highlight search terms in text
- *
- * @param text - Text to highlight
- * @param query - Search query
- * @returns HTML string with highlighted terms
  */
 export function highlightSearchTerms(text: string, query: string): string {
-  if (!query || !text) {
-    return text;
-  }
+  const validQuery = validateQuery(query);
+  if (!validQuery || !text) return text;
 
   try {
-    const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    const terms = validQuery.toLowerCase().split(/\s+/).filter(Boolean);
 
-    if (terms.length === 0) {
-      return text;
-    }
+    if (terms.length === 0) return text;
 
     // Escape special regex characters
     const escapedTerms = terms.map((term) =>
       term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     );
 
-    // Create regex pattern
     const pattern = new RegExp(`(${escapedTerms.join("|")})`, "gi");
-
-    // Replace matches
     return text.replace(pattern, "<mark>$1</mark>");
   } catch (error) {
-    console.error("[Search] Error highlighting terms:", error);
+    console.error("[Search] Highlighting failed:", error);
     return text;
   }
 }
 
 /**
  * Format result count message
- *
- * @param count - Number of results
- * @param contentType - Type of content
- * @returns Formatted message
  */
 export function formatResultCount(
   count: number,
-  contentType: string = "result"
+  contentType = "result"
 ): string {
-  if (count === 0) {
-    return `No ${contentType}s found`;
-  }
-
+  if (count === 0) return `No ${contentType}s found`;
   const plural = count === 1 ? contentType : `${contentType}s`;
   return `${count} ${plural}`;
 }
 
 /**
- * Debounce function for search input
- *
- * @param fn - Function to debounce
- * @param delay - Delay in milliseconds
- * @returns Debounced function
+ * Extract content type from URL
+ */
+export function extractContentType(url: string): string {
+  try {
+    const match = url.match(/^\/(writing|work|profile)\//);
+    return match ? match[1] : "page";
+  } catch (error) {
+    console.error("[Search] Content type extraction failed:", error);
+    return "page";
+  }
+}
+
+/**
+ * Calculate reading time
+ */
+export function calculateReadingTime(
+  content: string,
+  wordsPerMinute = DEFAULT_WORDS_PER_MINUTE
+): string {
+  const words = content.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / wordsPerMinute);
+  return `${minutes} min read`;
+}
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Debounce function
  */
 export function debounce<T extends (...args: any[]) => void>(
   fn: T,
   delay: number
 ): (...args: Parameters<T>) => void {
-  let timeoutId: NodeJS.Timeout | null = null;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   return function (this: any, ...args: Parameters<T>) {
     if (timeoutId !== null) {
@@ -327,29 +356,14 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
-/**
- * Extract content type from URL
- *
- * @param url - URL to analyze
- * @returns Content type
- */
-export function extractContentType(url: string): string {
-  try {
-    const match = url.match(/^\/(writing|work|profile)\//);
-    return match ? match[1] : "page";
-  } catch (error) {
-    console.error("[Search] Error extracting content type:", error);
-    return "page";
-  }
-}
+// ============================================================================
+// Statistics Tracker
+// ============================================================================
 
-/**
- * Search statistics tracker
- */
 export class SearchStats {
-  private searches: number = 0;
-  private totalResults: number = 0;
-  private failedSearches: number = 0;
+  private searches = 0;
+  private totalResults = 0;
+  private failedSearches = 0;
 
   recordSearch(resultCount: number): void {
     this.searches++;
@@ -380,5 +394,5 @@ export class SearchStats {
   }
 }
 
-// Global search stats instance
+// Global instance
 export const searchStats = new SearchStats();

@@ -1,132 +1,190 @@
 /**
- * SEO Utilities - December 2025
+ * SEO Utilities
  *
- * Enhanced with:
- * - Better structured data validation
- * - More schema types
- * - Rich snippets support
- * - Error handling
+ * Provides structured data generation and metadata utilities for SEO optimization.
+ * Implements schema.org types with validation and error handling.
  */
 
 import type { ProcessedWritingPost } from "./content";
 import { SITE } from "../config/site";
 
-/**
- * BlogPosting structured data
- */
-export interface BlogStructuredData {
+// ============================================================================
+// Types
+// ============================================================================
+
+interface BaseStructuredData {
   "@context": string;
   "@type": string;
+}
+
+export interface BlogPostSchema extends BaseStructuredData {
+  "@type": "BlogPosting";
+  headline: string;
+  description: string;
+  datePublished: string;
+  url: string;
+  author: {
+    "@type": "Person";
+    name: string;
+  };
+  image?: string;
+}
+
+export interface BlogStructuredData extends BaseStructuredData {
+  "@type": "Blog";
   name: string;
   description: string;
   url: string;
-  blogPost: Array<{
-    "@type": string;
-    headline: string;
-    description: string;
-    datePublished: string;
-    url: string;
-    author?: {
-      "@type": string;
-      name: string;
-    };
-    image?: string;
-  }>;
+  blogPost: BlogPostSchema[];
 }
 
-/**
- * BreadcrumbList structured data
- */
-export interface BreadcrumbStructuredData {
-  "@context": string;
-  "@type": string;
-  itemListElement: Array<{
-    "@type": string;
-    position: number;
-    name: string;
-    item: string;
-  }>;
+export interface BreadcrumbItem {
+  "@type": "ListItem";
+  position: number;
+  name: string;
+  item: string;
 }
 
-/**
- * Person structured data
- */
-export interface PersonStructuredData {
-  "@context": string;
-  "@type": string;
+export interface BreadcrumbStructuredData extends BaseStructuredData {
+  "@type": "BreadcrumbList";
+  itemListElement: BreadcrumbItem[];
+}
+
+export interface PersonStructuredData extends BaseStructuredData {
+  "@type": "Person";
   name: string;
   url: string;
   email?: string;
   sameAs?: string[];
   jobTitle?: string;
   worksFor?: {
-    "@type": string;
+    "@type": "Organization";
     name: string;
   };
 }
 
+export interface OpenGraphMeta {
+  "og:type": string;
+  "og:title": string;
+  "og:description": string;
+  "og:url": string;
+  "og:image": string;
+  "og:site_name": string;
+}
+
+export interface TwitterCardMeta {
+  "twitter:card": string;
+  "twitter:title": string;
+  "twitter:description": string;
+  "twitter:url": string;
+  "twitter:image": string;
+}
+
+// ============================================================================
+// URL Utilities
+// ============================================================================
+
 /**
- * Validate URL
+ * Safely create and validate URL
  */
-function validateURL(url: string | URL, baseUrl?: URL | string): string {
+function createURL(path: string, base?: string | URL): URL | null {
   try {
-    if (typeof url === "string") {
-      return new URL(url, baseUrl).toString();
-    }
-    return url.toString();
+    return new URL(path, base);
   } catch (error) {
-    console.error("[SEO] Invalid URL:", url, error);
-    return "";
+    console.error("[SEO] Invalid URL:", { path, base, error });
+    return null;
   }
 }
 
 /**
+ * Validate and format URL string
+ */
+function validateURL(url: string | URL, baseUrl?: string | URL): string {
+  try {
+    if (typeof url === "string") {
+      const urlObj = createURL(url, baseUrl);
+      return urlObj?.toString() || url;
+    }
+    return url.toString();
+  } catch (error) {
+    console.error("[SEO] URL validation failed:", error);
+    return String(url);
+  }
+}
+
+/**
+ * Generate canonical URL with proper formatting
+ */
+export function generateCanonicalURL(
+  path: string,
+  baseUrl: string | URL
+): string {
+  try {
+    const url = createURL(path, baseUrl);
+    if (!url) return path;
+
+    // Remove trailing slash except for root
+    url.pathname = url.pathname.replace(/\/+$/, "") || "/";
+    return url.toString();
+  } catch (error) {
+    console.error("[SEO] Canonical URL generation failed:", error);
+    return path;
+  }
+}
+
+// ============================================================================
+// Structured Data Generation
+// ============================================================================
+
+/**
  * Generate blog structured data
- *
- * @param posts - Array of processed writing posts
- * @param baseUrl - Base URL of the site
- * @param path - Path to the writing section
- * @returns Structured data object
  */
 export function generateBlogStructuredData(
   posts: ProcessedWritingPost[],
-  baseUrl: URL | string,
-  path: string = "/writing"
+  baseUrl: string | URL,
+  path = "/writing"
 ): BlogStructuredData {
-  const siteUrl = typeof baseUrl === "string" ? new URL(baseUrl) : baseUrl;
-
   try {
+    const siteUrl = createURL(String(baseUrl), undefined);
+    if (!siteUrl) {
+      throw new Error("Invalid base URL");
+    }
+
+    const blogPosts: BlogPostSchema[] = posts.slice(0, 10).map((post) => {
+      const postUrl = validateURL(`${path}/${post.slug}`, siteUrl);
+
+      return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: post.title,
+        description: post.excerpt,
+        datePublished: post.date,
+        url: postUrl,
+        author: {
+          "@type": "Person",
+          name: SITE.name,
+        },
+      };
+    });
+
     return {
       "@context": "https://schema.org",
       "@type": "Blog",
       name: "Writing",
       description: "Thoughts on design, technology, and the creative process",
       url: validateURL(path, siteUrl),
-      blogPost: posts.slice(0, 10).map((post) => {
-        const postUrl = validateURL(`${path}/${post.slug}`, siteUrl);
-
-        return {
-          "@type": "BlogPosting",
-          headline: post.title,
-          description: post.excerpt,
-          datePublished: post.date,
-          url: postUrl,
-          author: {
-            "@type": "Person",
-            name: SITE.name,
-          },
-        };
-      }),
+      blogPost: blogPosts,
     };
   } catch (error) {
-    console.error("[SEO] Error generating blog structured data:", error);
+    console.error("[SEO] Blog structured data generation failed:", error);
+
     // Return minimal valid structure
     return {
       "@context": "https://schema.org",
       "@type": "Blog",
       name: "Writing",
       description: "Thoughts on design, technology, and the creative process",
-      url: validateURL(path, siteUrl),
+      url: path,
       blogPost: [],
     };
   }
@@ -134,30 +192,31 @@ export function generateBlogStructuredData(
 
 /**
  * Generate breadcrumb structured data
- *
- * @param breadcrumbs - Array of breadcrumb items
- * @param baseUrl - Base URL of the site
- * @returns Breadcrumb structured data
  */
 export function generateBreadcrumbStructuredData(
   breadcrumbs: Array<{ name: string; path: string }>,
-  baseUrl: URL | string
+  baseUrl: string | URL
 ): BreadcrumbStructuredData {
-  const siteUrl = typeof baseUrl === "string" ? new URL(baseUrl) : baseUrl;
-
   try {
+    const siteUrl = createURL(String(baseUrl), undefined);
+    if (!siteUrl) {
+      throw new Error("Invalid base URL");
+    }
+
+    const items: BreadcrumbItem[] = breadcrumbs.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: validateURL(crumb.path, siteUrl),
+    }));
+
     return {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      itemListElement: breadcrumbs.map((crumb, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: crumb.name,
-        item: validateURL(crumb.path, siteUrl),
-      })),
+      itemListElement: items,
     };
   } catch (error) {
-    console.error("[SEO] Error generating breadcrumb structured data:", error);
+    console.error("[SEO] Breadcrumb structured data generation failed:", error);
     return {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
@@ -168,40 +227,39 @@ export function generateBreadcrumbStructuredData(
 
 /**
  * Generate person structured data
- *
- * @param baseUrl - Base URL of the site
- * @returns Person structured data
  */
 export function generatePersonStructuredData(
-  baseUrl: URL | string
+  baseUrl: string | URL
 ): PersonStructuredData {
-  const siteUrl = typeof baseUrl === "string" ? new URL(baseUrl) : baseUrl;
-
   try {
+    const siteUrl = createURL(String(baseUrl), undefined);
+    const url = siteUrl?.toString() || String(baseUrl);
+
     return {
       "@context": "https://schema.org",
       "@type": "Person",
       name: SITE.name,
-      url: siteUrl.toString(),
+      url,
       email: SITE.email,
       jobTitle: "Designer & Developer",
     };
   } catch (error) {
-    console.error("[SEO] Error generating person structured data:", error);
+    console.error("[SEO] Person structured data generation failed:", error);
     return {
       "@context": "https://schema.org",
       "@type": "Person",
       name: SITE.name,
-      url: siteUrl.toString(),
+      url: String(baseUrl),
     };
   }
 }
 
+// ============================================================================
+// Meta Tag Generation
+// ============================================================================
+
 /**
  * Generate Open Graph metadata
- *
- * @param options - Metadata options
- * @returns Object with Open Graph meta tags
  */
 export function generateOpenGraphMeta(options: {
   title: string;
@@ -210,7 +268,7 @@ export function generateOpenGraphMeta(options: {
   image?: string;
   type?: "website" | "article";
   siteName?: string;
-}) {
+}): OpenGraphMeta {
   const {
     title,
     description,
@@ -220,13 +278,11 @@ export function generateOpenGraphMeta(options: {
     siteName = SITE.name,
   } = options;
 
-  const urlStr = typeof url === "string" ? url : url.toString();
-
   return {
     "og:type": type,
     "og:title": title,
     "og:description": description,
-    "og:url": urlStr,
+    "og:url": validateURL(url, undefined),
     "og:image": image,
     "og:site_name": siteName,
   };
@@ -234,9 +290,6 @@ export function generateOpenGraphMeta(options: {
 
 /**
  * Generate Twitter Card metadata
- *
- * @param options - Metadata options
- * @returns Object with Twitter Card meta tags
  */
 export function generateTwitterCardMeta(options: {
   title: string;
@@ -244,7 +297,7 @@ export function generateTwitterCardMeta(options: {
   url: string | URL;
   image?: string;
   card?: "summary" | "summary_large_image";
-}) {
+}): TwitterCardMeta {
   const {
     title,
     description,
@@ -253,115 +306,74 @@ export function generateTwitterCardMeta(options: {
     card = "summary_large_image",
   } = options;
 
-  const urlStr = typeof url === "string" ? url : url.toString();
-
   return {
     "twitter:card": card,
     "twitter:title": title,
     "twitter:description": description,
-    "twitter:url": urlStr,
+    "twitter:url": validateURL(url, undefined),
     "twitter:image": image,
   };
 }
 
+// ============================================================================
+// Data Validation
+// ============================================================================
+
 /**
- * Validate and sanitize structured data
- * Ensures all required fields are present
- *
- * @param data - Structured data object
- * @returns Validated and sanitized data
+ * Validate structured data
  */
-export function validateStructuredData<T extends Record<string, any>>(
+export function validateStructuredData<T extends BaseStructuredData>(
   data: T
 ): T {
-  // Check for required @context and @type
   if (!data["@context"] || !data["@type"]) {
     console.error("[SEO] Invalid structured data: missing @context or @type");
   }
 
-  // Remove undefined and null values
-  const cleaned = Object.entries(data).reduce((acc, [key, value]) => {
+  // Remove undefined/null values
+  return Object.entries(data).reduce((acc, [key, value]) => {
     if (value !== undefined && value !== null) {
-      (acc as Record<string, any>)[key] = value;
+      acc[key as keyof T] = value;
     }
     return acc;
   }, {} as T);
-
-  return cleaned;
 }
 
 /**
- * Generate JSON-LD script tag content
- *
- * @param data - Structured data object
- * @returns JSON string for script tag
+ * Generate JSON-LD script content
  */
-export function generateJSONLD<T extends Record<string, any>>(data: T): string {
+export function generateJSONLD<T extends BaseStructuredData>(data: T): string {
   try {
     const validated = validateStructuredData(data);
-    return JSON.stringify(validated, null, 0); // Minified for production
+    return JSON.stringify(validated, null, 0); // Minified
   } catch (error) {
-    console.error("[SEO] Error generating JSON-LD:", error);
+    console.error("[SEO] JSON-LD generation failed:", error);
     return "{}";
   }
 }
 
-/**
- * Generate canonical URL
- * Ensures proper URL format for canonical tags
- *
- * @param path - Page path
- * @param baseUrl - Base URL
- * @returns Canonical URL string
- */
-export function generateCanonicalURL(
-  path: string,
-  baseUrl: URL | string
-): string {
-  try {
-    const siteUrl = typeof baseUrl === "string" ? new URL(baseUrl) : baseUrl;
-    const canonical = new URL(path, siteUrl);
-
-    // Remove trailing slash except for root
-    const cleanPath = canonical.pathname.replace(/\/+$/, "") || "/";
-    canonical.pathname = cleanPath;
-
-    return canonical.toString();
-  } catch (error) {
-    console.error("[SEO] Error generating canonical URL:", error);
-    return path;
-  }
-}
+// ============================================================================
+// Content Utilities
+// ============================================================================
 
 /**
- * Calculate reading time from content
- *
- * @param content - Text content
- * @param wordsPerMinute - Average reading speed
- * @returns Reading time string
+ * Calculate reading time
  */
 export function calculateReadingTime(
   content: string,
-  wordsPerMinute: number = 200
+  wordsPerMinute = 200
 ): string {
-  const wordCount = content.trim().split(/\s+/).length;
-  const minutes = Math.ceil(wordCount / wordsPerMinute);
-
+  const words = content.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / wordsPerMinute);
   return `${minutes} min read`;
 }
 
 /**
  * Generate meta description from content
- *
- * @param content - Full content text
- * @param maxLength - Maximum description length
- * @returns Meta description string
  */
 export function generateMetaDescription(
   content: string,
-  maxLength: number = 160
+  maxLength = 160
 ): string {
-  // Remove markdown/HTML and extra whitespace
   const cleaned = content
     .replace(/[#*`_~\[\]()]/g, "")
     .replace(/\s+/g, " ")
@@ -371,9 +383,8 @@ export function generateMetaDescription(
     return cleaned;
   }
 
-  // Truncate at word boundary
   const truncated = cleaned.slice(0, maxLength);
   const lastSpace = truncated.lastIndexOf(" ");
 
-  return lastSpace > 0 ? truncated.slice(0, lastSpace) + "…" : truncated + "…";
+  return (lastSpace > 0 ? truncated.slice(0, lastSpace) : truncated) + "…";
 }
