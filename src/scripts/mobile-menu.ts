@@ -1,14 +1,9 @@
 /**
  * Mobile Menu Script
- * 
+ *
  * Handles mobile menu toggle functionality with proper ARIA management
  * and keyboard navigation support.
  */
-
-interface MobileMenuElements {
-  button: HTMLElement | null;
-  menu: HTMLElement | null;
-}
 
 /**
  * Initialize mobile menu functionality
@@ -23,7 +18,9 @@ export function initMobileMenu(
   const menu = document.getElementById(menuId);
 
   if (!button || !menu) {
-    console.warn(`Mobile menu elements not found: button=${buttonId}, menu=${menuId}`);
+    console.warn(
+      `Mobile menu elements not found: button=${buttonId}, menu=${menuId}`
+    );
     return;
   }
 
@@ -34,7 +31,7 @@ export function initMobileMenu(
     const isExpanded = button?.getAttribute("aria-expanded") === "true";
     button?.setAttribute("aria-expanded", String(!isExpanded));
     menu?.classList.toggle("hidden");
-    
+
     // Focus management
     if (!isExpanded) {
       // Menu opened - focus first link
@@ -80,11 +77,7 @@ export function initMobileMenu(
    * Handle Escape key
    */
   document.addEventListener("keydown", (e) => {
-    if (
-      e.key === "Escape" &&
-      menu &&
-      !menu.classList.contains("hidden")
-    ) {
+    if (e.key === "Escape" && menu && !menu.classList.contains("hidden")) {
       e.preventDefault();
       closeMenu();
     }

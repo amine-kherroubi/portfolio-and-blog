@@ -3,14 +3,6 @@
  * ArticleSchema Component - Desktop Only
  *
  * Purpose: Add JSON-LD structured data for blog posts.
- *
- * Implementation: On each post page, output a <script type="application/ld+json">
- * with schema.org Article (or BlogPosting) including title, author, datePublished, etc.
- *
- * Justification: Structured data helps search engines "understand" content. Google
- * notes that Article schema makes page context explicit and can improve search result
- * appearance (better titles/snippets). Including recommended fields (author, dates)
- * aids SEO by enabling rich snippets.
  */
 
 import { SITE } from "../config/site";
@@ -70,4 +62,8 @@ const structuredData = {
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(structuredData)}
+  is:inline
+/>

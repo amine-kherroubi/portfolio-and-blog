@@ -1,18 +1,6 @@
 ---
 /**
  * Work Project Page - Desktop Only
- *
- * Purpose: Detail page for a single project.
- *
- * Implementation: Similar to a post: an <article> with project title, description,
- * larger images or galleries, and any links (demo, source). Set SiteMeta using
- * project info.
- *
- * Justification: Separate project pages give SEO value (unique URL and content).
- * Semantic markup and alt text on project images continue to aid accessibility
- * and indexing.
- *
- * Enhanced with structured data and project-specific metadata
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -50,9 +38,21 @@ const dateCreated = `${project.data.year}-01-01`;
   description={project.data.description}
   keywords={project.data.tags}
 >
-  <Navigation currentPage="work" />
+  <div slot="header">
+    <Navigation currentPage="work" />
+  </div>
 
-  <main id="main-content">
+  <main id="main-content" data-pagefind-body>
+    <!-- Pagefind metadata -->
+    <div data-pagefind-meta="title">{project.data.title}</div>
+    <div data-pagefind-meta="description">{project.data.description}</div>
+    <div data-pagefind-meta="date">{project.data.year}</div>
+    {
+      project.data.tags.map((tag: string) => (
+        <div data-pagefind-meta="tags">{tag}</div>
+      ))
+    }
+
     <!-- Project Header -->
     <article
       class="py-24 px-8"
@@ -105,7 +105,11 @@ const dateCreated = `${project.data.year}-01-01`;
     </article>
 
     <!-- Project Hero Image / Gallery -->
-    <section class="px-8 mb-24" aria-label="Project preview">
+    <section
+      class="px-8 mb-24"
+      aria-label="Project preview"
+      data-pagefind-ignore
+    >
       <div class="max-w-container mx-auto">
         <figure
           class="aspect-video bg-gray-100 border-2 border-black overflow-hidden"
@@ -140,7 +144,11 @@ const dateCreated = `${project.data.year}-01-01`;
     </section>
 
     <!-- Project Details and Links -->
-    <section class="px-8 mb-24" aria-label="Project information">
+    <section
+      class="px-8 mb-24"
+      aria-label="Project information"
+      data-pagefind-ignore
+    >
       <div class="max-w-container mx-auto">
         <div class="grid grid-cols-12 gap-12">
           <!-- Project Links -->
@@ -238,7 +246,11 @@ const dateCreated = `${project.data.year}-01-01`;
     </section>
 
     <!-- Additional Project Images (if any) -->
-    <section class="px-8 mb-24" aria-label="Additional project images">
+    <section
+      class="px-8 mb-24"
+      aria-label="Additional project images"
+      data-pagefind-ignore
+    >
       <div class="max-w-container mx-auto">
         <h2 class="text-2xl font-bold mb-8 sr-only">Project Gallery</h2>
         <div class="grid grid-cols-2 gap-8">
@@ -280,7 +292,7 @@ const dateCreated = `${project.data.year}-01-01`;
     </section>
 
     <!-- Navigation -->
-    <section class="px-8 mb-24">
+    <section class="px-8 mb-24" data-pagefind-ignore>
       <div class="max-w-container mx-auto">
         <a
           href="/work"
@@ -305,7 +317,9 @@ const dateCreated = `${project.data.year}-01-01`;
     </section>
   </main>
 
-  <Footer />
+  <div slot="footer">
+    <Footer />
+  </div>
 
   <!-- Structured Data for SEO -->
   <ProjectSchema
@@ -334,14 +348,5 @@ const dateCreated = `${project.data.year}-01-01`;
         transform: translateY(0);
       }
     }
-  }
-
-  /**
-   * Ensure images have proper alt text - dev warning
-   */
-  :global(img:not([alt])),
-  :global(img[alt=""]) {
-    outline: 3px dashed red;
-    outline-offset: 4px;
   }
 </style>

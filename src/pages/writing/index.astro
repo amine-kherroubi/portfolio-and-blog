@@ -64,8 +64,10 @@ const structuredData = generateBlogStructuredData(posts, Astro.site);
   <Footer />
 
   <script
+    slot="head"
     type="application/ld+json"
     set:html={JSON.stringify(structuredData)}
+    is:inline
   />
 </BaseLayout>
 

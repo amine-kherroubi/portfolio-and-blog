@@ -1,18 +1,6 @@
 ---
 /**
  * Writing Post Page - Desktop Only
- *
- * Purpose: Template for individual blog posts.
- *
- * Implementation: Wrap post content in a semantic <article> with <h1> title, date,
- * author, and markdown body. Include SiteMeta for SEO, and optionally social-share
- * buttons. Images in posts use <img> with alt.
- *
- * Justification: Using <article> and proper headings makes content accessible to
- * screen readers. Any images must have meaningful alt text (for SEO and accessibility).
- * Metadata (via SiteMeta/schema) further ensures each post is indexed correctly.
- *
- * Enhanced with structured data and article-specific metadata
  */
 
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -48,14 +36,27 @@ const publishDate = new Date(post.data.date).toISOString();
   publishedTime={publishDate}
   keywords={post.data.tags}
 >
-  <Navigation currentPage="writing" />
+  <div slot="header">
+    <Navigation currentPage="writing" />
+  </div>
 
   <article
     id="main-content"
     class="py-24 px-8"
     itemscope
     itemtype="https://schema.org/BlogPosting"
+    data-pagefind-body
   >
+    <!-- Pagefind metadata -->
+    <div data-pagefind-meta="title">{post.data.title}</div>
+    <div data-pagefind-meta="description">{post.data.excerpt}</div>
+    <div data-pagefind-meta="date">{post.data.date}</div>
+    {
+      post.data.tags.map((tag: string) => (
+        <div data-pagefind-meta="tags">{tag}</div>
+      ))
+    }
+
     <div class="max-w-container mx-auto">
       <header class="mb-32">
         <div
@@ -90,11 +91,12 @@ const publishDate = new Date(post.data.date).toISOString();
           {post.data.excerpt}
         </p>
 
-        <!-- Optional: Social Share Buttons -->
+        <!-- Social Share Buttons -->
         <div
           class="flex items-center gap-4"
           role="group"
           aria-label="Share this article"
+          data-pagefind-ignore
         >
           <span
             class="text-sm font-bold uppercase tracking-[0.15em] text-black/50"
@@ -134,7 +136,7 @@ const publishDate = new Date(post.data.date).toISOString();
       </div>
 
       <!-- Article Footer with Navigation -->
-      <footer class="mt-32 pt-16 border-t-2 border-black">
+      <footer class="mt-32 pt-16 border-t-2 border-black" data-pagefind-ignore>
         <div class="flex items-center justify-between">
           <a
             href="/writing"
@@ -155,14 +157,14 @@ const publishDate = new Date(post.data.date).toISOString();
             </svg>
             All Posts
           </a>
-
-          <!-- Optional: Related Posts could go here -->
         </div>
       </footer>
     </div>
   </article>
 
-  <Footer />
+  <div slot="footer">
+    <Footer />
+  </div>
 
   <!-- Structured Data for SEO -->
   <ArticleSchema
@@ -179,9 +181,6 @@ const publishDate = new Date(post.data.date).toISOString();
 <script>
   /**
    * Social Share Functionality
-   *
-   * Implements client-side social sharing with proper error handling
-   * and user feedback.
    */
 
   function initSocialShare() {
@@ -215,7 +214,6 @@ const publishDate = new Date(post.data.date).toISOString();
 
             case "copy":
               await navigator.clipboard.writeText(currentUrl);
-              // Provide visual feedback
               const originalText = button.textContent;
               button.textContent = "Copied!";
               setTimeout(() => {
@@ -257,20 +255,5 @@ const publishDate = new Date(post.data.date).toISOString();
         transform: translateY(0);
       }
     }
-  }
-
-  /**
-   * Ensure images in prose have proper styling and alt text visibility
-   */
-  :global(.prose img) {
-    /* Images already have border and proper spacing from global.css */
-    /* Ensure they're never missing alt text by making it visible in dev */
-  }
-
-  :global(.prose img:not([alt])),
-  :global(.prose img[alt=""]) {
-    /* Dev warning: outline missing alt text */
-    outline: 3px dashed red;
-    outline-offset: 4px;
   }
 </style>

@@ -3,11 +3,6 @@
  * ProjectSchema Component - Desktop Only
  *
  * Purpose: Add JSON-LD structured data for portfolio projects.
- *
- * Implementation: Output schema.org CreativeWork structured data for project pages.
- *
- * Justification: Helps search engines understand project content and can enable
- * rich snippets in search results for portfolio items.
  */
 
 import { SITE } from "../config/site";
@@ -51,4 +46,8 @@ const structuredData = {
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(structuredData)}
+  is:inline
+/>

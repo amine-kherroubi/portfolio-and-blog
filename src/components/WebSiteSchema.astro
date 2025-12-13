@@ -3,12 +3,6 @@
  * WebSiteSchema Component - Desktop Only
  *
  * Purpose: Add JSON-LD structured data for the website as a whole.
- *
- * Implementation: Output schema.org WebSite structured data with search action
- * and site navigation information.
- *
- * Justification: Establishes the website entity in search engines, enables
- * sitelinks search box in Google, and provides overall site context.
  */
 
 import { SITE } from "../config/site";
@@ -53,4 +47,8 @@ const structuredData = {
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(structuredData)}
+  is:inline
+/>

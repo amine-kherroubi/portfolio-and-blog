@@ -67,7 +67,19 @@ const {
   </head>
   <body class="bg-white text-black antialiased">
     <SkipLink targetId="main-content" />
+
+    <!-- Navigation and header are excluded from search -->
+    <div data-pagefind-ignore>
+      <slot name="header" />
+    </div>
+
+    <!-- Main content is searchable by default -->
     <slot />
+
+    <!-- Footer is excluded from search -->
+    <div data-pagefind-ignore>
+      <slot name="footer" />
+    </div>
   </body>
 </html>
 

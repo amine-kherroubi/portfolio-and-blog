@@ -97,7 +97,7 @@ const { variant = "button", class: className = "" } = Astro.props;
   function initSearchShortcut() {
     document.addEventListener("keydown", (e) => {
       // Check for Cmd+K (Mac) or Ctrl+K (Windows/Linux)
-      const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+      const isMac = navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
       const modifierKey = isMac ? e.metaKey : e.ctrlKey;
 
       if (modifierKey && e.key === "k") {

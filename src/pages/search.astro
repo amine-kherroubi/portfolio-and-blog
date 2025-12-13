@@ -20,9 +20,11 @@ import Footer from "../components/Footer.astro";
 ---
 
 <BaseLayout title="Search" description="Search all content across the site">
-  <Navigation />
+  <div slot="header">
+    <Navigation />
+  </div>
 
-  <main id="main-content">
+  <main id="main-content" data-pagefind-body>
     <!-- Search Header -->
     <section class="py-24 px-8" aria-labelledby="search-title">
       <div class="max-w-container mx-auto">
@@ -154,7 +156,9 @@ import Footer from "../components/Footer.astro";
     </section>
   </main>
 
-  <Footer />
+  <div slot="footer">
+    <Footer />
+  </div>
 </BaseLayout>
 
 <script>
@@ -225,13 +229,20 @@ import Footer from "../components/Footer.astro";
 
     // Load Pagefind
     try {
-      // @ts-ignore - Pagefind is loaded dynamically
-      const pagefind = await import("/pagefind/pagefind.js");
+      // @ts-ignore - Pagefind is loaded dynamically at build time
+      const pagefind = await import(/* @vite-ignore */ "/pagefind/pagefind.js");
       window.pagefind = pagefind;
+      console.log("Pagefind loaded successfully");
     } catch (error) {
       console.error("Failed to load Pagefind:", error);
       if (searchStatus) {
-        searchStatus.textContent = "Search unavailable";
+        searchStatus.textContent =
+          "Search is only available in production builds. Run 'npm run build' then 'npm run preview' to test search.";
+        searchStatus.classList.add("text-red-600");
+      }
+      if (searchInput) {
+        searchInput.disabled = true;
+        searchInput.placeholder = "Search unavailable (build required)";
       }
       return;
     }

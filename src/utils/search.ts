@@ -261,7 +261,8 @@ export async function loadPagefind(): Promise<any> {
   }
 
   try {
-    const pagefind = await import("pagefind/pagefind.js");
+    // @ts-ignore
+    const pagefind = await import("/pagefind/pagefind.js");
     (window as any).pagefind = pagefind;
     return pagefind;
   } catch (error) {
